@@ -33,6 +33,7 @@ __Acknowledgements:__ The authors thank CNPq for partially sponsoring this work.
 
 * __arimapred__ - Automatic ARIMA fitting and prediction.
 * __marimapred__ - Multiple time series automatic ARIMA fitting and prediction.
+* __arimainterp__ - Interpolation of unknown values using automatic ARIMA fitting and prediction.
 
 ######__Examples:__
 ~~~~~~
@@ -41,6 +42,9 @@ __Acknowledgements:__ The authors thank CNPq for partially sponsoring this work.
 
 > data(NN3.A,NN3.A.cont)
 > marimapred(NN3.A,NN3.A.cont,plot=TRUE)
+
+> data(CATS)
+> arimainterp(CATS[,c(2:3)],n.ahead=20,extrap=TRUE)
 ~~~~~~
 
 ---
