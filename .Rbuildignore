@@ -4,4 +4,4 @@
 ^README.md$
 ^LICENSE$
 ^.*\.git$
-^\dev$
+^dev$
