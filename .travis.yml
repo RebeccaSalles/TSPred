@@ -1,2 +1,14 @@
 language: r
+sudo: false
 cache: packages
+
+r:
+ - oldrel
+ - release
+ - devel
+
+r_packages:
+  - covr
+
+after_success:
+  - Rscript -e 'covr::codecov()'
