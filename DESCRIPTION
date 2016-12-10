@@ -1,0 +1,11 @@
+Package: TSPred
+Type: Package
+Title: Functions for Baseline-Based Time Series Prediction
+Version: 2.0
+Date: 2015-03-11
+Authors@R: c(person(c("Rebecca", "Pontes"),"Salles", role = c("aut", "cre","cph"),email = "rebeccapsalles@gmail.com", comment = "CEFET/RJ"),person("Eduardo","Ogasawara", role = c("ths"),email = "eogasawara@ieee.org", comment = "CEFET/RJ"))
+Maintainer: Rebecca Pontes Salles <rebeccapsalles@gmail.com>
+Description: Functions for time series prediction and accuracy assessment using automatic ARIMA modelling. The generated ARIMA models and its yielded prediction errors are intended to be used as baseline for evaluating the practical value of other time series prediction methods and creating a demand for the refinement of such methods. For this purpose, benchmark data from prediction competitions may be used.
+Depends: forecast, stats
+License: GPL (>= 2)
+URL: https://sourceforge.net/p/gpca/wiki/TSPred/

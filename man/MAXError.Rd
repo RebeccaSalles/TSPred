@@ -1,0 +1,59 @@
+\name{MAXError}
+\alias{MAXError}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{Maximal error of prediction
+%%  ~~function to do ... ~~
+}
+\description{The function calculates the maximal error between actual and predicted values.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+}
+\usage{
+MAXError(actual, prediction)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{actual}{A vector or univariate time series containing actual values for a time series that are to be compared against its respective predictions.
+%%     ~~Describe \code{actual} here~~
+}
+  \item{prediction}{A vector or univariate time series containing time series predictions that are to be compared against the values in \code{actual}.
+%%     ~~Describe \code{forecast} here~~
+}
+}
+\value{A numeric value of the maximal error of prediction.
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+%%  \item{comp1 }{Description of 'comp1'}
+%%  \item{comp2 }{Description of 'comp2'}
+%% ...
+}
+\author{Rebecca Pontes Salles
+%%  ~~who you are~~
+}
+\seealso{\code{\link{sMAPE}}, \code{\link{MAPE}}
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
+\examples{
+data(SantaFe.A,SantaFe.A.cont)
+pred <- marimapred(SantaFe.A,n.ahead=100)
+MAXError(SantaFe.A.cont[,1], pred)
+%%##---- Should be DIRECTLY executable !! ----
+%%##-- ==>  Define data, use random,
+%%##--	or do  help(data=index)  for the standard data sets.
+%%## The function is currently defined as
+%%function (actual, prediction) 
+%%{
+%%    if (!is.ts(actual)) 
+%%        stop("actual is not a time series")
+%%    if (!is.ts(prediction)) 
+%%        stop("prediction is not a time series")
+%%    if (length(actual) != length(prediction)) 
+%%        stop("actual and prediction have different lengths")
+%%    res <- max(abs(actual - prediction))
+%%    res
+%%  }
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ maximal }
+\keyword{ prediction }% __ONLY ONE__ keyword per line
+\keyword{ error }
