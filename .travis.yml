@@ -1,3 +1,4 @@
+
 language: r
 sudo: false
 cache: packages
@@ -9,6 +10,10 @@ r:
 
 r_packages:
   - covr
+
+warnings_are_errors: true
+
+r_check_args: --as-cran
 
 r_build_args: --resave-data
 
