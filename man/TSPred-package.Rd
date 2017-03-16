@@ -14,7 +14,7 @@ Functions for time series prediction and accuracy assessment using automatic lin
 Package: \tab TSPred\cr
 Type: \tab Package\cr
 Version: \tab 3.0\cr
-Date: \tab 2017-03-15\cr
+Date: \tab 2017-03-16\cr
 Depends: \tab forecast, KFAS, stats, MuMIn\cr
 License: \tab GPL (>= 2)\cr
 URL: \tab \url{https://sourceforge.net/p/gpca/wiki/TSPred/}\cr
