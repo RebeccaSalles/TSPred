@@ -79,7 +79,8 @@ fs <- KFS(fArimaKF$model,filtering=c("state","mean"),smoothing=c("state","mean")
 f <- fitted(fs, filtered = TRUE) #Kalman filtered time  series
 s <- fitted(fs) #Kalman smoothed time  series
 #plotting the time series data
-plot(c(CATS[,2],CATS.cont[,2]),type='o',lwd=2,xlim=c(960,1000),ylim=c(200,600),xlab="Time",ylab="ARIMAKF")
+plot(c(CATS[,2],CATS.cont[,2]),type='o',lwd=2,xlim=c(960,1000),ylim=c(200,600),
+ xlab="Time",ylab="ARIMAKF")
 #plotting the Kalman filtered time series
 lines(f,col='red',lty=2,lwd=2)
 #plotting the Kalman smoothed time series

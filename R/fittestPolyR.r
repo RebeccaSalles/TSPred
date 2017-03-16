@@ -59,7 +59,9 @@ function(timeseries, timeseries.test, maxorder=5, na.action=na.omit, se.fit=FALS
     model.calls[[i]] <- parse(text=toString(rank$modelCall[i]))
   }
   
-  rank <- subset(rank, select=-c(modelCall,df,delta,weight))
+  exc <- names(rank) %in% c("modelCall", "df", "delta", "weight") 
+  rank <- rank[!exc]
+  #rank <- subset(rank, select=-c(modelCall,df,delta,weight))
   attr(rank,"model.calls") <- model.calls
   
   statsData <- rank[1,]

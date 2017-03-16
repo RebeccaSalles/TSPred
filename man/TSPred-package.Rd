@@ -91,10 +91,13 @@ pred <- fArima$pred$pred
 #estimated standard errors
 se <- fArima$pred$se
 #model information
-cbind(AICc=fArima$AICc, AIC=fArima$AIC, BIC=fArima$BIC, logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE, MAPE=fArima$MSE, sMAPE=fArima$MSE, MaxError=fArima$MaxError)
+cbind(AICc=fArima$AICc, AIC=fArima$AIC, BIC=fArima$BIC,
+ logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE,
+ MAPE=fArima$MSE, sMAPE=fArima$MSE, MaxError=fArima$MaxError)
 
 #plotting the time series data
-plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),xlab="Time",ylab="ARIMA")
+plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),
+ xlab="Time",ylab="ARIMA")
 #plotting the predicted values
 lines(ts(pred,start=981),lwd=2,col='blue')
 #plotting the estimated standard errors (confidence interval)
@@ -115,7 +118,8 @@ fs <- KFS(fArimaKF$model,filtering=c("state","mean"),smoothing=c("state","mean")
 f <- fitted(fs, filtered = TRUE) #Kalman filtered time  series
 s <- fitted(fs) #Kalman smoothed time  series
 #plotting the time series data
-plot(c(CATS[,2],CATS.cont[,2]),type='o',lwd=2,xlim=c(960,1000),ylim=c(200,600),xlab="Time",ylab="ARIMAKF")
+plot(c(CATS[,2],CATS.cont[,2]),type='o',lwd=2,xlim=c(960,1000),ylim=c(200,600),
+ xlab="Time",ylab="ARIMAKF")
 #plotting the Kalman filtered time series
 lines(f,col='red',lty=2,lwd=2)
 #plotting the Kalman smoothed time series
@@ -137,7 +141,8 @@ pred <- fPolyR$pred
 fPolyR$rank[1,]
 
 #plotting the time series data
-plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),xlab="Time",ylab="PR")
+plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),
+ xlab="Time",ylab="PR")
 #plotting predicted values
 lines(ts(pred$fit,start=981),lwd=2,col='blue')
 #plotting estimated standard errors (confidence interval)
@@ -158,7 +163,8 @@ fs <- KFS(fPolyRKF$model,filtering=c("state","mean"),smoothing=c("state","mean")
 f <- fitted(fs, filtered = TRUE) #Kalman filtered time  series
 s <- fitted(fs) #Kalman smoothed time  series
 #plotting the time series data
-plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),xlab="Time",ylab="PRKF")
+plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),
+ xlab="Time",ylab="PRKF")
 #plotting the Kalman filtered time series
 lines(f,col='red',lty=2,lwd=2)
 #plotting the Kalman smoothed time series

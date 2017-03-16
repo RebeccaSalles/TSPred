@@ -4,7 +4,7 @@
 \description{
  Internal TSPred functions
 }
-\Usage{
+\Usage{ SSMpolynomial(y, ord, H=0, Q=NA)
 }
 \details{
 These are not to be called by the user (or in some cases are just

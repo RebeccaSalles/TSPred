@@ -37,9 +37,7 @@ se.fit = FALSE, filtered = TRUE)
 
 The TSPredC criterion is calculated as the sum of the rank possitions of a model (1 = 1st position = better ranked model, 2 = 2nd position, etc.) on each calculated fitness or prediction accuracy measure.
 
-The list of evaluated measures are:
-\item{Model fitness measures:}{AIC, AICc, BIC and log-likelihood}
-\item{Prediction accuracy measures:}{MSE, NMSE, MAPE, sMAPE and maximal error}
+The evaluated measures for model fitness are the AIC, AICc, BIC and log-likelihood, and for prediction accuracy the MSE, NMSE, MAPE, sMAPE and maximal error.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{A list with components:

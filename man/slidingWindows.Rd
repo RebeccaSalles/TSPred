@@ -23,7 +23,7 @@ slidingWindows(timeseries,swSize)
 \details{The function returns all (overlapping) subsequences of size \code{swSize} of \code{timeseries}.
 %%  ~~ If necessary, more details than the description above ~~
 }
-\value{A numeric matrix of size \code{(length(timeseries)-swSize+1)} by \code{swSize}, where each line is a sliding window.
+\value{A numeric matrix of size (length(\code{timeseries})-\code{swSize}+1) by \code{swSize}, where each line is a sliding window.
 }
 \references{
 Lampert, C. H., Blaschko, M. B., and Hofmann, T. (2008). Beyond sliding windows: Object localization by efficient subwindow search. In Computer Vision and Pattern Recognition, 2008. CVPR 2008. IEEE Conference on, pages 1–8. IEEE.

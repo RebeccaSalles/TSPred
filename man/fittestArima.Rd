@@ -31,7 +31,7 @@ The fitness criteria AICc, AIC (\code{\link{AIC}}), BIC (\code{\link{BIC}}) and 
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{A list with components:
-\item{model}{A list of class "ARIMA" containing the best fitted ARIMA model. See the \code{\link{auto.arima}} function in the \code{\link[forecast:forecast-package]{forecast}} package.}
+\item{model}{A list of class "ARIMA" containing the best fitted ARIMA model. See the \code{\link{auto.arima}} function in the \code{\link[pkg:forecast-package]{forecast}} package.}
 \item{AICc}{Numeric value of the computed AICc criterion of the fitted model.}
 \item{AIC}{Numeric value of the computed AIC criterion of the fitted model.}
 \item{BIC}{Numeric value of the computed BIC criterion of the fitted model.}
@@ -64,10 +64,13 @@ pred <- fArima$pred$pred
 #estimated standard errors
 se <- fArima$pred$se
 #model information
-cbind(AICc=fArima$AICc, AIC=fArima$AIC, BIC=fArima$BIC, logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE, MAPE=fArima$MSE, sMAPE=fArima$MSE, MaxError=fArima$MaxError)
+cbind(AICc=fArima$AICc, AIC=fArima$AIC, BIC=fArima$BIC,
+ logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE, 
+ MAPE=fArima$MSE, sMAPE=fArima$MSE, MaxError=fArima$MaxError)
 
 #plotting the time series data
-plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),xlab="Time",ylab="ARIMA")
+plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),
+ xlab="Time",ylab="ARIMA")
 #plotting the predicted values
 lines(ts(pred,start=981),lwd=2,col='blue')
 #plotting the estimated standard errors (confidence interval)
