@@ -1,5 +1,5 @@
 importFrom(forecast, auto.arima, forecast)
-importFrom(KFAS, SSMarima, SSModel, artransform, fitSSM, SSMcustom, KFS, fitted)
+importFrom(KFAS, SSMarima, SSModel, artransform, fitSSM, SSMcustom, KFS)
 importFrom(MuMIn, dredge, AICc)
 importFrom("graphics", "lines", "plot")
 importFrom("stats", "lm", "logLik", "na.omit", "optim", "predict","var")

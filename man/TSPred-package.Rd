@@ -115,7 +115,7 @@ pred <- fArimaKF$pred
 fArimaKF$rank[1,]
 
 #extracting Kalman filtered and smoothed time series from the best fitted model
-fs <- KFS(fArimaKF$model,filtering=c("state","mean"),smoothing=c("state","mean"))
+fs <- KFAS::KFS(fArimaKF$model,filtering=c("state","mean"),smoothing=c("state","mean"))
 f <- fitted(fs, filtered = TRUE) #Kalman filtered time  series
 s <- fitted(fs) #Kalman smoothed time  series
 #plotting the time series data
@@ -160,7 +160,7 @@ pred <- fPolyRKF$pred
 fPolyRKF$rank[1,]
 
 #extracting Kalman filtered and smoothed time series from the best fitted model
-fs <- KFS(fPolyRKF$model,filtering=c("state","mean"),smoothing=c("state","mean"))
+fs <- KFAS::KFS(fPolyRKF$model,filtering=c("state","mean"),smoothing=c("state","mean"))
 f <- fitted(fs, filtered = TRUE) #Kalman filtered time  series
 s <- fitted(fs) #Kalman smoothed time  series
 #plotting the time series data

@@ -60,7 +60,7 @@ For more details, see the \code{\link{forecast.Arima}} and the  \code{\link{plot
 }
 \examples{
 data(SantaFe.A,SantaFe.A.cont)
-fit <- auto.arima(SantaFe.A)  
+fit <- forecast::auto.arima(SantaFe.A)  
 ts.cont <- ts(SantaFe.A.cont,start=1001)
 plotarimapred(ts.cont, fit, xlim=c(1001,1100))
 %%##---- Should be DIRECTLY executable !! ----
