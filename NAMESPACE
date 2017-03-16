@@ -1,4 +1,4 @@
-import(forecast,KFAS)
+
 importFrom(MuMIn, dredge)
 importFrom("graphics", "lines", "plot")
 importFrom("stats", "lm", "logLik", "na.omit", "optim", "predict","var")
