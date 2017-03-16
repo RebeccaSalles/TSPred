@@ -9,7 +9,7 @@ function(timeseries, timeseries.test, na.action=na.omit, se.fit=FALSE){
   n.ahead <- length(ts.test)
 
   #Best fit ARIMA
-  fitARIMA <- auto.arima(ts)
+  fitARIMA <- forecast::auto.arima(ts)
   
   #Stats
   AIC <- fitARIMA$aic
