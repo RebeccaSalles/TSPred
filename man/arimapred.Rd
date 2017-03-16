@@ -52,8 +52,8 @@ range.p = 0.2, ylab = NULL, xlab = NULL, main = NULL)
 %%     ~~Describe \code{main} here~~
 }
 }
-\details{The ARIMA model used for time series prediction is automatically fitted by the \code{\link{auto.arima}} function in the \code{\link[forecast:forecast-package]{forecast}} package. In order to avoid drift errors, the function introduces an auxiliary regressor whose values are a sequence of consecutive integer numbers starting from 1. The fitted ARIMA model is used for prediction by the \code{\link{predict.Arima}} function in the \code{\link[stats:stats-package]{stats}} package.
-For more details, see the \code{\link{auto.arima}} function in the \code{\link[forecast:forecast-package]{forecast}} package and the \code{\link{predict.Arima}} function in the stats package.
+\details{The ARIMA model used for time series prediction is automatically fitted by the \code{\link{auto.arima}} function in the \code{\link[pkg:forecast-package]{forecast}} package. In order to avoid drift errors, the function introduces an auxiliary regressor whose values are a sequence of consecutive integer numbers starting from 1. The fitted ARIMA model is used for prediction by the \code{\link{predict.Arima}} function in the \code{\link[pkg:stats-package]{stats}} package.
+For more details, see the \code{\link{auto.arima}} function in the \code{\link[pkg:forecast-package]{forecast}} package and the \code{\link{predict.Arima}} function in the stats package.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{A time series of predictions, or if \code{se.fit} is \code{TRUE}, a list with the components \code{pred}, the predictions, and \code{se}, the estimated standard errors. Both components are time series. See the \code{\link{predict.Arima}} function in the stats package.

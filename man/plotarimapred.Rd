@@ -38,8 +38,8 @@ ylab = NULL, xlab = NULL, main = NULL)
 %%     ~~Describe \code{main} here~~
 }
 }
-\details{The model in \code{fit.arima} is used for prediction by the \code{\link{forecast.Arima}} function in the \code{\link[forecast:forecast-package]{forecast}} package. The resulting \code{forecast} object is then used for plotting the predictions and their intervals by the \code{\link{plot.forecast}} function also in the \code{\link[forecast:forecast-package]{forecast}} package.
-For more details, see the \code{\link{forecast.Arima}} and the  \code{\link{plot.forecast}} functions in the \code{\link[forecast:forecast-package]{forecast}} package.
+\details{The model in \code{fit.arima} is used for prediction by the \code{\link{forecast.Arima}} function in the \code{\link[pkg:forecast-package]{forecast}} package. The resulting \code{forecast} object is then used for plotting the predictions and their intervals by the \code{\link{plot.forecast}} function also in the \code{\link[pkg:forecast-package]{forecast}} package.
+For more details, see the \code{\link{forecast.Arima}} and the  \code{\link{plot.forecast}} functions in the \code{\link[pkg:forecast-package]{forecast}} package.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{None.
