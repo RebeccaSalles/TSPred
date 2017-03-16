@@ -26,9 +26,9 @@ slidingWindows(timeseries,swSize)
 \value{A numeric matrix of size (length(\code{timeseries})-\code{swSize}+1) by \code{swSize}, where each line is a sliding window.
 }
 \references{
-Lampert, C. H., Blaschko, M. B., and Hofmann, T. (2008). Beyond sliding windows: Object localization by efficient subwindow search. In Computer Vision and Pattern Recognition, 2008. CVPR 2008. IEEE Conference on, pages 1–8. IEEE.
+Lampert, C. H., Blaschko, M. B., and Hofmann, T. (2008). Beyond sliding windows: Object localization by efficient subwindow search. In Computer Vision and Pattern Recognition, 2008. CVPR 2008. IEEE Conference on, pages 1-8. IEEE.
 
-Keogh, E. and Lin, J. (2005). Clustering of time-series subsequences is meaningless: Implications for previous and future research. Knowledge and Information Systems, 8(2):154–177.
+Keogh, E. and Lin, J. (2005). Clustering of time series subsequences is meaningless: Implications for previous and future research. Knowledge and Information Systems, 8(2):154-177.
 %% ~put references to the literature/web site here ~
 }
 \author{
@@ -43,3 +43,4 @@ SW <- slidingWindows(CATS[,1],4)
 % R documentation directory.
 \keyword{ sliding }% __ONLY ONE__ keyword per line
 \keyword{ windows }
+\keyword{ time series }

@@ -30,7 +30,7 @@ se.fit = FALSE)
 %%     ~~Describe \code{se.fit} here~~
 }
 }
-\details{A set with possible polynomial regression models of orders from 0 to \code{maxorder} is generated with help from the \code{\link{dredge}} function from the \code{\link[MuMIn:MuMIn-package]{MuMIn}} package.
+\details{A set with possible polynomial regression models of orders from 0 to \code{maxorder} is generated with help from the \code{\link{dredge}} function from the \code{MuMIn} package.
 
 The set of generated models are used for time series prediction. Fitness measures (AICc, AIC, BIC, log-likelihood) and prediction accuracy measures (MSE, NMSE, MAPE, sMAPE, maximal error) are calculated for each model.
 

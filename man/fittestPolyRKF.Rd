@@ -33,9 +33,9 @@ se.fit = FALSE, filtered = TRUE)
 %%     ~~Describe \code{filtered} here~~
 }
 }
-\details{A set of maxorder+1 polynomial regression models of orders from 0 to \code{maxorder}, respectively, is generated and represented as state space models (\code{\link{SSModel}}) based on code from the \code{\link[pkg:dlmodeler-package]{dlmodeler}} package. See \code{\link[pkg:dlmodeler.polynomial]{dlmodeler}}.
+\details{A set of maxorder+1 polynomial regression models of orders from 0 to \code{maxorder}, respectively, is generated and represented as state space models (\code{\link{SSModel}}) based on code from the \code{dlmodeler} package. See \code{\link[dlmodeler]{dlmodeler.polynomial}}.
 
-All models in the set are optimized using the Kalman filter and functions of the \code{\link[pkg:KFAS-package]{KFAS}} package. Different initial parameterization during the optimization process generate different models, which are included in the set of polynomial regression models to be evaluated.
+All models in the set are optimized using the Kalman filter and functions of the \code{KFAS} package. Different initial parameterization during the optimization process generate different models, which are included in the set of polynomial regression models to be evaluated.
 
 The set of generated models are used for time series prediction. Fitness measures (AICc, AIC, BIC, log-likelihood) and prediction accuracy measures (MSE, NMSE, MAPE, sMAPE, maximal error) are calculated for each model.
 

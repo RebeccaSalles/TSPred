@@ -26,12 +26,12 @@ fittestArima(timeseries, timeseries.test, na.action = na.omit, se.fit = FALSE)
 %%     ~~Describe \code{se.fit} here~~
 }
 }
-\details{The ARIMA model used for time series prediction is automatically fitted by the \code{\link{auto.arima}} function in the \code{\link[pkg:forecast-package]{forecast}} package. The fitted ARIMA model is used for prediction by the \code{\link{predict.Arima}} function in the \code{\link[pkg:stats-package]{stats}} package.
+\details{The ARIMA model used for time series prediction is automatically fitted by the \code{\link{auto.arima}} function in the \code{forecast} package. The fitted ARIMA model is used for prediction by the \code{\link{predict.Arima}} function in the \code{stats} package.
 The fitness criteria AICc, AIC (\code{\link{AIC}}), BIC (\code{\link{BIC}}) and log-likelihood (\code{\link{logLik}}) are extracted from the fitted ARIMA model. Also, the prediction accuracy of the model is computed by means of MSE (\code{\link{MSE}}), NMSE (\code{\link{NMSE}}), MAPE (\code{\link{MAPE}}), sMAPE (\code{\link{sMAPE}}) and maximal error (\code{\link{MAXError}}) measures.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{A list with components:
-\item{model}{A list of class "ARIMA" containing the best fitted ARIMA model. See the \code{\link{auto.arima}} function in the \code{\link[pkg:forecast-package]{forecast}} package.}
+\item{model}{A list of class "ARIMA" containing the best fitted ARIMA model. See the \code{\link{auto.arima}} function in the \code{forecast} package.}
 \item{AICc}{Numeric value of the computed AICc criterion of the fitted model.}
 \item{AIC}{Numeric value of the computed AIC criterion of the fitted model.}
 \item{BIC}{Numeric value of the computed BIC criterion of the fitted model.}
