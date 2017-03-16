@@ -23,8 +23,8 @@ function(timeseries, timeseries.test, maxorder=5, na.action=na.omit, se.fit=FALS
   colnames(data.test) <- names
   
   fit.max <- lm(y~. ,data=data, na.action = "na.fail")
-
-  rank <- suppressMessages(dredge(fit.max,  m.lim = c(0,maxorder), rank = "AIC", extra = alist(AICc, BIC)))
+  
+  rank <- suppressMessages(dredge(fit.max,  m.lim = c(0,maxorder), rank = "AICc", extra = c(AIC, BIC)))
   
   calls <- attr(rank,"model.calls")
   models <- MSE <- NMSE <- MAPE <- sMAPE <- MaxError <- NULL
@@ -61,7 +61,6 @@ function(timeseries, timeseries.test, maxorder=5, na.action=na.omit, se.fit=FALS
   
   exc <- names(rank) %in% c("modelCall", "df", "delta", "weight") 
   rank <- rank[!exc]
-  #rank <- subset(rank, select=-c(modelCall,df,delta,weight))
   attr(rank,"model.calls") <- model.calls
   
   statsData <- rank[1,]
