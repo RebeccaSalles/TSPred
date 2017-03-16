@@ -24,7 +24,7 @@ function(timeseries, timeseries.test, maxorder=5, na.action=na.omit, se.fit=FALS
   
   fit.max <- lm(y~. ,data=data, na.action = "na.fail")
 
-  rank <- suppressMessages(dredge(fit.max,  m.lim = c(0,maxorder), rank = "AIC", extra = alist(AICc, BIC)))
+  rank <- suppressMessages(dredge(fit.max,  m.lim = c(0,maxorder), rank = "AIC", extra = c("AICc", "BIC")))
   
   calls <- attr(rank,"model.calls")
   models <- MSE <- NMSE <- MAPE <- sMAPE <- MaxError <- NULL
