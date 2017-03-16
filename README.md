@@ -51,28 +51,32 @@ __Acknowledgements:__ The authors thank CNPq for partially sponsoring this work.
 > fittest$ranked.results[[1]]$pred
 ~~~~~~
 #### ARIMA fitting and prediction:
+##### 1 - Single univariate time series:
 ~~~~~~
-#Example 1 - a single univariate time series
 > data(SantaFe.A)
 > arimapred(SantaFe.A[,1],n.ahead=100)
-
-#Example 2 - allowing the prediction of multiple univariate time series
+~~~~~~
+##### 2 - Allowing the prediction of multiple univariate time series:
+~~~~~~
 > data(NN3.A,NN3.A.cont)
 > marimapred(NN3.A,NN3.A.cont,plot=TRUE)
-
-#Example 3 - time series interpolation
+~~~~~~
+##### 3 - Time series interpolation:
+~~~~~~
 > data(CATS)
 > arimainterp(CATS[,c(2:3)],n.ahead=20,extrap=TRUE)
-
-#Example 4 - automatic fitting, prediction and accuracy evaluation
+~~~~~~
+##### 4 - Automatic fitting, prediction and accuracy evaluation:
+~~~~~~
 > data(CATS,CATS.cont)
 > fArima <- fittestArima(CATS[,1],CATS.cont[,1], se.fit=TRUE)
 #predicted values
 > pred <- fArima$pred$pred
 #model information
 > cbind(AICc=fArima$AICc, AIC=fArima$AIC, BIC=fArima$BIC, logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE, MAPE=fArima$MSE, sMAPE=fArima$MSE, MaxError=fArima$MaxError)
-
-#Example 5 - automatic fitting with Kalman filter, prediction and accuracy evaluation
+~~~~~~
+##### 5 - Automatic fitting with Kalman filter, prediction and accuracy evaluation:
+~~~~~~
 > data(CATS,CATS.cont)
 > fArimaKF <- fittestArimaKF(CATS[,2],CATS.cont[,2], se.fit=TRUE, filtered=TRUE)
 #predicted values and estimated standard errors
@@ -81,16 +85,17 @@ __Acknowledgements:__ The authors thank CNPq for partially sponsoring this work.
 > fArimaKF$rank[1,]
 ~~~~~~
 #### Polynomial regression fitting and prediction:
+##### 1 - Automatic fitting, prediction and accuracy evaluation:
 ~~~~~~
-#Example 1 - automatic fitting, prediction and accuracy evaluation
 > data(CATS,CATS.cont)
 > fPolyR <- fittestPolyR(CATS[,1],CATS.cont[,1], maxorder=5, se.fit=TRUE)
 #predicted values and estimated standard errors
 > pred <- fPolyR$pred
 #model information
 > fPolyR$rank[1,]
-
-#Example 2 - automatic fitting with Kalman filter, prediction and accuracy evaluation
+~~~~~~
+##### 2 - Automatic fitting with Kalman filter, prediction and accuracy evaluation:
+~~~~~~
 > data(CATS,CATS.cont)
 > fPolyRKF <- fittestPolyRKF(CATS[,1],CATS.cont[,1], maxorder=5, se.fit=TRUE, filtered=TRUE)
 #predicted values and estimated standard errors
