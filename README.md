@@ -20,7 +20,7 @@ __Reference manual:__ [TSPred.pdf](http://cran.r-project.org/web/packages/TSPred
 __Acknowledgements:__ The authors thank CNPq for partially sponsoring this work.
 
 ---
-###Usage:
+### Usage:
 ~~~~~~
 #Install TSPred package
 > install.packages("TSPred")
@@ -29,29 +29,29 @@ __Acknowledgements:__ The authors thank CNPq for partially sponsoring this work.
 > library("TSPred")
 ~~~~~~
 #####
-#####Most important functions:
+### Most important functions:
 
 * __fittestLM__ - Automatically finding fittest linear model for prediction.
-* __fittestArima__ - Automatic ARIMA fitting, prediction and accuracy evaluation.}
-* __fittestArimaKF__ - Automatic ARIMA fitting and prediction with Kalman filter.}
-* __fittestPolyR__ - Automatic fitting and prediction of polynomial regression.}
-* __fittestPolyRKF__ - Automatic fitting and prediction of polynomial regression with Kalman filter.}
+* __fittestArima__ - Automatic ARIMA fitting, prediction and accuracy evaluation.
+* __fittestArimaKF__ - Automatic ARIMA fitting and prediction with Kalman filter.
+* __fittestPolyR__ - Automatic fitting and prediction of polynomial regression.
+* __fittestPolyRKF__ - Automatic fitting and prediction of polynomial regression with Kalman filter.
 * __arimapred__ - Automatic ARIMA fitting and prediction.
 * __marimapred__ - Multiple time series automatic ARIMA fitting and prediction.
 * __arimainterp__ - Interpolation of unknown values using automatic ARIMA fitting and prediction.
 
-######__Examples:__
+### __Examples:__
+#### Fittest linear model:
 ~~~~~~
-#======== Fittest linear model ========
 > data(CATS,CATS.cont)
 > fittest <- fittestLM(CATS[,1],CATS.cont[,1], maxorder=5, se.fit=TRUE, filtered=TRUE)
 #fittest model information
 > fittest$rank[1,]
 #predictions of the fittest model
 > fittest$ranked.results[[1]]$pred
-#======== ===================== ========
-
-#======== ARIMA fitting and prediction ========
+~~~~~~
+#### ARIMA fitting and prediction:
+~~~~~~
 #Example 1 - a single univariate time series
 > data(SantaFe.A)
 > arimapred(SantaFe.A[,1],n.ahead=100)
@@ -79,9 +79,9 @@ __Acknowledgements:__ The authors thank CNPq for partially sponsoring this work.
 > pred <- fArimaKF$pred
 #model information
 > fArimaKF$rank[1,]
-#======== ============================ ========
-
-#======== Polynomial regression fitting and prediction ========
+~~~~~~
+#### Polynomial regression fitting and prediction:
+~~~~~~
 #Example 1 - automatic fitting, prediction and accuracy evaluation
 > data(CATS,CATS.cont)
 > fPolyR <- fittestPolyR(CATS[,1],CATS.cont[,1], maxorder=5, se.fit=TRUE)
@@ -97,7 +97,6 @@ __Acknowledgements:__ The authors thank CNPq for partially sponsoring this work.
 > pred <- fPolyRKF$pred
 #model information
 > fPolyRKF$rank[1,]
-#======== ============================================ ========
 ~~~~~~
 
 ---
