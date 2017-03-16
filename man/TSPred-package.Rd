@@ -16,6 +16,7 @@ Type: \tab Package\cr
 Version: \tab 3.0\cr
 Date: \tab 2017-03-16\cr
 Imports: \tab forecast, KFAS, stats, MuMIn\cr
+LinkingTo: \tab dlmodeler\cr
 License: \tab GPL (>= 2)\cr
 URL: \tab \url{https://sourceforge.net/p/gpca/wiki/TSPred/}\cr
 }

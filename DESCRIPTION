@@ -7,5 +7,6 @@ Authors@R: c(person(c("Rebecca", "Pontes"),"Salles", role = c("aut", "cre","cph"
 Maintainer: Rebecca Pontes Salles <rebeccapsalles@acm.org>
 Description: Functions for time series prediction and accuracy assessment using automatic linear modelling. The generated linear models and its yielded prediction errors can be used for benchmarking other time series prediction methods and for creating a demand for the refinement of such methods. For this purpose, benchmark data from prediction competitions may be used.
 Imports: forecast, KFAS, stats, MuMIn
+LinkingTo: dlmodeler
 License: GPL (>= 2)
 URL: https://sourceforge.net/p/gpca/wiki/TSPred/
