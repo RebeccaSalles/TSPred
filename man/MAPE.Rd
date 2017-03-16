@@ -32,7 +32,7 @@ MAPE(actual, prediction)
 \author{Rebecca Pontes Salles
 %%  ~~who you are~~
 }
-\seealso{\code{\link{sMAPE}}, \code{\link{MAXError}}
+\seealso{\code{\link{sMAPE}}, \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAXError}}
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{

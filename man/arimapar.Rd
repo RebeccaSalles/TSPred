@@ -23,7 +23,7 @@ arimapar(timeseries, na.action = na.omit, xreg = NULL)
 }
 }
 \details{The ARIMA model whose adjusted parameters are presented is automatically fitted by the \code{\link{auto.arima}} function in the forecast package. In order to avoid drift errors, the function introduces an auxiliary regressor whose values are a sequence of consecutive integer numbers starting from 1.
-For more details, see the \code{\link{auto.arima}} function in the forecast package.
+For more details, see the \code{\link{auto.arima}} function in the \code{\link[forecast:forecast-package]{forecast}} package.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{A numeric vector giving the number of AR, MA, seasonal AR and seasonal MA coefficients, plus the period and the number of non-seasonal and seasonal differences of the automatically fitted ARIMA model. It is also presented the value of the fitted drift constant.

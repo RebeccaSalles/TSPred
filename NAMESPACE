@@ -1,2 +1,3 @@
-import(forecast)
+import(forecast,KFAS)
+importFrom(MuMIn, dredge)
 exportPattern("^[^\\.]")
