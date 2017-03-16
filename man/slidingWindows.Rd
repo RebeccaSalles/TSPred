@@ -16,7 +16,7 @@ slidingWindows(timeseries,swSize)
   \item{timeseries}{A vector or univariate time series from which the sliding windows are to be extracted.
 %%     ~~Describe \code{timeseries} here~~
 }
-  \item{swSize}{Numeric value of the required size/length of each sliding window.
+  \item{swSize}{Numeric value of the required size (length) of each sliding window.
 %%     ~~Describe \code{timeseries.cont} here~~
 }
 }
