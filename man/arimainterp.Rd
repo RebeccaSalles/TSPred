@@ -57,8 +57,10 @@ Rebecca Pontes Salles
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+\dontrun{
 data(CATS)
 arimainterp(CATS[,c(2:3)],n.ahead=20,extrap=TRUE)
+}
 %%##---- Should be DIRECTLY executable !! ----
 %%##-- ==>  Define data, use random,
 %%##--	or do  help(data=index)  for the standard data sets.

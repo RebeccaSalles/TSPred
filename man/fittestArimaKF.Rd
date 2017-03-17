@@ -74,6 +74,7 @@ pred <- fArimaKF$pred
 #model information
 fArimaKF$rank[1,]
 
+\dontrun{
 #extracting Kalman filtered and smoothed time series from the best fitted model
 fs <- KFAS::KFS(fArimaKF$model,filtering=c("state","mean"),smoothing=c("state","mean"))
 f <- fitted(fs, filtered = TRUE) #Kalman filtered time  series
@@ -90,6 +91,7 @@ lines(ts(pred[,1],start=981),lwd=2,col='blue')
 #plotting estimated standard errors (confidence interval)
 lines(ts(pred[,1]+pred[,4],start=981),lwd=2,col='light blue')
 lines(ts(pred[,1]-pred[,4],start=981),lwd=2,col='light blue')
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -72,6 +72,7 @@ Rebecca Pontes Salles
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+\dontrun{
 data(CATS,CATS.cont)
 fPolyRKF <- fittestPolyRKF(CATS[,1],CATS.cont[,1], maxorder=5, se.fit=TRUE, filtered=TRUE)
 #predicted values and estimated standard errors
@@ -95,6 +96,7 @@ lines(ts(pred[,1],start=981),lwd=2,col='blue')
 #plotting estimated standard errors (confidence interval)
 lines(ts(pred[,1]+pred[,4],start=981),lwd=2,col='light blue')
 lines(ts(pred[,1]-pred[,4],start=981),lwd=2,col='light blue')
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

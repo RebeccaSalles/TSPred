@@ -57,6 +57,7 @@ Rebecca Pontes Salles
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+\dontrun{
 data(CATS,CATS.cont)
 fArima <- fittestArima(CATS[,1],CATS.cont[,1], se.fit=TRUE)
 #predicted values
@@ -76,6 +77,7 @@ lines(ts(pred,start=981),lwd=2,col='blue')
 #plotting the estimated standard errors (confidence interval)
 lines(ts(pred+se,start=981),lwd=2,col='light blue')
 lines(ts(pred-se,start=981),lwd=2,col='light blue')
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
