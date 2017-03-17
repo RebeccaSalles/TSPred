@@ -17,7 +17,7 @@
 \details{One of the benchmarks of the Santa Fe Time Series Competition, time series D, is composed of a four-dimensional nonlinear time series with non-stationary properties and 100,000 observations. Competitors were asked to correctly predict the next 500 observations of this time series (\code{\link{SantaFe.D.cont}}). The performance evaluation done by the Santa Fe Competition was based on the NMSE errors of prediction found by the competitors.
 %%  ~~ If necessary, more details than the __description__ above ~~
 }
-\source{The Santa Fe Time Series Competition Data, URL: \url{http://www-psych.stanford.edu/~andreas/Time-Series/SantaFe.html}.
+\source{The Santa Fe Time Series Competition Data, URL: \url{http://www.comp-engine.org/timeseries/time-series_data_source/source-151/}.
 %%  ~~ reference to a publication or URL from which the data were obtained ~~
 }
 \references{A.S. Weigend, 1993, Time Series Prediction: Forecasting The Future And Understanding The Past. Reading, MA, Westview Press.

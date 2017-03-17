@@ -64,6 +64,7 @@ Rebecca Pontes Salles <rebeccapsalles@acm.org> and Eduardo Ogasawara from CEFET/
 }
 \examples{
 #======== Fittest linear model ========
+\dontrun{
 data(CATS,CATS.cont)
 fittest <- fittestLM(CATS[,1],CATS.cont[,1], maxorder=5, se.fit=TRUE, filtered=TRUE)
 
@@ -72,6 +73,7 @@ fittest$rank[1,]
 
 #predictions of the fittest model
 fittest$ranked.results[[1]]$pred
+}
 #======== ===================== ========
 
 #======== ARIMA fitting and prediction ========
@@ -83,7 +85,7 @@ arimapred(SantaFe.A[,1],n.ahead=100)
 #Example 2 - allowing the prediction of multiple univariate time series
 marimapred(SantaFe.A,SantaFe.A.cont)
 
-
+\dontrun{
 #Example 3 - automatic fitting, prediction and accuracy evaluation
 data(CATS,CATS.cont)
 fArima <- fittestArima(CATS[,1],CATS.cont[,1], se.fit=TRUE)
@@ -175,6 +177,7 @@ lines(ts(pred[,1],start=981),lwd=2,col='blue')
 #plotting estimated standard errors (confidence interval)
 lines(ts(pred[,1]+pred[,4],start=981),lwd=2,col='light blue')
 lines(ts(pred[,1]-pred[,4],start=981),lwd=2,col='light blue')
+}
 #======== ============================================ ========
 %%~~ simple examples of the most important functions ~~
 }

@@ -17,7 +17,7 @@
 \details{The main benchmark of the Santa Fe Time Series Competition, time series A, is composed of a clean low-dimensional nonlinear and stationary time series with 1,000 observations. Competitors were asked to correctly predict the next 100 observations (\code{\link{SantaFe.A.cont}}). The performance evaluation done by the Santa Fe Competition was based on the NMSE errors of prediction found by the competitors.
 %%  ~~ If necessary, more details than the __description__ above ~~
 }
-\source{The Santa Fe Time Series Competition Data, URL: \url{http://www-psych.stanford.edu/~andreas/Time-Series/SantaFe.html}.
+\source{The Santa Fe Time Series Competition Data, URL: \url{http://www.comp-engine.org/timeseries/time-series_data_source/source-151/}.
 %%  ~~ reference to a publication or URL from which the data were obtained ~~
 }
 \references{A.S. Weigend, 1993, Time Series Prediction: Forecasting The Future And Understanding The Past. Reading, MA, Westview Press.

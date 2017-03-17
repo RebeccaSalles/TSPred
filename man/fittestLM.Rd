@@ -53,6 +53,7 @@ Rebecca Pontes Salles
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+\dontrun{
 data(CATS,CATS.cont)
 fittest <- fittestLM(CATS[,1],CATS.cont[,1], maxorder=5, se.fit=TRUE, filtered=TRUE)
 
@@ -61,6 +62,7 @@ fittest$rank[1,]
 
 #predictions of the fittest model
 fittest$ranked.results[[1]]$pred
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

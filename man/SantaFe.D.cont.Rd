@@ -17,7 +17,7 @@
 \details{Contains the 500 observations which were to be predicted of the time series D (\code{\link{SantaFe.D}}) as demanded by the Santa Fe Time Series Competition.
 %%  ~~ If necessary, more details than the __description__ above ~~
 }
-\source{The Santa Fe Time Series Competition Data, URL: \url{http://www-psych.stanford.edu/~andreas/Time-Series/SantaFe.html}.
+\source{The Santa Fe Time Series Competition Data, URL: \url{http://www.comp-engine.org/timeseries/time-series_data_source/source-151/}.
 %%  ~~ reference to a publication or URL from which the data were obtained ~~
 }
 \references{A.S. Weigend, 1993, Time Series Prediction: Forecasting The Future And Understanding The Past. Reading, MA, Westview Press.
