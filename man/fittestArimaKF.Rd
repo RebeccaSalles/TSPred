@@ -67,6 +67,7 @@ Rebecca Pontes Salles
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+\dontrun{
 data(CATS,CATS.cont)
 fArimaKF <- fittestArimaKF(CATS[,2],CATS.cont[,2], se.fit=TRUE, filtered=TRUE)
 #predicted values and estimated standard errors
@@ -74,7 +75,6 @@ pred <- fArimaKF$pred
 #model information
 fArimaKF$rank[1,]
 
-\dontrun{
 #extracting Kalman filtered and smoothed time series from the best fitted model
 fs <- KFAS::KFS(fArimaKF$model,filtering=c("state","mean"),smoothing=c("state","mean"))
 f <- fitted(fs, filtered = TRUE) #Kalman filtered time  series
