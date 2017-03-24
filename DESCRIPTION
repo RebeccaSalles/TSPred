@@ -1,8 +1,8 @@
 Package: TSPred
 Type: Package
 Title: Functions for Benchmarking Time Series Prediction
-Version: 3.0
-Date: 2017-03-16
+Version: 3.0.1
+Date: 2017-03-24
 Authors@R: c(person(c("Rebecca", "Pontes"),"Salles", role = c("aut", "cre","cph"),email = "rebeccapsalles@acm.org", comment = "CEFET/RJ"),
 			 person("Eduardo","Ogasawara", role = c("ths"),email = "eogasawara@ieee.org", comment = "CEFET/RJ"))
 Author: Rebecca Pontes Salles [aut, cre, cph] (CEFET/RJ), Eduardo Ogasawara [ths] (CEFET/RJ)
@@ -10,4 +10,5 @@ Maintainer: Rebecca Pontes Salles <rebeccapsalles@acm.org>
 Description: Functions for time series prediction and accuracy assessment using automatic linear modelling. The generated linear models and its yielded prediction errors can be used for benchmarking other time series prediction methods and for creating a demand for the refinement of such methods. For this purpose, benchmark data from prediction competitions may be used.
 Imports: forecast, KFAS, stats, MuMIn
 License: GPL (>= 2)
+BugReports: https://github.com/RebeccaSalles/TSPred/issues
 URL: https://sourceforge.net/p/gpca/wiki/TSPred/

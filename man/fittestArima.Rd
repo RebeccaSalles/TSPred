@@ -9,7 +9,7 @@ The function predicts and returns the next n consecutive values of a univariate 
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-fittestArima(timeseries, timeseries.test, na.action = na.omit, se.fit = FALSE)
+fittestArima(timeseries, timeseries.test, na.action = na.omit)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,11 +22,9 @@ fittestArima(timeseries, timeseries.test, na.action = na.omit, se.fit = FALSE)
   \item{na.action}{A function for treating missing values in \code{timeseries} and \code{timeseries.test}. The default function is \code{\link{na.omit}}, which omits any missing values found in \code{timeseries} or \code{timeseries.test}.
 %%     ~~Describe \code{na.action} here~~
 }
-  \item{se.fit}{If \code{se.fit} is \code{TRUE}, the standard errors of the predictions are returned.
-%%     ~~Describe \code{se.fit} here~~
 }
-}
-\details{The ARIMA model used for time series prediction is automatically fitted by the \code{\link{auto.arima}} function in the \code{forecast} package. The fitted ARIMA model is used for prediction by the \code{\link{predict.Arima}} function in the \code{stats} package.
+\details{The ARIMA model is automatically fitted by the \code{\link{auto.arima}} function and it is used for prediction by the \code{\link{forecast}} function both in the \code{forecast} package.
+
 The fitness criteria AICc, AIC (\code{\link{AIC}}), BIC (\code{\link{BIC}}) and log-likelihood (\code{\link{logLik}}) are extracted from the fitted ARIMA model. Also, the prediction accuracy of the model is computed by means of MSE (\code{\link{MSE}}), NMSE (\code{\link{NMSE}}), MAPE (\code{\link{MAPE}}), sMAPE (\code{\link{sMAPE}}) and maximal error (\code{\link{MAXError}}) measures.
 %%  ~~ If necessary, more details than the description above ~~
 }
@@ -36,7 +34,7 @@ The fitness criteria AICc, AIC (\code{\link{AIC}}), BIC (\code{\link{BIC}}) and 
 \item{AIC}{Numeric value of the computed AIC criterion of the fitted model.}
 \item{BIC}{Numeric value of the computed BIC criterion of the fitted model.}
 \item{logLik}{Numeric value of the computed log-likelihood of the fitted model.}
-\item{pred}{A time series of predictions, or if \code{se.fit} is \code{TRUE}, a list with the components \code{pred}, the predictions, and \code{se}, the estimated standard errors. Both components are time series. See the \code{\link{predict.Arima}} function in the stats package.}
+\item{pred}{A list with the components \code{pred}, \code{lower} and \code{upper}, containing the predictions and the lower and upper limits for prediction intervals, respectively. All components are time series. See the \code{\link{forecast}} function in the \code{forecast} package.}
 \item{MSE}{Numeric value of the resulting MSE error of prediction.}
 \item{NMSE}{Numeric value of the resulting NMSE error of prediction.}
 \item{MAPE}{Numeric value of the resulting MAPE error of prediction.}
@@ -59,11 +57,9 @@ Rebecca Pontes Salles
 \examples{
 \dontrun{
 data(CATS,CATS.cont)
-fArima <- fittestArima(CATS[,1],CATS.cont[,1], se.fit=TRUE)
+fArima <- fittestArima(CATS[,1],CATS.cont[,1])
 #predicted values
 pred <- fArima$pred$pred
-#estimated standard errors
-se <- fArima$pred$se
 #model information
 cbind(AICc=fArima$AICc, AIC=fArima$AIC, BIC=fArima$BIC,
  logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE, 
@@ -74,9 +70,9 @@ plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),
  xlab="Time",ylab="ARIMA")
 #plotting the predicted values
 lines(ts(pred,start=981),lwd=2,col='blue')
-#plotting the estimated standard errors (confidence interval)
-lines(ts(pred+se,start=981),lwd=2,col='light blue')
-lines(ts(pred-se,start=981),lwd=2,col='light blue')
+#plotting the confidence interval
+lines(ts(fArima$pred$upper[,2],start=981),lwd=2,col='light blue')
+lines(ts(fArima$pred$lower[,2],start=981),lwd=2,col='light blue')
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

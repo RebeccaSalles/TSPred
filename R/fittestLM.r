@@ -2,7 +2,7 @@ fittestLM <-
 function(timeseries, timeseries.test, maxorder=5, na.action=na.omit, se.fit=FALSE, filtered=TRUE){
   if(is.null(timeseries) || is.null(timeseries.test) ) stop("timeseries and timeseries.test are required and must have positive length")
   
-  oa <- fittestArima(timeseries, timeseries.test, na.action=na.action, se.fit=se.fit)
+  oa <- fittestArima(timeseries, timeseries.test, na.action=na.action)
   oaKF <- fittestArimaKF(timeseries, timeseries.test, na.action=na.action, se.fit=se.fit, filtered = filtered)
   opr <- fittestPolyR(timeseries, timeseries.test, maxorder=maxorder, na.action=na.action, se.fit=se.fit)
   oprKF <- fittestPolyRKF(timeseries, timeseries.test, maxorder=maxorder, na.action=na.action, se.fit=se.fit, filtered = filtered)

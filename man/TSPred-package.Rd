@@ -13,11 +13,12 @@ Functions for time series prediction and accuracy assessment using automatic lin
 \tabular{ll}{
 Package: \tab TSPred\cr
 Type: \tab Package\cr
-Version: \tab 3.0\cr
-Date: \tab 2017-03-16\cr
+Version: \tab 3.0.1\cr
+Date: \tab 2017-03-24\cr
 Imports: \tab forecast, KFAS, stats, MuMIn\cr
 LinkingTo: \tab dlmodeler\cr
 License: \tab GPL (>= 2)\cr
+BugReports: \tab \url{https://github.com/RebeccaSalles/TSPred/issues}\cr
 URL: \tab \url{https://sourceforge.net/p/gpca/wiki/TSPred/}\cr
 }
 \describe{
@@ -88,14 +89,12 @@ marimapred(SantaFe.A,SantaFe.A.cont)
 \dontrun{
 #Example 3 - automatic fitting, prediction and accuracy evaluation
 data(CATS,CATS.cont)
-fArima <- fittestArima(CATS[,1],CATS.cont[,1], se.fit=TRUE)
+fArima <- fittestArima(CATS[,1],CATS.cont[,1])
 #predicted values
 pred <- fArima$pred$pred
-#estimated standard errors
-se <- fArima$pred$se
 #model information
 cbind(AICc=fArima$AICc, AIC=fArima$AIC, BIC=fArima$BIC,
- logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE,
+ logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE, 
  MAPE=fArima$MSE, sMAPE=fArima$MSE, MaxError=fArima$MaxError)
 
 #plotting the time series data
@@ -103,9 +102,9 @@ plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),
  xlab="Time",ylab="ARIMA")
 #plotting the predicted values
 lines(ts(pred,start=981),lwd=2,col='blue')
-#plotting the estimated standard errors (confidence interval)
-lines(ts(pred+se,start=981),lwd=2,col='light blue')
-lines(ts(pred-se,start=981),lwd=2,col='light blue')
+#plotting the confidence interval
+lines(ts(fArima$pred$upper[,2],start=981),lwd=2,col='light blue')
+lines(ts(fArima$pred$lower[,2],start=981),lwd=2,col='light blue')
 
 
 #Example 4 - automatic fitting with Kalman filter, prediction and accuracy evaluation

@@ -1,5 +1,5 @@
 fittestArima <- 
-function(timeseries, timeseries.test, na.action=na.omit, se.fit=FALSE){
+function(timeseries, timeseries.test, na.action=na.omit){
   
   if(is.null(timeseries) || is.null(timeseries.test) ) stop("timeseries and timeseries.test are required and must have positive length")
   
@@ -18,10 +18,10 @@ function(timeseries, timeseries.test, na.action=na.omit, se.fit=FALSE){
   ll <- fitARIMA$loglik
   
   #Prediction errors
-  prediction <- predict(fitARIMA, n.ahead=n.ahead,se.fit=se.fit)
+  prediction <- forecast::forecast(fitARIMA, h=n.ahead)
+  prediction <- list(pred=prediction$mean,lower=prediction$lower,upper=prediction$upper)
 
-  if(se.fit) pred <- ts(prediction$pred,start=(nobs+1))
-  else pred <- ts(prediction,start=(nobs+1))
+  pred <- ts(prediction$pred,start=(nobs+1))
   
   MSE <- TSPred::MSE(ts.test, pred)
   NMSE <- TSPred::NMSE(ts.test, pred, ts)
