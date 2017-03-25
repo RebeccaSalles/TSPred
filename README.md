@@ -6,7 +6,7 @@
 
 ## TSPred Package for R : Functions for Benchmarking Time Series Prediction
 
-__Current Version:__ 3.0
+__Current Version:__ 3.0.1
 __Date:__ 2017-03
 
 __Authors:__ Rebecca Pontes Salles (<rebeccapsalles@acm.org>) and Eduardo Ogasawara (<eogasawara@ieee.org>)
@@ -69,7 +69,7 @@ __Acknowledgements:__ The authors thank CNPq for partially sponsoring this work.
 ##### 4 - Automatic fitting, prediction and accuracy evaluation:
 ~~~~~~
 > data(CATS,CATS.cont)
-> fArima <- fittestArima(CATS[,1],CATS.cont[,1], se.fit=TRUE)
+> fArima <- fittestArima(CATS[,1],CATS.cont[,1])
 #predicted values
 > pred <- fArima$pred$pred
 #model information
