@@ -13,8 +13,8 @@ Functions for time series prediction and accuracy assessment using automatic lin
 \tabular{ll}{
 Package: \tab TSPred\cr
 Type: \tab Package\cr
-Version: \tab 3.0.1\cr
-Date: \tab 2017-03-24\cr
+Version: \tab 3.0.2\cr
+Date: \tab 2017-04-05\cr
 Imports: \tab forecast, KFAS, stats, MuMIn\cr
 LinkingTo: \tab dlmodeler\cr
 License: \tab GPL (>= 2)\cr
