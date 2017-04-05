@@ -9,7 +9,7 @@ The function predicts and returns the next n consecutive values of a univariate 
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-fittestPolyR(timeseries, timeseries.test, maxorder = 5, na.action = na.omit,
+fittestPolyR(timeseries, timeseries.test, minorder = 0, maxorder = 5, na.action = na.omit,
 se.fit = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -19,6 +19,9 @@ se.fit = FALSE)
 }
   \item{timeseries.test}{A vector or univariate time series containing a continuation for \code{timeseries} with actual values. The number of consecutive values to be predicted is assumed to be equal to the length of \code{timeseries.test}. It is used as a testing set and base for calculation of prediction error measures.
 %%     ~~Describe \code{timeseries.cont} here~~
+}
+  \item{minorder}{A numeric integer value corresponding to the minimum order of polynomial regression to be fitted and evaluated.
+%%     ~~Describe \code{minorder} here~~
 }
   \item{maxorder}{A numeric integer value corresponding to the maximal order of polynomial regression to be fitted and evaluated.
 %%     ~~Describe \code{maxorder} here~~
@@ -30,7 +33,7 @@ se.fit = FALSE)
 %%     ~~Describe \code{se.fit} here~~
 }
 }
-\details{A set with possible polynomial regression models of orders from 0 to \code{maxorder} is generated with help from the \code{\link{dredge}} function from the \code{MuMIn} package.
+\details{A set with possible polynomial regression models of orders from \code{minorder} to \code{maxorder} is generated with help from the \code{\link{dredge}} function from the \code{MuMIn} package.
 
 The set of generated models are used for time series prediction. Fitness measures (AICc, AIC, BIC, log-likelihood) and prediction accuracy measures (MSE, NMSE, MAPE, sMAPE, maximal error) are calculated for each model.
 
