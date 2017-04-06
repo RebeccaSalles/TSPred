@@ -6,8 +6,8 @@
 
 ## TSPred Package for R : Functions for Benchmarking Time Series Prediction
 
-__Current Version:__ 3.0.1
-__Date:__ 2017-03
+__Current Version:__ 3.0.2
+__Date:__ 2017-04
 
 __Authors:__ Rebecca Pontes Salles (<rebeccapsalles@acm.org>) and Eduardo Ogasawara (<eogasawara@ieee.org>)
  
