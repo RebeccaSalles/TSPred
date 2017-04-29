@@ -103,19 +103,3 @@ __Acknowledgements:__ The authors thank CNPq for partially sponsoring this work.
 #model information
 > fPolyRKF$rank[1,]
 ~~~~~~
-
----
-Developed Baseline Evaluation Processes:
---
-The TSPred R-Package enables the evaluation of time series prediction methods against ARIMA. ARIMA establishes a baseline linear prediction model that can be consistently used to compare with several other machine learning methods. In order to aid such comparision, we have included some benchmark prediction competition datasets. Some of the cited evaluation processes with respect to 5 of the most important time series prediction competitions organized so far are presented in the following.
-
-* __[The Santa Fe Time Series Competition Experiment](https://sourceforge.net/p/gpca/wiki/Santa%20Fe%20Competition/)__
-* __[The EUNITE Competition Experiment](https://sourceforge.net/p/gpca/wiki/EUNITE%20Competition/)__
-* __[The CATS Competition Experiment](https://sourceforge.net/p/gpca/wiki/CATS%20Competition/)__
-* __[The NN3 / NN5 Competition Experiment](https://sourceforge.net/p/gpca/wiki/NN3-NN5%20Competition/)__
-
-These competitions were adopted as they maintain their datasets and results available, besides making accessible the papers of a large number of competitors, which describe their applied methods. The works presented in them comprehend a large variety of machine learning methods, which demonstrate great efforts done by the community of scientists on the time series prediction problem through years.
-
-Furthermore, all the selected competitions provide free and easy access to the performance evaluation metrics used, as well as the ranked prediction errors found by each of their 125 competitors. This enabled us to compare the prediction errors and performance of the competitors’ methods against the baseline. Thus, the test and analysis of prediction results is facilitated.
-
-These selected benchmarks differ from each other in many aspects, such as number of time series and their length, number of observations to be predicted, seasonality, missing data, prediction error metrics, etc.
