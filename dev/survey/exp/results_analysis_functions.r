@@ -1,5 +1,5 @@
 #Pacotes necessarios
-#install.packages(c("TSPred","KFAS","MuMIn","openair","ggplot2","ggcorrplot"))
+#install.packages(c("TSPred","KFAS","MuMIn","openair","ggplot2","ggcorrplot","Cairo","plyr"))
 #devtools::install_github("vsimko/corrplot")
 
 #Analysis of fittness and prediction of many series and taylor diagram generation
