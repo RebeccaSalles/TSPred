@@ -104,7 +104,7 @@ plotTransformStats <- function(stats){
     file_name <- paste("correlogram_",metric,".pdf",sep="")
     CairoPDF(file_name,width=10,height=8)
     corrplot(as.matrix(stats[[metric]]), p.mat=as.matrix(stats[[metric]]), addCoef.col="black", number.cex=.9, 
-             sig.level=0.05, insig="label_sig", pch="□",pch.cex=6, method="color", is.corr=FALSE, order="FPC",
+             sig.level=0.05, insig="label_sig", pch="\u{25a1}",pch.cex=6, method="color", is.corr=FALSE, order="FPC",
              col=col, cl.lim=c(0,1), tl.col="black", cl.length=11, cl.cex = 1.1, tl.cex=1.3)
     dev.off()
   }
@@ -139,77 +139,28 @@ plotTransformWins <- function(results,top=5){
 
 
 #plot barplot with the number of times each transform had errors "statistically" smaller than other transforms
-plotTransformWinsStats <- function(stats){
+plotTransformWinsStats <- function(stats,metric="MSE"){
   require(ggplot2)
   wins <- NULL
-  for(metric in names(stats)){
-    for(t in rownames(stats[[metric]])){
-      wins <- rbind(data.frame(wins),
-                    cbind(Metric=metric, Transform=t,
-                          Wins=as.double(sum(stats[[metric]][t,]<0.05, na.rm=TRUE))) )
-    }
+  
+  for(t in rownames(stats[[metric]])){
+    wins <- rbind(data.frame(wins),
+                  cbind(Metric=metric, Transform=t,
+                        Wins=as.double(sum(stats[[metric]][t,]<0.05, na.rm=TRUE))) )
   }
   wins$Wins <- as.numeric(levels(wins$Wins))[wins$Wins]
   names(wins$Metric) <- "NULL"
   names(wins$Transform) <- "NULL"
   
-  
-  # Function to calculate the mean and the standard deviation for each group
-  # data : a data frame
-  # varname : the name of a column containing the variable to be summariezed
-  # groupnames : vector of column names to be used as grouping variables
-  data_summary <- function(data, varname, groupnames){
-    require(plyr)
-    summary_func <- function(x, col){
-      c(mean = mean(x[[col]], na.rm=TRUE),
-        sd = sd(x[[col]], na.rm=TRUE))
-    }
-    data_sum<-ddply(data, groupnames, .fun=summary_func,
-                    varname)
-    data_sum <- rename(data_sum, c("mean" = varname))
-    return(data_sum)
-  }
-
-  wins_summ <- data_summary(wins[(wins$Metric %in% c("AICc","AIC","BIC","logLik")),], varname="Wins", groupnames=c("Transform"))
-  barplot.fit <- ggplot(wins_summ, aes(x=Transform, y=Wins)) + 
-    geom_bar(position=position_dodge(), stat="identity",
-             fill="#007FFF",
-             size=.3) +      # Thinner lines
-    geom_errorbar(aes(ymin=Wins-sd, ymax=Wins+sd),
-                  size=.3,    # Thinner lines
-                  width=.2,
-                  position=position_dodge(.9)) +
-    xlab("Transform") +
-    ylab("Wins") +
-    ggtitle("# transforms \"beaten\" in statistical tests of fitness measures (AICc,AIC,BIC,logLik)") +
-    scale_y_continuous(breaks=0:20*4) +
-    theme_bw()
-  
-  wins_summ <- data_summary(wins[(wins$Metric %in% c("MSE","NMSE","MAPE","sMAPE","MaxError")),], varname="Wins", groupnames=c("Transform"))
-  barplot.err <- ggplot(wins_summ, aes(x=Transform, y=Wins)) + 
-    geom_bar(position=position_dodge(), stat="identity",
-             fill="#007FFF",
-             size=.3) +      # Thinner lines
-    geom_errorbar(aes(ymin=Wins-sd, ymax=Wins+sd),
-                  size=.3,    # Thinner lines
-                  width=.2,
-                  position=position_dodge(.9)) +
-    xlab("Transform") +
-    ylab("Wins") +
-    ggtitle("# transforms \"beaten\" in statistical tests of prediction error measures (MSE,NMSE,MAPE,sMAPE,MaxError)") +
-    scale_y_continuous(breaks=0:20*4) +
-    theme_bw()
-  
-  wins_summ <- data_summary(wins[(wins$Metric %in% c("TSPredC")),], varname="Wins", groupnames=c("Transform"))
-  barplot.tspredc <- ggplot(wins_summ, aes(x=Transform, y=Wins)) + 
+  barplot.err <- ggplot(wins, aes(x=Transform, y=Wins)) + 
     geom_bar(position=position_dodge(), stat="identity",
              fill="#007FFF",
              size=.3) +      # Thinner lines
     xlab("Transform") +
     ylab("Wins") +
-    ggtitle("# transforms \"beaten\" in statistical tests of the TSPredC measure") +
+    ggtitle(paste("# transforms \"beaten\" in statistical tests of prediction error measure ",metric,sep="")) +
     scale_y_continuous(breaks=0:20*4) +
     theme_bw()
 
-  return(list(Wins=wins,plots=list(fitness=barplot.fit, errors=barplot.err, TSPredC=barplot.tspredc)))
+  return(list(Wins=wins,plot=barplot.err))
 }

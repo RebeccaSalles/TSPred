@@ -23,13 +23,11 @@ View(stats_NN3$MSE)
 #plot taylor diagrams for the transforms predictions of the series
 TaylorDiag_NN3 <- plotTaylorDiagrams(results_NN3,NN3.A.cont)
 #plot barplot with the number of times each transform was in the top 5 results of the series
-plotwins_NN3 <- plotTransformWins(results_NN3,top=5)$plot
+plotwins_NN3 <- plotTransformWins(results_NN3,top=5)
 plotwins_NN3$plot
 #plot barplot with the number of times each transform had errors "statistically" smaller than other transform
-plotwinsStats_NN3 <- plotTransformWinsStats(stats_NN3)
-plotwinsStats_NN3$plots$errors
-plotwinsStats_NN3$plots$fitness
-plotwinsStats_NN3$plots$TSPredC
+plotwinsStats_NN3 <- plotTransformWinsStats(stats_NN3,metric="MSE")
+plotwinsStats_NN3$plot
 #Plot and save "correlograms" with the p-values resulting from resultsExpStats
 plotTransformStats(stats_NN3)
 
@@ -49,13 +47,11 @@ View(stats_NN5$MSE)
 #plot taylor diagrams for the transforms predictions of the series
 TaylorDiag_NN5 <- plotTaylorDiagrams(results_NN5,NN5.A.cont)
 #plot barplot with the number of times each transform was in the top 5 results of the series
-plotwins_NN5 <- plotTransformWins(results_NN5,top=5)$plot
+plotwins_NN5 <- plotTransformWins(results_NN5,top=5)
 plotwins_NN5$plot
 #plot barplot with the number of times each transform had errors "statistically" smaller than other transform
-plotwinsStats_NN5 <- plotTransformWinsStats(stats_NN5)
-plotwinsStats_NN5$plots$errors
-plotwinsStats_NN5$plots$fitness
-plotwinsStats_NN5$plots$TSPredC
+plotwinsStats_NN5 <- plotTransformWinsStats(stats_NN5,metric="MSE")
+plotwinsStats_NN5$plot
 #Plot "correlogram" with the p-values resulting from resultsExpStats
 plotTransformStats(stats_NN5)
 
@@ -75,13 +71,11 @@ View(stats_CATS$MSE)
 #plot taylor diagrams for the transforms predictions of the series
 TaylorDiag_CATS <- plotTaylorDiagrams(results_CATS,CATS.cont)
 #plot barplot with the number of times each transform was in the top 5 results of the series
-plotwins_CATS <- plotTransformWins(results_CATS,top=5)$plot
+plotwins_CATS <- plotTransformWins(results_CATS,top=5)
 plotwins_CATS$plot
 #plot barplot with the number of times each transform had errors "statistically" smaller than other transform
-plotwinsStats_CATS <- plotTransformWinsStats(stats_CATS)
-plotwinsStats_CATS$plots$errors
-plotwinsStats_CATS$plots$fitness
-plotwinsStats_CATS$plots$TSPredC
+plotwinsStats_CATS <- plotTransformWinsStats(stats_CATS,metric="MSE")
+plotwinsStats_CATS$plot
 #Plot "correlogram" with the p-values resulting from resultsExpStats
 plotTransformStats(stats_CATS)
 
@@ -108,22 +102,18 @@ View(stats_ipeadata_m$MSE)
 #plot taylor diagrams for the transforms predictions of the series
 TaylorDiag_ipeadata_d <- plotTaylorDiagrams(results_ipeadata_d,ipeadata_d.cont)
 #plot barplot with the number of times each transform was in the top 5 results of the series
-plotwins_ipeadata_d <- plotTransformWins(results_ipeadata_d,top=5)$plot
+plotwins_ipeadata_d <- plotTransformWins(results_ipeadata_d,top=5)
 plotwins_ipeadata_d$plot
 #plot taylor diagrams for the transforms predictions of the series
 TaylorDiag_ipeadata_m <- plotTaylorDiagrams(results_ipeadata_m,ipeadata_m.cont)
 #plot barplot with the number of times each transform was in the top 5 results of the series
-plotwins_ipeadata_m <- plotTransformWins(results_ipeadata_m,top=5)$plot
+plotwins_ipeadata_m <- plotTransformWins(results_ipeadata_m,top=5)
 plotwins_ipeadata_m$plot
 #plot barplot with the number of times each transform had errors "statistically" smaller than other transform
-plotwinsStats_ipeadata_d <- plotTransformWinsStats(stats_ipeadata_d)
-plotwinsStats_ipeadata_d$plots$errors
-plotwinsStats_ipeadata_d$plots$fitness
-plotwinsStats_ipeadata_d$plots$TSPredC
-plotwinsStats_ipeadata_m <- plotTransformWinsStats(stats_ipeadata_m)
-plotwinsStats_ipeadata_m$plots$errors
-plotwinsStats_ipeadata_m$plots$fitness
-plotwinsStats_ipeadata_m$plots$TSPredC
+plotwinsStats_ipeadata_d <- plotTransformWinsStats(stats_ipeadata_d,metric="MSE")
+plotwinsStats_ipeadata_d$plot
+plotwinsStats_ipeadata_m <- plotTransformWinsStats(stats_ipeadata_m,metric="MSE")
+plotwinsStats_ipeadata_m$plot
 #Plot "correlogram" with the p-values resulting from resultsExpStats
 plotTransformStats(stats_ipeadata_d)
 plotTransformStats(stats_ipeadata_m)
