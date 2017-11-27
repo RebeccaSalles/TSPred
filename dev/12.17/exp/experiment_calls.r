@@ -37,6 +37,14 @@ file_name <- "transformWinsStats_NN3.pdf"
 CairoPDF(file_name,width=7,height=6)
 plotwinsStats_NN3$plot
 dev.off()
+#plot scatter plot with the number of times each transform was in the top results of the series and
+#also the number of times each transform had errors "statistically" smaller than other transforms
+plotAllwins_NN3 <- plotAllWins(results=results_NN3,top=5,stats=stats_NN3,metric="MSE")
+plotAllwins_NN3$plot
+file_name <- "allTransformWins_NN3.pdf"
+CairoPDF(file_name,width=7,height=6)
+plotAllwins_NN3$plot
+dev.off()
 #Plot and save "correlograms" with the p-values resulting from resultsExpStats
 plotTransformStats(stats_NN3)
 
@@ -69,6 +77,14 @@ file_name <- "transformWinsStats_NN5.pdf"
 CairoPDF(file_name,width=7,height=6)
 plotwinsStats_NN5$plot
 dev.off()
+#plot scatter plot with the number of times each transform was in the top results of the series and
+#also the number of times each transform had errors "statistically" smaller than other transforms
+plotAllwins_NN5 <- plotAllWins(results=results_NN5,top=5,stats=stats_NN5,metric="MSE")
+plotAllwins_NN5$plot
+file_name <- "allTransformWins_NN5.pdf"
+CairoPDF(file_name,width=7,height=6)
+plotAllwins_NN5$plot
+dev.off()
 #Plot "correlogram" with the p-values resulting from resultsExpStats
 plotTransformStats(stats_NN5)
 
@@ -100,6 +116,14 @@ plotwinsStats_CATS$plot
 file_name <- "transformWinsStats_CATS.pdf"
 CairoPDF(file_name,width=7,height=6)
 plotwinsStats_CATS$plot
+dev.off()
+#plot scatter plot with the number of times each transform was in the top results of the series and
+#also the number of times each transform had errors "statistically" smaller than other transforms
+plotAllwins_CATS <- plotAllWins(results=results_CATS,top=5,stats=stats_CATS,metric="MSE")
+plotAllwins_CATS$plot
+file_name <- "allTransformWins_CATS.pdf"
+CairoPDF(file_name,width=7,height=6)
+plotAllwins_CATS$plot
 dev.off()
 #Plot "correlogram" with the p-values resulting from resultsExpStats
 plotTransformStats(stats_CATS)
@@ -134,6 +158,14 @@ file_name <- "transformWinsStats_ipeadata_d.pdf"
 CairoPDF(file_name,width=7,height=6)
 plotwinsStats_ipeadata_d$plot
 dev.off()
+#plot scatter plot with the number of times each transform was in the top results of the series and
+#also the number of times each transform had errors "statistically" smaller than other transforms
+plotAllwins_ipeadata_d <- plotAllWins(results=results_ipeadata_d,top=5,stats=stats_ipeadata_d,metric="MSE")
+plotAllwins_ipeadata_d$plot
+file_name <- "allTransformWins_ipeadata_d.pdf"
+CairoPDF(file_name,width=7,height=6)
+plotAllwins_ipeadata_d$plot
+dev.off()
 #Plot "correlogram" with the p-values resulting from resultsExpStats
 plotTransformStats(stats_ipeadata_d)
 
@@ -165,6 +197,14 @@ plotwinsStats_ipeadata_m$plot
 file_name <- "transformWinsStats_ipeadata_m.pdf"
 CairoPDF(file_name,width=7,height=6)
 plotwinsStats_ipeadata_m$plot
+dev.off()
+#plot scatter plot with the number of times each transform was in the top results of the series and
+#also the number of times each transform had errors "statistically" smaller than other transforms
+plotAllwins_ipeadata_m <- plotAllWins(results=results_ipeadata_m,top=5,stats=stats_ipeadata_m,metric="MSE")
+plotAllwins_ipeadata_m$plot
+file_name <- "allTransformWins_ipeadata_m.pdf"
+CairoPDF(file_name,width=7,height=6)
+plotAllwins_ipeadata_m$plot
 dev.off()
 #Plot "correlogram" with the p-values resulting from resultsExpStats
 plotTransformStats(stats_ipeadata_m)

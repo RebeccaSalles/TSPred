@@ -109,8 +109,8 @@ plotTransformStats <- function(stats){
     
     file_name <- paste("correlogram_",metric,".pdf",sep="")
     CairoPDF(file_name,width=10,height=8)
-    corrplot(as.matrix(stats[[metric]]), p.mat=as.matrix(stats[[metric]]), addCoef.col="black", number.cex=.9, 
-             sig.level=0.05, insig="label_sig", pch="\u{25a1}",pch.cex=6, method="color", is.corr=FALSE, order="FPC",
+    corrplot(as.matrix(stats[[metric]]), p.mat=as.matrix(stats[[metric]]), addCoef.col="black", number.cex=.7, 
+             sig.level=0.05, insig="label_sig", pch="\u{25a1}",pch.cex=5, method="color", is.corr=FALSE, order="FPC",
              col=col, cl.lim=c(0,1), tl.col="black", cl.length=11, cl.cex = 1.1, tl.cex=1.3)
     dev.off()
   }
@@ -130,15 +130,16 @@ plotTransformWins <- function(results,top=5){
   topWins <- count(topTrans)
   names(topWins) <- c("Transform","Wins")
   
-  barplot.wins <- ggplot(topWins, aes(x=Transform, y=Wins)) + 
+  barplot.wins <- ggplot(topWins, aes(x=reorder(Transform, Wins), y=Wins)) + 
     geom_bar(position=position_dodge(), stat="identity",
              fill="#007FFF",
              size=.3) +
     xlab("Transform") +
     ylab("Wins") +
-    ggtitle(paste("# of times each transform was in the top ",top," results of the time series",sep="")) +
+    ggtitle(paste("Presence in the top ",top," results of the time series",sep="")) +
     scale_y_continuous(breaks=0:20*4) +
-    theme_bw()
+    theme_bw() +
+    theme(plot.title = element_text(hjust = 0.5))
 
   return(list(Wins=topWins,plot=barplot.wins))
 }
@@ -158,15 +159,66 @@ plotTransformWinsStats <- function(stats,metric="MSE"){
   names(wins$Metric) <- "NULL"
   names(wins$Transform) <- "NULL"
   
-  barplot.err <- ggplot(wins, aes(x=Transform, y=Wins)) + 
+  barplot.err <- ggplot(wins, aes(x=reorder(Transform, Wins), y=Wins)) + 
     geom_bar(position=position_dodge(), stat="identity",
              fill="#007FFF",
              size=.3) +      # Thinner lines
     xlab("Transform") +
     ylab("Wins") +
-    ggtitle(paste("# transforms \"beaten\" in statistical tests of prediction error measure ",metric,sep="")) +
+    ggtitle(paste("Statistically significant prediction improvements against other transforms\n(based on ",metric," errors)",sep="")) +
     scale_y_continuous(breaks=0:20*1) +
-    theme_bw()
+    theme_bw() +
+    theme(plot.title = element_text(hjust = 0.5))
 
   return(list(Wins=wins,plot=barplot.err))
+}
+
+
+#plot scatter plot with the number of times each transform was in the top results of the series and
+#also the number of times each transform had errors "statistically" smaller than other transforms
+plotAllWins <- function(results,top=5,stats,metric="MSE"){
+  require(ggplot2)
+  require(plyr)
+  require(RColorBrewer)
+  
+  wins <- NULL
+  for(t in rownames(stats[[metric]])){
+    wins <- rbind(data.frame(wins),
+                  cbind(Transform=t,
+                        statsWins=as.double(sum(stats[[metric]][t,]<0.05, na.rm=TRUE))) )
+  }
+  wins$statsWins <- as.numeric(levels(wins$statsWins))[wins$statsWins]
+  names(wins$Transform) <- "NULL"
+  
+  topTrans <- NULL
+  for(ts in names(results)){
+    topTrans <- c(topTrans,rownames(head(results[[ts]]$rank,top)))
+  }
+  topWins <- count(topTrans)
+  names(topWins) <- c("Transform","topWins")
+  
+  # merge (outer join) the data frames by Transform
+  wins <- merge(wins,topWins,by="Transform", all = TRUE)
+  wins$topWins[is.na(wins$topWins)] <- 0
+  
+  getPalette <- function(colourCount){
+    cols <- suppressWarnings(colorRampPalette(brewer.pal(9, "Set1"), interpolate = "spline"))
+    cols(colourCount)
+  }
+  
+  barplot.wins <- ggplot(wins, aes(x=statsWins, y=topWins, color=Transform)) + 
+    geom_point(shape=16, size=4, # Use filled circles
+               # Jitter the points
+               # Jitter range is 1 on the x-axis, .5 on the y-axis
+               position=position_jitter(width=0.015*max(wins$statsWins),height=0.015*max(wins$topWins))) +
+    scale_color_manual(values=getPalette(nrow(wins))) +
+    xlab(paste("Statistically significant prediction improvements against other transforms\n(based on ",metric," errors)",sep="")) +
+    ylab(paste("Presence in the top ",top," results of the time series",sep="")) +
+    ggtitle("Overall results for each transform") +
+    scale_y_continuous(breaks=0:100*1) +
+    scale_x_continuous(breaks=0:20*1) +
+    theme_bw() +
+    theme(plot.title = element_text(hjust = 0.5))
+  
+  return(list(Wins=wins,plot=barplot.wins))
 }
