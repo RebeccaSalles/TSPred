@@ -12,7 +12,7 @@ TestsAnalysis <- function(y,model){
     
     Norm <- tryCatch( TestsResults[[l]]$Tests$Norm$p.value ,error = function(c) NA)
     
-    MaxDW <- max(TestsResults[[l]]$Tests$DW$p)
+    MinDW <- min(TestsResults[[l]]$Tests$DW$p)
     BG <- TestsResults[[l]]$Tests$BG$p.value
     
     BoxP <- TestsResults[[l]]$Tests$BoxP$p.value
