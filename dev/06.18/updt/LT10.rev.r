@@ -1,0 +1,1 @@
+LT10.rev <- function(x) 10^(x)
