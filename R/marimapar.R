@@ -1,5 +1,5 @@
 marimapar <-
-function(TimeSeries, na.action=na.omit, xreg=NULL){
+function(timeseries, na.action=na.omit, xreg=NULL){
 	.Deprecated("arimaparameters","TSPred")
-  #return (lapply(TimeSeries,arimapar,na.action=na.action, xreg=xreg))
+  #return (lapply(timeseries,arimapar,na.action=na.action, xreg=xreg))
 }
