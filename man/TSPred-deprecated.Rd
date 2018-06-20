@@ -9,7 +9,7 @@
 }
 \usage{
 arimapar(timeseries, na.action = na.omit, xreg = NULL)
-marimapar(Timeseries, na.action=na.omit, xreg=NULL)
+marimapar(TimeSeries, na.action=na.omit, xreg=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -54,7 +54,7 @@ rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik",
 
 For producing the prediction of the next \code{h} consecutive values of the provided univariate time series, the function \code{\link{MAS.rev}} is used.
 
-If \code{order} is \code{NULL}, it is automatically selected. For that, a set with candidate models constructed for moving average smoothers of orders from \code{minorder} to \code{maxorder} is generated. The default value of \code{maxorder} is set based on code from the \code{\link{sma}} function of \code{smooth} package. The value option of \code{order} which generate the best ranked candidate model acoording to the criteria in \code{rank.by} is selected.
+If \code{order} is \code{NULL}, it is automatically selected. For that, a set with candidate models constructed for moving average smoothers of orders from \code{minorder} to \code{maxorder} is generated. The default value of \code{maxorder} is set based on code from the \code{sma} function of \code{smooth} package. The value option of \code{order} which generate the best ranked candidate model acoording to the criteria in \code{rank.by} is selected.
 
 The ranking criteria in \code{rank.by} may be set as a prediction error measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}}, \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or \code{\link{logLik}}). In the former case, the candidate models are used for time series prediction and the error measures are calculated by means of a cross-validation process. In the latter case, the candidate models are fitted and fitness criteria are calculated based on all observations in \code{timeseries}.
 

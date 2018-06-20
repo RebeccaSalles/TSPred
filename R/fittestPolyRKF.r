@@ -57,7 +57,7 @@ fittestPolyRKF <-
     #computes predictions, and prediction error measures (if timeseries.test is provided)
     pred.criteria <- function(model,n.ahead,level,filtered,i.n.ahead,ts.test,ts){
       #computes predictions using the candidate model
-      pred <- KFAS::predict(model,n.ahead=n.ahead,interval="prediction",level=level, filtered = filtered)
+      pred <- predict(model,n.ahead=n.ahead,interval="prediction",level=level, filtered = filtered)
       pred <- list(mean=pred[,1],lower=pred[,2],upper=pred[,3])
       pred.mean <- ts(pred$mean,start=i.n.ahead)
       
