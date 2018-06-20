@@ -5,7 +5,7 @@ fittestArima <-
     if(is.null(timeseries))    stop("timeseries is required and must have positive length")
     if(is.null(timeseries.test) & is.null(h)) stop("the number of values to be predicted is unknown, provide either timeseries.test or h")
     
-    require("forecast")
+    #require("forecast")
     
     #prepare the training time series
     ts <- ts(na.action(timeseries))
@@ -65,7 +65,7 @@ fittestArima <-
     #generates and optimizes Model based on optim parameter values
     model <- optim.model(ts, ...)
     
-    modelpar <- arimaparameters(model)
+    modelpar <- TSPred::arimaparameters(model)
     
     #computes fitness measures and returns a dataframe with them
     fit.measures <- fitness.criteria(model)

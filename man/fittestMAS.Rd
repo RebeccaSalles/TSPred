@@ -1,21 +1,21 @@
-\name{fittestPolyR}
-\alias{fittestPolyR}
+\name{fittestMAS}
+\alias{fittestMAS}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Automatic fitting and prediction of polynomial regression
+\title{Automatic prediction with moving average smoothing
 %%  ~~function to do ... ~~
 }
 \description{
-The function predicts and returns the next n consecutive values of a univariate time series using the best evaluated automatically fitted polynomial regression model. It also evaluates the fitness of the produced model, using AICc, AIC, BIC and logLik criteria, and its prediction accuracy, using the MSE, NMSE, MAPE, sMAPE and maximal error accuracy measures.
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+The function uses an automatically produced moving average smoother as base for predicting and returning the next n consecutive values of the provided univariate time series using an also automatically fitted model (\code{\link{ets}}/\code{\link{stlf}} or \code{\link{arima}}). It also evaluates the fitness and prediction accuracy of the produced model.
 }
 \usage{
-fittestPolyR(timeseries, timeseries.test=NULL, h=NULL, order=NULL, minorder=0, maxorder=5,
-raw = FALSE, na.action=na.omit, level=0.95,
-rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","errors","fitness"))
+fittestMAS(timeseries, timeseries.test=NULL, h=NULL, order=NULL, minorder=1,
+maxorder=min(36,length(ts(na.action(timeseries)))/2), 
+model=c("ets","arima"), level=0.95, na.action=na.omit,
+rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","errors","fitness"),...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{timeseries}{A vector or univariate time series which contains the values used for fitting a polynomial regression model.
+  \item{timeseries}{A vector or univariate time series.
 %%     ~~Describe \code{timeseries} here~~
 }
   \item{timeseries.test}{A vector or univariate time series containing a continuation for \code{timeseries} with actual values. It is used as a testing set and base for calculation of prediction error measures. Ignored if \code{NULL}.
@@ -24,31 +24,36 @@ rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","er
   \item{h}{Number of consecutive values of the time series to be predicted. If \code{h} is \code{NULL}, the number of consecutive values to be predicted is assumed to be equal to the length of \code{timeseries.test}. Required when \code{timeseries.test} is \code{NULL}.
 %%     ~~Describe \code{n.ahead} here~~
 }
-  \item{order}{A numeric integer value corresponding to the order of polynomial regression to be fitted. If \code{NULL}, the order of the polynomial regression returned by the function is automatically selected within the interval \code{minorder:maxorder}. See 'Details'.
+  \item{order}{A numeric integer value corresponding to the order of moving average smoother to be produced. If \code{NULL}, the order of the moving average smoother returned by the function is automatically selected within the interval \code{minorder:maxorder}. See 'Details'.
 %%     ~~Describe \code{maxorder} here~~
 }
-  \item{minorder}{A numeric integer value corresponding to the minimum order of candidate polynomial regression to be fitted and evaluated. Ignored if \code{order} is provided. See 'Details'.
+  \item{minorder}{A numeric integer value corresponding to the minimum order of candidate moving average smoothers to be produced and evaluated. Ignored if \code{order} is provided. See 'Details'.
 %%     ~~Describe \code{maxorder} here~~
 }
-  \item{maxorder}{A numeric integer value corresponding to the maximal order of candidate polynomial regression to be fitted and evaluated. Ignored if \code{order} is provided. See 'Details'.
+  \item{maxorder}{A numeric integer value corresponding to the maximal order of candidate moving average smoothers to be produced and evaluated. Ignored if \code{order} is provided. See 'Details'.
 %%     ~~Describe \code{maxorder} here~~
 }
-  \item{raw}{If \code{TRUE}, use raw and not orthogonal polynomials. Orthogonal polynomials help avoid correlation between variables. Default is \code{FALSE}. See \code{\link{poly}} of the \code{stats} package.
-%%     ~~Describe \code{maxorder} here~~
+  \item{model}{Character string. Indicates which model is to be used for fitting and prediction of the moving average smoothed series.
+%%     ~~Describe \code{na.action} here~~
 }
   \item{na.action}{A function for treating missing values in \code{timeseries} and \code{timeseries.test}. The default function is \code{\link{na.omit}}, which omits any missing values found in \code{timeseries} or \code{timeseries.test}.
 %%     ~~Describe \code{na.action} here~~
 }
-  \item{level}{Confidence level for prediction intervals. See the \code{\link{predict.lm}} function in the \code{stats} package.
+  \item{level}{Confidence level for prediction intervals. See the \code{\link[forecast]{forecast}} function of the \code{forecast} package.
 %%     ~~Describe \code{na.action} here~~
 }
   \item{rank.by}{Character string. Criteria used for ranking candidate models generated. See 'Details'.
 %%     ~~Describe \code{filtered} here~~
 }
+  \item{...}{Additional arguments passed to the modeling functions.
+%%     ~~Describe \code{na.action} here~~
 }
-\details{A set with candidate polynomial regression models of order \code{order} is generated with help from the \code{\link{dredge}} function from the \code{MuMIn} package. The candidate models are ranked acoording to the criteria in \code{rank.by} and the best ranked model is returned by the function.
+}
+\details{The function produces a moving average smoother of \code{timeseries} with order \code{order} and uses it as base for model fitting and prediction. If \code{model="arima"}, an arima model is used and automatically fitted using the \code{\link[forecast]{auto.arima}} function. If \code{model="ets"}, the function fits an \code{[forecast]\link{ets}} model (if \code{timeseries} is non-seasonal or the seasonal period is 12 or less) or \code{\link[forecast]{stlf}} model (if the seasonal period is 13 or more).
 
-If \code{order} is \code{NULL}, it is automatically selected. For that, the candidate polynomial regression models generated receive orders from \code{minorder} to \code{maxorder}. The value option of \code{order} which generate the best ranked candidate polynomial regression model acoording to the criteria in \code{rank.by} is selected.
+For producing the prediction of the next \code{h} consecutive values of the provided univariate time series, the function \code{\link{MAS.rev()}} is used.
+
+If \code{order} is \code{NULL}, it is automatically selected. For that, a set with candidate models constructed for moving average smoothers of orders from \code{minorder} to \code{maxorder} is generated. The default value of \code{maxorder} is set based on code from the \code{\link[smooth]{sma}} function of \code{smooth} package. The value option of \code{order} which generate the best ranked candidate model acoording to the criteria in \code{rank.by} is selected.
 
 The ranking criteria in \code{rank.by} may be set as a prediction error measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}}, \code{\link{sMAPE}} or \code{\link{MaxError}}), or as a fitness criteria (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or \code{\link{logLik}}). In the former case, the candidate models are used for time series prediction and the error measures are calculated by means of a cross-validation process. In the latter case, the candidate models are fitted and fitness criteria are calculated based on all observations in \code{timeseries}.
 
@@ -56,19 +61,20 @@ If \code{rank.by} is set as \code{"errors"} or \code{"fitness"}, the candidate m
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{A list with components:
-\item{model}{An object of class "lm" containing the best evaluated polynomial regression model.}
-\item{order}{The order argument provided (or automatically selected) for the best evaluated polynomial regression model.}
+\item{model}{A list containing information about the best evaluated model.}
+\item{order}{The order of moving average smoother provided or automatically selected.}
+\item{ma}{The simple moving average smoother of order \code{order} of the provided time series.}
 \item{AICc}{Numeric value of the computed AICc criterion of the best evaluated model.}
 \item{AIC}{Numeric value of the computed AIC criterion of the best evaluated model.}
 \item{BIC}{Numeric value of the computed BIC criterion of the best evaluated model.}
 \item{logLik}{Numeric value of the computed log-likelihood of the best evaluated model.}
-\item{pred}{A list with the components \code{mean}, \code{lower} and \code{upper}, containing the predictions of the best evaluated model and the lower and upper limits for prediction intervals, respectively. All components are time series. See \code{\link{predict.lm}}.}
+\item{pred}{A list with the components \code{mean}, \code{lower} and \code{upper}, containing the predictions of the best evaluated model and the lower and upper limits for prediction intervals, respectively. All components are time series. See the \code{\link[forecast]{forecast}} function in the \code{forecast} package.}
 \item{MSE}{Numeric value of the resulting MSE error of prediction. Require \code{timeseries.test}.}
 \item{NMSE}{Numeric value of the resulting NMSE error of prediction. Require \code{timeseries.test}.}
 \item{MAPE}{Numeric value of the resulting MAPE error of prediction. Require \code{timeseries.test}.}
 \item{sMAPE}{Numeric value of the resulting sMAPE error of prediction. Require \code{timeseries.test}.}
 \item{MaxError}{Numeric value of the maximal error of prediction. Require \code{timeseries.test}.}
-\item{rank.val}{Data.frame with the coefficients and the fitness or prediction accuracy criteria computed for all candidate polynomial regression models ranked by \code{rank.by}. It has the attribute \code{"model.calls"}, which is a list of objects of class "expression" containing the calls of all the candidate polynomial regression models, also ranked by \code{rank.by}.}
+\item{rank.val}{Data.frame with the fitness or prediction accuracy criteria computed for all candidate models ranked by \code{rank.by}. It has the attribute \code{"ranked.models"}, which is a list of objects containing all the candidate models, also ranked by \code{rank.by}.}
 \item{rank.by}{Ranking criteria used for ranking candidate models and producing \code{rank.val}.}
 }
 \references{
@@ -81,27 +87,22 @@ R.H. Shumway and D.S. Stoffer, 2010, Time Series Analysis and Its Applications: 
 Rebecca Pontes Salles
 %%  ~~who you are~~
 }
-\seealso{\code{\link{fittestPolyRKF}}, \code{\link{fittestLM}}
+\seealso{\code{\link{fittestEMD}}, \code{\link{fittestWavelet}}
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-data(CATS,CATS.cont)
-fPolyR <- fittestPolyR(CATS[,3],CATS.cont[,3])
-#predicted values
-pred <- fPolyR$pred
+data(CATS)
+\dontrun{
+#automatically select order of moving average
+fMAS <- fittestMAS(CATS[,1],h=20,model="arima")
 
-#plotting the time series data
-plot(c(CATS[,3],CATS.cont[,3]),type='o',lwd=2,xlim=c(960,1000),ylim=c(-100,300),xlab="Time",ylab="PR")
-#plotting predicted values
-lines(ts(pred$mean,start=981),lwd=2,col='blue')
-#plotting prediction intervals
-lines(ts(pred$lower,start=981),lwd=2,col='light blue')
-lines(ts(pred$upper,start=981),lwd=2,col='light blue')
+mas.order <- fMAS$order
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ polynomial }% __ONLY ONE__ keyword per line
-\keyword{ regression }
+\keyword{ moving average }% __ONLY ONE__ keyword per line
+\keyword{ smoother }
 \keyword{ automatic }
 \keyword{ fitting }
 \keyword{ adjustment }
@@ -109,3 +110,4 @@ lines(ts(pred$upper,start=981),lwd=2,col='light blue')
 \keyword{ evaluation }
 \keyword{ criterion }
 \keyword{ errors }
+\keyword{ time series }

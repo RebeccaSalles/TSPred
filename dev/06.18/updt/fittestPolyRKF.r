@@ -6,7 +6,7 @@ fittestPolyRKF <-
     if(is.null(timeseries))    stop("timeseries is required and must have positive length")
     if(is.null(timeseries.test) & is.null(h)) stop("the number of values to be predicted is unknown, provide either timeseries.test or h")
     
-    require(KFAS)
+    #require(KFAS)
     
     #prepare the training time series
     ts <- ts(na.action(timeseries))
@@ -39,7 +39,7 @@ fittestPolyRKF <-
     #optimize Model given a set of initial parameters
     optim.model <- function(timeseries, order, initQ){
       model <- TSPred::SSMpolynomial(timeseries,order)
-      model <- fitSSM(model, inits=rep(initQ,(order+1)))$model
+      model <- KFAS::fitSSM(model, inits=rep(initQ,(order+1)))$model
       return(model)
     }
     
@@ -57,7 +57,7 @@ fittestPolyRKF <-
     #computes predictions, and prediction error measures (if timeseries.test is provided)
     pred.criteria <- function(model,n.ahead,level,filtered,i.n.ahead,ts.test,ts){
       #computes predictions using the candidate model
-      pred <- predict(model,n.ahead=n.ahead,interval="prediction",level=level, filtered = filtered)
+      pred <- KFAS::predict(model,n.ahead=n.ahead,interval="prediction",level=level, filtered = filtered)
       pred <- list(mean=pred[,1],lower=pred[,2],upper=pred[,3])
       pred.mean <- ts(pred$mean,start=i.n.ahead)
       
@@ -173,7 +173,7 @@ fittestPolyRKF <-
     
     #append results in a list
     results <- c( list(model=model), order=order.optim, initQ=initQ.optim, fit.measures, list(pred=prediction), errors.measures )
-    if(!is.null(rank) ) results <- c(results, list(rank.val=rank))
+    if(!is.null(rank) ) results <- c(results, list(rank.val=rank), rank.by=rank.by)
     
     return(results)
   }

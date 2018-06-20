@@ -9,54 +9,71 @@ The function predicts and returns the next n consecutive values of a univariate 
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-fittestPolyRKF(timeseries, timeseries.test, maxorder = 5, na.action = na.omit,
-se.fit = FALSE, filtered = TRUE)
+fittestPolyRKF(timeseries, timeseries.test=NULL, h=NULL, na.action=na.omit,
+level=0.9, order=NULL, minorder=0, maxorder=5, initQ=NULL, filtered = TRUE, 
+rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","errors","fitness")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{timeseries}{A vector or univariate time series which contains the values used for fitting a polynomial regression model with Kalman filter.
 %%     ~~Describe \code{timeseries} here~~
 }
-  \item{timeseries.test}{A vector or univariate time series containing a continuation for \code{timeseries} with actual values. The number of consecutive values to be predicted is assumed to be equal to the length of \code{timeseries.test}. It is used as a testing set and base for calculation of prediction error measures.
+  \item{timeseries.test}{A vector or univariate time series containing a continuation for \code{timeseries} with actual values. It is used as a testing set and base for calculation of prediction error measures. Ignored if \code{NULL}.
 %%     ~~Describe \code{timeseries.cont} here~~
 }
-  \item{maxorder}{A numeric integer value corresponding to the maximal order of polynomial regression to be fitted and evaluated.
-%%     ~~Describe \code{maxorder} here~~
+  \item{h}{Number of consecutive values of the time series to be predicted. If \code{h} is \code{NULL}, the number of consecutive values to be predicted is assumed to be equal to the length of \code{timeseries.test}. Required when \code{timeseries.test} is \code{NULL}.
+%%     ~~Describe \code{n.ahead} here~~
 }
   \item{na.action}{A function for treating missing values in \code{timeseries} and \code{timeseries.test}. The default function is \code{\link{na.omit}}, which omits any missing values found in \code{timeseries} or \code{timeseries.test}.
 %%     ~~Describe \code{na.action} here~~
 }
-  \item{se.fit}{If \code{se.fit} is \code{TRUE}, the standard errors of the predictions are returned.
-%%     ~~Describe \code{se.fit} here~~
+  \item{level}{Confidence level for prediction intervals. See the \code{\link{predict.SSModel}} function in the \code{KFAS} package.
+%%     ~~Describe \code{na.action} here~~
+}
+  \item{order}{A numeric integer value corresponding to the order of polynomial regression to be fitted. If \code{NULL}, the order of the polynomial regression returned by the function is automatically selected within the interval \code{minorder:maxorder}. See 'Details'.
+%%     ~~Describe \code{maxorder} here~~
+}
+  \item{minorder}{A numeric integer value corresponding to the minimum order of candidate polynomial regression to be fitted and evaluated. Ignored if \code{order} is provided. See 'Details'.
+%%     ~~Describe \code{maxorder} here~~
+}
+  \item{maxorder}{A numeric integer value corresponding to the maximal order of candidate polynomial regression to be fitted and evaluated. Ignored if \code{order} is provided. See 'Details'.
+%%     ~~Describe \code{maxorder} here~~
 }
   \item{filtered}{If \code{filtered} is \code{TRUE}, Kalman filtered time series observations are used for prediction, otherwise, Kalman smoothed observations are used for prediction.
 %%     ~~Describe \code{filtered} here~~
 }
+  \item{initQ}{Numeric argument regarding the initial values for the covariance of disturbances parameter to be optimized over. The initial values to be optimized are set to \code{rep(initQ,(order+1))}. See the \code{Q} argument of the \code{\link{SSModel}} function in the \code{KFAS} package and the examples in \code{\link{KFAS}}. If \code{NULL}, \code{initQ} is automatically set. See 'Details'.
+%%     ~~Describe \code{filtered} here~~
 }
-\details{A set of maxorder+1 polynomial regression models of orders from 0 to \code{maxorder}, respectively, is generated and represented as state space models (\code{\link{SSModel}}) based on code from the \code{dlmodeler} package. See \code{\link[dlmodeler]{dlmodeler.polynomial}}.
+  \item{rank.by}{Character string. Criteria used for ranking candidate models generated using different options of values for \code{order} and/or \code{initQ}. Ignored if both \code{order} and \code{initQ} are provided. See 'Details'.
+%%     ~~Describe \code{filtered} here~~
+}
+}
+\details{The polynomial regression model produced and returned by the function is generated and represented as state space model (\code{\link{SSModel}}) based on code from the \code{dlmodeler} package. See \code{dlmodeler.polynomial}. The model is optimized using the Kalman filter and functions of the \code{KFAS} package (see \code{\link{fitSSM}}).
 
-All models in the set are optimized using the Kalman filter and functions of the \code{KFAS} package (see \code{\link{fitSSM}}). Different initial parameterization during the optimization process generate different models, which are included in the set of polynomial regression models to be evaluated.
+If \code{order} is \code{NULL}, it is automatically selected. For that, a set of candidate polynomial regression state space models of orders from \code{minorder} to \code{maxorder} is generated and evaluated. Also, if \code{initQ} is \code{NULL}, it is automatically set as either \code{log(var(timeseries))} or \code{0}. For that, candidate models receive different initial parameterization of \code{initQ} during the model optimization process. The value options of \code{order} and/or \code{initQ} which generate the best ranked candidate polynomial regression model acoording to the criteria in \code{rank.by} are selected.
 
-The set of generated models are used for time series prediction. Fitness measures (AICc, AIC, BIC, log-likelihood) and prediction accuracy measures (MSE, NMSE, MAPE, sMAPE, maximal error) are calculated for each model.
+The ranking criteria in \code{rank.by} may be set as a prediction error measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}}, \code{\link{sMAPE}} or \code{\link{MaxError}}), or as a fitness criteria (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or \code{\link{logLik}}). In the former case, the candidate models are used for time series prediction and the error measures are calculated by means of a cross-validation process. In the latter case, the candidate models are fitted and fitness criteria are calculated based on all observations in \code{timeseries}.
 
-The models are ranked and the best evaluated fitted polynomial regression model is selected based on the lowest value of the TSPredC criterion.
-
-The TSPredC criterion is calculated as the sum of the rank possitions of a model (1 = 1st position = better ranked model, 2 = 2nd position, etc.) on each calculated fitness or prediction accuracy measure.
+If \code{rank.by} is set as \code{"errors"} or \code{"fitness"}, the candidate models are ranked by all the mentioned prediction error measures or fitness criteria, respectively. The wheight of the ranking criteria is equally distributed. In this case, a \code{rank.position.sum} criterion is produced for ranking the candidate models. The \code{rank.position.sum} criterion is calculated as the sum of the rank positions of a model (1 = 1st position = better ranked model, 2 = 2nd position, etc.) on each calculated ranking criteria.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{A list with components:
 \item{model}{An object of class "SSModel" containing the best evaluated polynomial regression model fitted with Kalman Filter.}
+\item{order}{The order argument provided (or automatically selected) for the best evaluated polynomial regression model fitted with Kalman Filter.}
+\item{initQ}{The initQ argument provided (or automatically selected) for optimization of the best evaluated polynomial regression model fitted with Kalman Filter.}
 \item{AICc}{Numeric value of the computed AICc criterion of the best evaluated model.}
 \item{AIC}{Numeric value of the computed AIC criterion of the best evaluated model.}
 \item{BIC}{Numeric value of the computed BIC criterion of the best evaluated model.}
 \item{logLik}{Numeric value of the computed log-likelihood of the best evaluated model.}
-\item{pred}{A time series of predictions of the best evaluated model. If \code{se.fit} is \code{TRUE}, the estimated standard errors are included. See \code{\link{predict.SSModel}}.}
-\item{MSE}{Numeric value of the resulting MSE error of prediction.}
-\item{NMSE}{Numeric value of the resulting NMSE error of prediction.}
-\item{MAPE}{Numeric value of the resulting MAPE error of prediction.}
-\item{sMAPE}{Numeric value of the resulting sMAPE error of prediction.}
-\item{MaxError}{Numeric value of the maximal error of prediction.}
-\item{rank}{Data.frame with the fitness and prediction accuracy criteria computed for all polynomial regression with Kalman filter models considered ranked by the TSPredC value. It has the attribute \code{"ranked.models"}, which is a list of objects of class "SSModel" containing all the evaluated polynomial regression models fitted with Kalman Filter, also ranked by the TSPredC value.}
+\item{pred}{A list with the components \code{mean}, \code{lower} and \code{upper}, containing the predictions of the best evaluated model and the lower and upper limits for prediction intervals, respectively. All components are time series. See \code{\link{predict.SSModel}}.}
+\item{MSE}{Numeric value of the resulting MSE error of prediction. Require \code{timeseries.test}.}
+\item{NMSE}{Numeric value of the resulting NMSE error of prediction. Require \code{timeseries.test}.}
+\item{MAPE}{Numeric value of the resulting MAPE error of prediction. Require \code{timeseries.test}.}
+\item{sMAPE}{Numeric value of the resulting sMAPE error of prediction. Require \code{timeseries.test}.}
+\item{MaxError}{Numeric value of the maximal error of prediction. Require \code{timeseries.test}.}
+\item{rank.val}{Data.frame with the fitness or prediction accuracy criteria computed for all candidate polynomial regression with Kalman filter models  ranked by \code{rank.by}. It has the attribute \code{"ranked.models"}, which is a list of objects of class "SSModel" containing all the candidate polynomial regression models fitted with Kalman Filter, also ranked by \code{rank.by}. Only provided if \code{order} or \code{initQ} were automatically selected.}
+\item{rank.by}{Ranking criteria used for ranking candidate models and producing \code{rank.val}.}
 }
 \references{
 R.J. Hyndman and G. Athanasopoulos, 2013, Forecasting: principles and practice. OTexts.
@@ -74,11 +91,9 @@ Rebecca Pontes Salles
 \examples{
 \dontrun{
 data(CATS,CATS.cont)
-fPolyRKF <- fittestPolyRKF(CATS[,1],CATS.cont[,1], maxorder=5, se.fit=TRUE, filtered=TRUE)
-#predicted values and estimated standard errors
+fPolyRKF <- fittestPolyRKF(CATS[,1],CATS.cont[,1])
+#predicted values
 pred <- fPolyRKF$pred
-#model information
-fPolyRKF$rank[1,]
 
 #extracting Kalman filtered and smoothed time series from the best fitted model
 fs <- KFAS::KFS(fPolyRKF$model,filtering=c("state","mean"),smoothing=c("state","mean"))
@@ -92,10 +107,10 @@ lines(f,col='red',lty=2,lwd=2)
 #plotting the Kalman smoothed time series
 lines(s,col='green',lty=2,lwd=2)
 #plotting predicted values
-lines(ts(pred[,1],start=981),lwd=2,col='blue')
-#plotting estimated standard errors (confidence interval)
-lines(ts(pred[,1]+pred[,4],start=981),lwd=2,col='light blue')
-lines(ts(pred[,1]-pred[,4],start=981),lwd=2,col='light blue')
+lines(ts(pred$mean,start=981),lwd=2,col='blue')
+#plotting prediction intervals
+lines(ts(pred$lower,start=981),lwd=2,col='light blue')
+lines(ts(pred$upper,start=981),lwd=2,col='light blue')
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

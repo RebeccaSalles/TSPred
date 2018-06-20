@@ -9,32 +9,43 @@ The function predicts and returns the next n consecutive values of a univariate 
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-fittestArima(timeseries, timeseries.test, na.action = na.omit)
+fittestArima(timeseries, timeseries.test=NULL, h=NULL, 
+na.action=na.omit, level=c(80,95), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{timeseries}{A vector or univariate time series which contains the values used for fitting an ARIMA model.
 %%     ~~Describe \code{timeseries} here~~
 }
-  \item{timeseries.test}{A vector or univariate time series containing a continuation for \code{timeseries} with actual values. The number of consecutive values to be predicted is assumed to be equal to the length of \code{timeseries.test}. It is used as a testing set and base for calculation of prediction error measures.
+  \item{timeseries.test}{A vector or univariate time series containing a continuation for \code{timeseries} with actual values. It is used as a testing set and base for calculation of prediction error measures. Ignored if \code{NULL}.
 %%     ~~Describe \code{timeseries.cont} here~~
 }
-  \item{na.action}{A function for treating missing values in \code{timeseries} and \code{timeseries.test}. The default function is \code{\link{na.omit}}, which omits any missing values found in \code{timeseries} or \code{timeseries.test}.
+  \item{h}{Number of consecutive values of the time series to be predicted. If \code{h} is \code{NULL}, the number of consecutive values to be predicted is assumed to be equal to the length of \code{timeseries.test}. Required when \code{timeseries.test} is \code{NULL}.
+%%     ~~Describe \code{n.ahead} here~~
+}
+  \item{na.action}{A function for treating missing values in \code{timeseries} and \code{timeseries.test}. The default function is \code{\link[stats]{na.omit}}, which omits any missing values found in \code{timeseries} or \code{timeseries.test}.
+%%     ~~Describe \code{na.action} here~~
+}
+  \item{level}{Confidence level for prediction intervals.
+%%     ~~Describe \code{na.action} here~~
+}
+  \item{...}{Additional arguments passed to the \code{\link[forecast]{auto.arima}} modelling function.
 %%     ~~Describe \code{na.action} here~~
 }
 }
-\details{The ARIMA model is automatically fitted by the \code{\link{auto.arima}} function and it is used for prediction by the \code{\link{forecast}} function both in the \code{forecast} package.
+\details{The ARIMA model is automatically fitted by the \code{\link[forecast]{auto.arima}} function and it is used for prediction by the \code{\link[forecast]{forecast}} function both in the \code{forecast} package.
 
 The fitness criteria AICc, AIC (\code{\link{AIC}}), BIC (\code{\link{BIC}}) and log-likelihood (\code{\link{logLik}}) are extracted from the fitted ARIMA model. Also, the prediction accuracy of the model is computed by means of MSE (\code{\link{MSE}}), NMSE (\code{\link{NMSE}}), MAPE (\code{\link{MAPE}}), sMAPE (\code{\link{sMAPE}}) and maximal error (\code{\link{MAXError}}) measures.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{A list with components:
 \item{model}{A list of class "ARIMA" containing the best fitted ARIMA model. See the \code{\link{auto.arima}} function in the \code{forecast} package.}
+\item{parameters}{A list containing the parameters of the best fitted ARIMA model. See the \code{\link{arimapar}} function.}
 \item{AICc}{Numeric value of the computed AICc criterion of the fitted model.}
 \item{AIC}{Numeric value of the computed AIC criterion of the fitted model.}
 \item{BIC}{Numeric value of the computed BIC criterion of the fitted model.}
 \item{logLik}{Numeric value of the computed log-likelihood of the fitted model.}
-\item{pred}{A list with the components \code{pred}, \code{lower} and \code{upper}, containing the predictions and the lower and upper limits for prediction intervals, respectively. All components are time series. See the \code{\link{forecast}} function in the \code{forecast} package.}
+\item{pred}{A list with the components \code{mean}, \code{lower} and \code{upper}, containing the predictions and the lower and upper limits for prediction intervals, respectively. All components are time series. See the \code{\link{forecast}} function in the \code{forecast} package.}
 \item{MSE}{Numeric value of the resulting MSE error of prediction.}
 \item{NMSE}{Numeric value of the resulting NMSE error of prediction.}
 \item{MAPE}{Numeric value of the resulting MAPE error of prediction.}
@@ -59,7 +70,7 @@ Rebecca Pontes Salles
 data(CATS,CATS.cont)
 fArima <- fittestArima(CATS[,1],CATS.cont[,1])
 #predicted values
-pred <- fArima$pred$pred
+pred <- fArima$pred$mean
 #model information
 cbind(AICc=fArima$AICc, AIC=fArima$AIC, BIC=fArima$BIC,
  logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE, 
@@ -70,7 +81,7 @@ plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),
  xlab="Time",ylab="ARIMA")
 #plotting the predicted values
 lines(ts(pred,start=981),lwd=2,col='blue')
-#plotting the confidence interval
+#plotting prediction intervals
 lines(ts(fArima$pred$upper[,2],start=981),lwd=2,col='light blue')
 lines(ts(fArima$pred$lower[,2],start=981),lwd=2,col='light blue')
 }

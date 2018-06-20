@@ -21,7 +21,7 @@ range.p = 0.2, ylab = NULL, xlab = NULL, main = NULL)
   \item{timeseries.cont}{A vector or univariate time series containing a continuation for \code{timeseries} with actual values. Ignored if \code{NULL}.
 %%     ~~Describe \code{timeseries.cont} here~~
 }
-  \item{n.ahead}{Number of consecutive values of the time series, which are to be predicted. If \code{n.ahead} is \code{NULL}, the number of consecutive values to be predicted is assumed to be equal to the number of rows in \code{timeseries.cont}. Required when \code{timeseries.cont} is \code{NULL}.
+  \item{n.ahead}{Number of consecutive values of the time series, which are to be predicted. If \code{n.ahead} is \code{NULL}, the number of consecutive values to be predicted is assumed to be equal to the length of \code{timeseries.cont}. Required when \code{timeseries.cont} is \code{NULL}.
 %%     ~~Describe \code{n.ahead} here~~
 }
   \item{na.action}{A function for treating missing values in \code{timeseries} and \code{timeseries.cont}. The default function is \code{\link{na.omit}}, which omits any missing values found in \code{timeseries} or \code{timeseries.cont}.

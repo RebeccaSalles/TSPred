@@ -1,1 +1,0 @@
-LT.rev <- function(x) exp(x)

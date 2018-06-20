@@ -3,7 +3,7 @@ fittestArimaKF <-
            rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","errors","fitness"), ...){
     if(is.null(timeseries))    stop("timeseries is required and must have positive length")
     if(is.null(timeseries.test) & is.null(h)) stop("the number of values to be predicted is unknown, provide either timeseries.test or h")
-    require(KFAS)
+    #require(KFAS)
     
     #preparing the training time series
     ts <- ts(na.action(timeseries))
@@ -71,7 +71,7 @@ fittestArimaKF <-
     #optimize ARIMA State Space Model given a set of initial parameters
     optim.model <- function(timeseries, initPar, initQ, likfn){
       #generates initial ARIMA State Space Model
-      model <- SSModel(timeseries ~ SSMarima(ar=initPar$ar.coef,ma=initPar$ma.coef,d=initPar$d), H=0)
+      model <- KFAS::SSModel(timeseries ~ SSMarima(ar=initPar$ar.coef,ma=initPar$ma.coef,d=initPar$d), H=0)
       
       #optimizes the model parameters based on initial values 
       inits <- c(initPar$ar.coef,initPar$ma.coef,initQ)
@@ -94,7 +94,7 @@ fittestArimaKF <-
     
     pred.criteria <- function(model,n.ahead,level,filtered,i.n.ahead,ts.test,ts){
       #computes predictions using the candidate model
-      pred <- predict(model,n.ahead=n.ahead,interval="prediction",level=level, filtered = filtered)
+      pred <- KFAS::predict(model,n.ahead=n.ahead,interval="prediction",level=level, filtered = filtered)
       pred <- list(mean=pred[,1],lower=pred[,2],upper=pred[,3])
       pred.mean <- ts(pred$mean,start=i.n.ahead)
       
@@ -210,7 +210,7 @@ fittestArimaKF <-
     
     #append results in a list
     results <- c( list(model=model_arima), initQ=initQ.optim, fit.measures, list(pred=prediction), errors.measures )
-    if(!is.null(rank) ) results <- c(results, list(rank.val=rank))
+    if(!is.null(rank) ) results <- c(results, list(rank.val=rank), rank.by=rank.by)
     
     return(results)
   }

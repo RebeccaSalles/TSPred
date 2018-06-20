@@ -1,7 +1,7 @@
 fittestPolyR <- 
   function(timeseries, timeseries.test=NULL, h=NULL, order=NULL, minorder=0, maxorder=5, raw = FALSE, na.action=na.omit, level=0.95,
            rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","errors","fitness")){
-    require(MuMIn)
+    #require(MuMIn)
     #catch parameter errors
     if(is.null(timeseries))    stop("timeseries is required and must have positive length")
     if(is.null(timeseries.test) & is.null(h)) stop("the number of values to be predicted is unknown, provide either timeseries.test or h")
@@ -59,10 +59,14 @@ fittestPolyR <-
     #computes predictions, and prediction error measures (if timeseries.test is provided)
     pred.criteria <- function(model,data.ahead,level,i.n.ahead,ts.test,ts){
       #computes predictions using the candidate model
-      pred <- predict(model, data.ahead, se.fit=TRUE, level=level)
-      names(pred$fit) <- names(pred$se.fit) <- NULL
-      pred <- list(mean=ts(pred$fit,start=i.n.ahead),
-                   se.fit=ts(pred$se.fit,start=i.n.ahead))
+      pred <- predict(model, data.ahead, interval="prediction", se.fit=FALSE, level=level)
+      
+      rownames(pred) <- NULL
+      pred <- list(mean=ts(pred[,"fit"],start=i.n.ahead),
+                   lower=ts(pred[,"lwr"],start=i.n.ahead),
+                   upper=ts(pred[,"upr"],start=i.n.ahead))
+      attr(pred,"pred.lm") <- predict(model, data.ahead, interval="prediction", se.fit=TRUE, level=level)
+      
       pred.mean <- pred$mean
       
       #computes prediction error measures if ts.test is provided
@@ -174,7 +178,7 @@ fittestPolyR <-
     
     #append results in a list
     results <- c( list(model=model), order=order.optim, fit.measures, list(pred=prediction), errors.measures )
-    if(!is.null(rank) ) results <- c(results, list(rank.val=rank))
+    if(!is.null(rank) ) results <- c(results, list(rank.val=rank), rank.by=rank.by)
     
     return(results)
   }

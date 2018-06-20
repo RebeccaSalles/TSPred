@@ -7,7 +7,7 @@ function(timeseries, timeseries.test=NULL, h=NULL, level=0.95, na.action=na.omit
   if(is.null(timeseries.test) & is.null(h)) stop("the number of values to be predicted is unknown, provide either timeseries.test or h")
   
   oa <- fittestArima(timeseries, timeseries.test, h, level=level, na.action=na.action, ...)
-  oaKF <- fittestArimaKF(timeseries, timeseries.test, h, level=level,initQ=initQ, na.action=na.action, filtered=filtered, rank.by=rank.by)
+  oaKF <- fittestArimaKF(timeseries, timeseries.test, h, level=level,initQ=initQ, na.action=na.action, filtered=filtered, rank.by=rank.by,...)
   opr <- fittestPolyR(timeseries, timeseries.test, h, level=level, na.action=na.action, rank.by=rank.by, order=order, minorder=minorder, maxorder=maxorder, raw=raw)
   oprKF <- fittestPolyRKF(timeseries, timeseries.test, h, level=level, na.action=na.action, filtered=filtered, rank.by=rank.by, order=order, minorder=minorder, maxorder=maxorder, initQ=initQ)
 
@@ -19,6 +19,11 @@ function(timeseries, timeseries.test=NULL, h=NULL, level=0.95, na.action=na.omit
                      MSE=opr$MSE,NMSE=opr$NMSE,MAPE=opr$MAPE,sMAPE=opr$sMAPE,MaxError=opr$MaxError)
   oprKF.t <- data.frame(AICc=oprKF$AICc,AIC=oprKF$AIC,BIC=oprKF$BIC,logLik=oprKF$logLik,
                        MSE=oprKF$MSE,NMSE=oprKF$NMSE,MAPE=oprKF$MAPE,sMAPE=oprKF$sMAPE,MaxError=oprKF$MaxError)
+  
+  # evaluate choices of rank.by
+  rank.by <- match.arg(rank.by)
+  if(rank.by == "fitness") rank.by <- c("AIC","AICc","BIC","logLik")
+  else if(rank.by == "errors") rank.by <- c("MSE","NMSE","MAPE","sMAPE","MaxError")
   
   rank <- rbind(oa.t,oaKF.t,opr.t,oprKF.t,deparse.level=0)
   rownames(rank) <- c("ARIMA","ARIMAKF","PR","PRKF")
