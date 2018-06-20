@@ -5,7 +5,7 @@
 \title{Differencing Transformation
 %%  ~~function to do ... ~~
 }
-\description{The \code{DIF()} function returns a simple or seasonal differencing transformation of the provided time series. \code{DIF.rev()} reverses the transformation. Wrapper functions for \code{\link[stats]{diff}} and \code{\link[stats]{diffinv}} of the \code{stats} package, respectively.
+\description{The \code{DIF()} function returns a simple or seasonal differencing transformation of the provided time series. \code{DIF.rev()} reverses the transformation. Wrapper functions for \code{\link{diff}} and \code{\link[stats]{diffinv}} of the \code{stats} package, respectively.
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
@@ -29,7 +29,7 @@ DIF.rev(x, lag = ifelse(type=="simple", 1, frequency(x)), differences = 1, xi, t
 \value{
 \code{x} if \code{differences} is automatically selected, and is not set as greater than \code{0}.
 
-Same as \code{\link[stats]{diff}} otherwise.
+Same as \code{\link{diff}} otherwise.
 }
 \references{
 R.J. Hyndman and G. Athanasopoulos, 2013, Forecasting: principles and practice. OTexts.
