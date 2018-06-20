@@ -40,7 +40,7 @@ The fitness criteria AICc, AIC (\code{\link{AIC}}), BIC (\code{\link{BIC}}) and 
 }
 \value{A list with components:
 \item{model}{A list of class "ARIMA" containing the best fitted ARIMA model. See the \code{\link{auto.arima}} function in the \code{forecast} package.}
-\item{parameters}{A list containing the parameters of the best fitted ARIMA model. See the \code{\link{arimapar}} function.}
+\item{parameters}{A list containing the parameters of the best fitted ARIMA model. See the \code{\link{arimaparameters}} function.}
 \item{AICc}{Numeric value of the computed AICc criterion of the fitted model.}
 \item{AIC}{Numeric value of the computed AIC criterion of the fitted model.}
 \item{BIC}{Numeric value of the computed BIC criterion of the fitted model.}

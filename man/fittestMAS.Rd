@@ -11,7 +11,8 @@ The function uses an automatically produced moving average smoother as base for 
 fittestMAS(timeseries, timeseries.test=NULL, h=NULL, order=NULL, minorder=1,
 maxorder=min(36,length(ts(na.action(timeseries)))/2), 
 model=c("ets","arima"), level=0.95, na.action=na.omit,
-rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","errors","fitness"),...)
+rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik",
+"errors","fitness"),...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -51,11 +52,11 @@ rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","er
 }
 \details{The function produces a moving average smoother of \code{timeseries} with order \code{order} and uses it as base for model fitting and prediction. If \code{model="arima"}, an arima model is used and automatically fitted using the \code{\link[forecast]{auto.arima}} function. If \code{model="ets"}, the function fits an \code{[forecast]\link{ets}} model (if \code{timeseries} is non-seasonal or the seasonal period is 12 or less) or \code{\link[forecast]{stlf}} model (if the seasonal period is 13 or more).
 
-For producing the prediction of the next \code{h} consecutive values of the provided univariate time series, the function \code{\link{MAS.rev()}} is used.
+For producing the prediction of the next \code{h} consecutive values of the provided univariate time series, the function \code{\link{MAS.rev}} is used.
 
 If \code{order} is \code{NULL}, it is automatically selected. For that, a set with candidate models constructed for moving average smoothers of orders from \code{minorder} to \code{maxorder} is generated. The default value of \code{maxorder} is set based on code from the \code{\link[smooth]{sma}} function of \code{smooth} package. The value option of \code{order} which generate the best ranked candidate model acoording to the criteria in \code{rank.by} is selected.
 
-The ranking criteria in \code{rank.by} may be set as a prediction error measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}}, \code{\link{sMAPE}} or \code{\link{MaxError}}), or as a fitness criteria (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or \code{\link{logLik}}). In the former case, the candidate models are used for time series prediction and the error measures are calculated by means of a cross-validation process. In the latter case, the candidate models are fitted and fitness criteria are calculated based on all observations in \code{timeseries}.
+The ranking criteria in \code{rank.by} may be set as a prediction error measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}}, \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or \code{\link{logLik}}). In the former case, the candidate models are used for time series prediction and the error measures are calculated by means of a cross-validation process. In the latter case, the candidate models are fitted and fitness criteria are calculated based on all observations in \code{timeseries}.
 
 If \code{rank.by} is set as \code{"errors"} or \code{"fitness"}, the candidate models are ranked by all the mentioned prediction error measures or fitness criteria, respectively. The wheight of the ranking criteria is equally distributed. In this case, a \code{rank.position.sum} criterion is produced for ranking the candidate models. The \code{rank.position.sum} criterion is calculated as the sum of the rank positions of a model (1 = 1st position = better ranked model, 2 = 2nd position, etc.) on each calculated ranking criteria.
 %%  ~~ If necessary, more details than the description above ~~

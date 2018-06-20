@@ -11,7 +11,8 @@ The function automatically evaluates and returns the fittest linear model among 
 \usage{
 fittestLM(timeseries, timeseries.test=NULL, h=NULL, level=0.95, na.action=na.omit,
 filtered=TRUE, order=NULL, minorder=0, maxorder=5, raw = FALSE, initQ=NULL,
-rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","errors","fitness"),...)
+rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik",
+"errors","fitness"),...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -57,7 +58,7 @@ rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","er
 }
 \details{The results of the best evaluated models returned by \code{\link{fittestArima}}, \code{\link{fittestArimaKF}}, \code{\link{fittestPolyR}} and \code{\link{fittestPolyRKF}} are ranked and the fittest linear model for prediction of the given univariate time series is selected based on the criteria in \code{rank.by}.
 
-The ranking criteria in \code{rank.by} may be set as a prediction error measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}}, \code{\link{sMAPE}} or \code{\link{MaxError}}), or as a fitness criteria (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or \code{\link{logLik}}). See \code{\link{fittestArima}}, \code{\link{fittestArimaKF}}, \code{\link{fittestPolyR}} or \code{\link{fittestPolyRKF}}.
+The ranking criteria in \code{rank.by} may be set as a prediction error measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}}, \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or \code{\link{logLik}}). See \code{\link{fittestArima}}, \code{\link{fittestArimaKF}}, \code{\link{fittestPolyR}} or \code{\link{fittestPolyRKF}}.
 
 If \code{rank.by} is set as \code{"errors"} or \code{"fitness"}, the candidate models are ranked by all the mentioned prediction error measures or fitness criteria, respectively. The wheight of the ranking criteria is equally distributed. In this case, a \code{rank.position.sum} criterion is produced for ranking the candidate models. The \code{rank.position.sum} criterion is calculated as the sum of the rank positions of a model (1 = 1st position = better ranked model, 2 = 2nd position, etc.) on each calculated ranking criteria.
 %%  ~~ If necessary, more details than the description above ~~

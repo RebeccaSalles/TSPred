@@ -8,9 +8,10 @@
 The function automatically applies a maximal overlap discrete wavelet transform to a provided univariate time series. The resulting components of the decomposed series are used as base for predicting and returning the next n consecutive values of the provided univariate time series using also automatically fitted models (\code{\link{ets}} or \code{\link{arima}}). It also evaluates fitness and prediction accuracy of the produced models.
 }
 \usage{
-fittestWavelet(timeseries, timeseries.test=NULL, h=NULL, filters=c("haar", "d4", "la8", "bl14", "c6"),
-n.levels=NULL, maxlevel=NULL, model=c("ets","arima"), conf.level=0.95, na.action=na.omit,
-rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","errors","fitness"),...)
+fittestWavelet(timeseries, timeseries.test=NULL, h=NULL, 
+filters=c("haar", "d4", "la8", "bl14", "c6"),n.levels=NULL, maxlevel=NULL, model=c("ets","arima"), conf.level=0.95, na.action=na.omit,
+rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik",
+"errors","fitness"),...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -52,7 +53,7 @@ rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","er
 
 If \code{length(filters)>1} or \code{filters=NULL}, it is automatically selected. For that, a set of candidate wavelet decompositions with different options of filters is generated and used for model fitting and prediction.  Also, if \code{n.levels} is \code{NULL}, it is automatically set as a value within the interval \code{1:maxlevel} (if \code{maxlevel} is not provided, it is calculated according to the wavelet filter based on code from \code{\link[wavelets]{modwt}}). For that, candidate decompositions are specified with different levels. The options of filter and/or level of decomposition which generate the best ranked model fitness/predictions acoording to the criteria in \code{rank.by} are selected.
 
-The ranking criteria in \code{rank.by} may be set as a prediction error measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}}, \code{\link{sMAPE}} or \code{\link{MaxError}}), or as a fitness criteria (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or \code{\link{logLik}}). In the former case, the candidate wavelet decompositions are used for time series prediction and the error measures are calculated by means of a cross-validation process. In the latter case, the component series of the candidate decompositions are modeled and model fitness criteria are calculated based on all observations in \code{timeseries}. In particular, the fitness criteria calculated for ranking the candidate decomposition correspond to the model produced for the \code{n.levels}th scaling coefficients series as it can be considered the main component of a decomposition of level \code{n.levels} (Conejo,2005).
+The ranking criteria in \code{rank.by} may be set as a prediction error measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}}, \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or \code{\link{logLik}}). In the former case, the candidate wavelet decompositions are used for time series prediction and the error measures are calculated by means of a cross-validation process. In the latter case, the component series of the candidate decompositions are modeled and model fitness criteria are calculated based on all observations in \code{timeseries}. In particular, the fitness criteria calculated for ranking the candidate decomposition correspond to the model produced for the \code{n.levels}th scaling coefficients series as it can be considered the main component of a decomposition of level \code{n.levels} (Conejo,2005).
 
 If \code{rank.by} is set as \code{"errors"} or \code{"fitness"}, the candidate decompositions are ranked by all the mentioned prediction error measures or fitness criteria, respectively. The wheight of the ranking criteria is equally distributed. In this case, a \code{rank.position.sum} criterion is produced for ranking the candidate decompositions. The \code{rank.position.sum} criterion is calculated as the sum of the rank positions of a decomposition (1 = 1st position = better ranked model, 2 = 2nd position, etc.) on each calculated ranking criteria.
 %%  ~~ If necessary, more details than the description above ~~

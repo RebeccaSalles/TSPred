@@ -35,7 +35,7 @@ R.H. Shumway and D.S. Stoffer, 2010, Time Series Analysis and Its Applications: 
 %%  ~~who you are~~
 }
 
-\seealso{\code{\link{fittestArima},\code{\link{arimapred}}
+\seealso{\code{\link{fittestArima}},\code{\link{arimapred}}
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{

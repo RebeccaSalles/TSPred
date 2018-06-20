@@ -9,8 +9,9 @@ The function automatically applies an empirical mode decomposition to a provided
 }
 \usage{
 fittestEMD(timeseries, timeseries.test=NULL, h=NULL, max.imf=10, 
-boundary=c("none","wave","symmetric","periodic","evenodd"), level=0.95, na.action=na.omit,
-rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","errors","fitness"))
+boundary=c("none","wave","symmetric","periodic","evenodd"), level=0.95,
+na.action=na.omit, rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik",
+"errors","fitness"))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -43,21 +44,21 @@ rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","er
 
 If \code{length(boundary)>1} or \code{boundary=NULL}, it is automatically selected. For that, a set of empirical mode decompositions with different options of boundary condition is generated and used for model fitting and prediction. Also, the function automatically selects the meaningful IMF's of a decomposition. For that, the function produces \code{\link[vars]{VAR}} models for different selections of meaningful IMF's according to the possible intervals \code{i:nimf} for \code{i=1,...,(nimf-1)}, where \code{nimf} is the number of IMF's in a decomposition. The options of \code{boundary} and/or meaningful IMF's of a decomposition which generate the best ranked model fitness/predictions acoording to the criteria in \code{rank.by} are selected.
 
-The ranking criteria in \code{rank.by} may be set as a prediction error measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}}, \code{\link{sMAPE}} or \code{\link{MaxError}}), or as a fitness criteria (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or \code{\link{logLik}}). In the former case, the candidate empirical mode decompositions are used for time series prediction and the error measures are calculated by means of a cross-validation process. In the latter case, the component series of the candidate decompositions are modeled and model fitness criteria are calculated based on all observations in \code{timeseries}. In particular, the fitness criteria calculated for ranking the candidate decompositions correspond to the \code{\link[vars]{VAR}} models produced for the IMF's.
+The ranking criteria in \code{rank.by} may be set as a prediction error measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}}, \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or \code{\link{logLik}}). In the former case, the candidate empirical mode decompositions are used for time series prediction and the error measures are calculated by means of a cross-validation process. In the latter case, the component series of the candidate decompositions are modeled and model fitness criteria are calculated based on all observations in \code{timeseries}. In particular, the fitness criteria calculated for ranking the candidate decompositions correspond to the \code{\link[vars]{VAR}} models produced for the IMF's.
 
 If \code{rank.by} is set as \code{"errors"} or \code{"fitness"}, the candidate decompositions are ranked by all the mentioned prediction error measures or fitness criteria, respectively. The wheight of the ranking criteria is equally distributed. In this case, a \code{rank.position.sum} criterion is produced for ranking the candidate decompositions. The \code{rank.position.sum} criterion is calculated as the sum of the rank positions of a decomposition (1 = 1st position = better ranked model, 2 = 2nd position, etc.) on each calculated ranking criteria.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{A list with components:
-\item{emd}{Same as \code{\link[EMD]{emd}}. Contains the empirical mode decomposition of \code{time series}.}
+\item{emd}{Same as \code{\link[EMD]{emd}}. Contains the empirical mode decomposition of \code{timeseries}.}
 \item{meaningfulImfs}{Character string indicating the automatically selected meaningful IMF's of the decomposition.}
 \item{boundary}{The provided or automatically selected boundary condition of the decomposition.}
 \item{varImfs}{The \code{\link[vars]{VAR}} model fitted to the meaningful IMF's of the empirical mode decomposition.}
 \item{polyRresidue}{The polynomial regression model fitted to the residue of the decomposition.}
-\item{AICc}{Numeric value of the computed AICc criterion of the fitted VAR model in \item{varImfs}.}
-\item{AIC}{Numeric value of the computed AIC criterion of the fitted VAR model in \item{varImfs}.}
-\item{BIC}{Numeric value of the computed BIC criterion of the fitted VAR model in \item{varImfs}.}
-\item{logLik}{Numeric value of the computed log-likelihood of the fitted VAR model in \item{varImfs}.}
+\item{AICc}{Numeric value of the computed AICc criterion of the fitted VAR model in \code{varImfs}.}
+\item{AIC}{Numeric value of the computed AIC criterion of the fitted VAR model in \code{varImfs}.}
+\item{BIC}{Numeric value of the computed BIC criterion of the fitted VAR model in \code{varImfs}.}
+\item{logLik}{Numeric value of the computed log-likelihood of the fitted VAR model in \code{varImfs}.}
 \item{pred}{A list with the components \code{mean}, \code{lower} and \code{upper}, containing the predictions based on the best evaluated decomposition and the lower and upper limits for prediction intervals, respectively. All components are time series.}
 \item{MSE}{Numeric value of the resulting MSE error of prediction. Require \code{timeseries.test}.}
 \item{NMSE}{Numeric value of the resulting NMSE error of prediction. Require \code{timeseries.test}.}
