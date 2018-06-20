@@ -16,29 +16,29 @@ data("ipeadata_m.cont")}
   The \code{ipeadata_m} dataset contains 23 time series of 156 to 1019 observations.
   The 23 time series are provided as the following variables of a data frame.
   \describe{
-    \item{[1]}{Exchange rate - Brazilian real (R$) / US dollar (US$) - purchase - average - R$ - Banco Central do Brasil, Boletim, Seção Balanço de Pagamentos (Bacen / Boletim / BP) - BM12_ERC12.}
-    \item{[2]}{Exchange rate - Brazilian real (R$) / US dollar (US$) - selling - average - R$ - Banco Central do Brasil, Boletim, Seção Balanço de Pagamentos (Bacen / Boletim / BP) - BM12_ERV12.}
-    \item{[3]}{IGP-DI - general price index domestic supply (aug 1994 = 100) - - - Fundação Getulio Vargas, Conjuntura Econômica - IGP (FGV/Conj. Econ. - IGP) - IGP12_IGPDI12.}
-    \item{[4]}{Imports - prices - index (average 2006 = 100) - - - Fundação Centro de Estudos do Comércio Exterior (Funcex) - FUNCEX12_MDPT12.}
-    \item{[5]}{Exports - prices - index (average 2006 = 100) - - - Fundação Centro de Estudos do Comércio Exterior (Funcex) - FUNCEX12_XPT12.}
-    \item{[6]}{INPC - national consumer price index (dec 1993 = 100) - - - Instituto Brasileiro de Geografia e Estatística, Sistema Nacional de Índices de Preços ao Consumidor (IBGE/SNIPC) - PRECOS12_INPC12.}
-    \item{[7]}{INPC - national consumer price index - growth rate - (\% p.m.) - Instituto Brasileiro de Geografia e Estatística, Sistema Nacional de Índices de Preços ao Consumidor (IBGE/SNIPC) - PRECOS12_INPCBR12.}
-    \item{[8]}{IPCA - extended consumer price index (dec 1993 = 100) - - - Instituto Brasileiro de Geografia e Estatística, Sistema Nacional de Índices de Preços ao Consumidor (IBGE/SNIPC) - PRECOS12_IPCA12.}
-    \item{[9]}{Unemployment rate - open - RMSP - (\%) - Fundação Sistema Estadual de Análise de Dados, Pesquisa de Emprego e Desemprego (Seade/PED) - SEADE12_TDAGSP12.}
-    \item{[10]}{Unemployment rate - hidden - RMSP - (\%) - Fundação Sistema Estadual de Análise de Dados, Pesquisa de Emprego e Desemprego (Seade/PED) - SEADE12_TDOTSP12.}
-    \item{[11]}{Unemployment rate - hidden - precarious - RMSP - (\%) - Fundação Sistema Estadual de Análise de Dados, Pesquisa de Emprego e Desemprego (Seade/PED) - SEADE12_TDOPSP12.}
-    \item{[12]}{Real minimum wage - R$ - Instituto de Pesquisa Econômica Aplicada (Ipea) - GAC12_SALMINRE12	.}
-    \item{[13]}{IGP-M - general price index at market prices (aug 1994 = 100) - - - Fundação Getulio Vargas, Conjuntura Econômica - IGP (FGV/Conj. Econ. - IGP) - IGP12_IGPM12.}
-    \item{[14]}{IPCA - extended consumer price index - growth rate - (\% p.m.) - Instituto Brasileiro de Geografia e Estatística, Sistema Nacional de Índices de Preços ao Consumidor (IBGE/SNIPC) - PRECOS12_IPCAG12.}
-    \item{[15]}{IGP-DI - general price index domestic supply - growth rate - (\% p.m.) - Fundação Getulio Vargas, Conjuntura Econômica - IGP (FGV/Conj. Econ. - IGP) - IGP12_IGPDIG12.}
-    \item{[16]}{IGP-M - general price index at market prices - growth rate - (\% p.m.) - Fundação Getulio Vargas, Conjuntura Econômica - IGP (FGV/Conj. Econ. - IGP) - IGP12_IGPMG12.}
-    \item{[17]}{IGP-OG - general price index overall supply - growth rate - (\% p.m.) - Fundação Getulio Vargas, Conjuntura Econômica - IGP (FGV/Conj. Econ. - IGP) - IGP12_IGPOGG12.}
-    \item{[18]}{IPCA 15 - extended consumer price index - growth rate - (\% p.m.) - Instituto Brasileiro de Geografia e Estatística, Sistema Nacional de Índices de Preços ao Consumidor (IBGE/SNIPC) - PRECOS12_IPCA15G12.}
-    \item{[19]}{GDP - R$ - Banco Central do Brasil, Boletim, Seção Atividade Econômica (Bacen / Boletim / Ativ. Ec.) - BM12_PIB12.}
-    \item{[20]}{Minimum wage - R$ - Ministério do Trabalho e Emprego (MTE) - MTE12_SALMIN12.}
-    \item{[21]}{Interest rate - Overnight/Selic - (\% p.m.) - Banco Central do Brasil, Boletim, Seção mercado financeiro e de capitais (Bacen/Boletim/M. Finan.) - BM12_TJOVER12.}
-    \item{[22]}{Unemployment rate - São Paulo - (\%) - Fundação Sistema Estadual de Análise de Dados, Pesquisa de Emprego e Desemprego (Seade/PED) - SEADE12_TDTGSP12.}
-    \item{[23]}{Unemployment rate - reference: 30 days - RMs - (\%) - Instituto Brasileiro de Geografia e Estatística, Pesquisa Mensal de Emprego (IBGE/PME) - obs:  PME closed in 2016-mar. - PMEN12_TD12.}
+    \item{BM12_ERC12}{Exchange rate - Brazilian real (R$) / US dollar (US$) - purchase - average - R$ - Bacen / Boletim / BP.}
+    \item{BM12_ERV12}{Exchange rate - Brazilian real (R$) / US dollar (US$) - selling - average - R$ - Bacen / Boletim / BP.}
+    \item{IGP12_IGPDI12}{IGP-DI - general price index domestic supply (aug 1994 = 100) - FGV/Conj. Econ. - IGP.}
+    \item{FUNCEX12_MDPT12}{Imports - prices - index (average 2006 = 100) - Funcex.}
+    \item{FUNCEX12_XPT12}{Exports - prices - index (average 2006 = 100) - Funcex.}
+    \item{PRECOS12_INPC12}{INPC - national consumer price index (dec 1993 = 100) - IBGE/SNIPC.}
+    \item{PRECOS12_INPCBR12}{INPC - national consumer price index - growth rate - (\% p.m.) - IBGE/SNIPC.}
+    \item{PRECOS12_IPCA12}{IPCA - extended consumer price index (dec 1993 = 100) - IBGE/SNIPC.}
+    \item{SEADE12_TDAGSP12}{Unemployment rate - open - RMSP - (\%) - Seade/PED.}
+    \item{SEADE12_TDOTSP12}{Unemployment rate - hidden - RMSP - (\%) - Seade/PED.}
+    \item{SEADE12_TDOPSP12}{Unemployment rate - hidden - precarious - RMSP - (\%) - Seade/PED.}
+    \item{GAC12_SALMINRE12}{Real minimum wage - R$ - Ipea.}
+    \item{IGP12_IGPM12}{IGP-M - general price index at market prices (aug 1994 = 100) - FGV/Conj. Econ. - IGP.}
+    \item{PRECOS12_IPCAG12}{IPCA - extended consumer price index - growth rate - (\% p.m.) - IBGE/SNIPC.}
+    \item{IGP12_IGPDIG12}{IGP-DI - general price index domestic supply - growth rate - (\% p.m.) - FGV/Conj. Econ. - IGP.}
+    \item{IGP12_IGPMG12}{IGP-M - general price index at market prices - growth rate - (\% p.m.) - FGV/Conj. Econ. - IGP.}
+    \item{IGP12_IGPOGG12}{IGP-OG - general price index overall supply - growth rate - (\% p.m.) - FGV/Conj. Econ. - IGP.}
+    \item{PRECOS12_IPCA15G12}{IPCA 15 - extended consumer price index - growth rate - (\% p.m.) - IBGE/SNIPC.}
+    \item{[BM12_PIB12}{GDP - R$ - Bacen / Boletim / Ativ. Ec..}
+    \item{MTE12_SALMIN12}{Minimum wage - R$ - MTE.}
+    \item{BM12_TJOVER12}{Interest rate - Overnight/Selic - (\% p.m.) - Bacen/Boletim/M. Finan..}
+    \item{SEADE12_TDTGSP12}{Unemployment rate - São Paulo - (\%) - Seade/PED.}
+    \item{PMEN12_TD12}{Unemployment rate - reference: 30 days - RMs - (\%) - IBGE/PME - obs:  PME closed in 2016-mar.}
   }
 }
 \details{The data had missing data removed by the function \code{\link{na.omit}}.
