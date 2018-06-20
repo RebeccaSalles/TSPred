@@ -9,7 +9,8 @@ The function automatically applies a maximal overlap discrete wavelet transform 
 }
 \usage{
 fittestWavelet(timeseries, timeseries.test=NULL, h=NULL, 
-filters=c("haar", "d4", "la8", "bl14", "c6"),n.levels=NULL, maxlevel=NULL, model=c("ets","arima"), conf.level=0.95, na.action=na.omit,
+filters=c("haar", "d4", "la8", "bl14", "c6"),n.levels=NULL, maxlevel=NULL,
+model=c("ets","arima"), conf.level=0.95, na.action=na.omit,
 rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik",
 "errors","fitness"),...)
 }

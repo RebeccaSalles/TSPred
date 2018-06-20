@@ -9,8 +9,9 @@ The function automatically applies an empirical mode decomposition to a provided
 }
 \usage{
 fittestEMD(timeseries, timeseries.test=NULL, h=NULL, max.imf=10, 
-boundary=c("none","wave","symmetric","periodic","evenodd"), level=0.95,
-na.action=na.omit, rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik",
+boundary=c("none","wave","symmetric","periodic","evenodd"), 
+level=0.95, na.action=na.omit, 
+rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik",
 "errors","fitness"))
 }
 %- maybe also 'usage' for other objects documented here.

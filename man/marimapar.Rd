@@ -22,7 +22,7 @@ marimapar(TimeSeries, na.action = na.omit, xreg = NULL)
 %%     ~~Describe \code{xreg} here~~
 }
 }
-\details{See the \code{\link{arimapar}} function.
+\details{See the \code{\link{arimaparameters}} function.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{A list of numeric vectors, each one giving the number of AR, MA, seasonal AR and seasonal MA coefficients, plus the period and the number of non-seasonal and seasonal differences of the automatically fitted ARIMA models. It is also presented the value of the fitted drift constants.

@@ -9,9 +9,11 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-DIF(x, lag = ifelse(type=="simple", 1, frequency(x)), differences = NULL, type = c("simple","seasonal"), ...)
+DIF(x, lag = ifelse(type=="simple", 1, frequency(x)), differences = NULL, 
+type = c("simple","seasonal"), ...)
 
-DIF.rev(x, lag = ifelse(type=="simple", 1, frequency(x)), differences = 1, xi, type=c("simple","seasonal"))
+DIF.rev(x, lag = ifelse(type=="simple", 1, frequency(x)), differences = 1,
+xi, type=c("simple","seasonal"))
 }
 \arguments{
 \item{x}{A numeric vector or univariate time series containing the values to be differenced.}
