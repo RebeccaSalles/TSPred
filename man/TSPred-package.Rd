@@ -6,7 +6,7 @@
 %%~~ package title ~~
 }
 \description{
-Functions for time series prediction and accuracy assessment using automatic linear modelling. The generated linear models and its yielded prediction errors can be used for benchmarking other time series prediction methods and for creating a demand for the refinement of such methods. For this purpose, benchmark data from prediction competitions may be used.
+Functions for time series preprocessing, decomposition, prediction and accuracy assessment using automatic linear modelling. The generated linear models and its yielded prediction errors can be used for benchmarking other time series prediction methods and for creating a demand for the refinement of such methods. For this purpose, benchmark data from prediction competitions may be used.
 %%~~ A concise (1-5 lines) description of the package ~~
 }
 \details{
@@ -15,7 +15,7 @@ Package: \tab TSPred\cr
 Type: \tab Package\cr
 Version: \tab 4.0\cr
 Date: \tab 2018-06-20\cr
-Imports: \tab forecast, KFAS, stats, MuMIn\cr
+Imports: \tab forecast, KFAS, stats, MuMIn, EMD, wavelets, vars\cr
 LinkingTo: \tab dlmodeler\cr
 License: \tab GPL (>= 2)\cr
 BugReports: \tab \url{https://github.com/RebeccaSalles/TSPred/issues}\cr
@@ -59,6 +59,11 @@ Rebecca Pontes Salles <rebeccapsalles@acm.org> and Eduardo Ogasawara from CEFET/
 \keyword{ evaluation }
 \keyword{ criterion }
 \keyword{ errors }
+\keyword{ transform }
+\keyword{ decomposition }
+\keyword{ wavelet }
+\keyword{ EMD }
+
 \seealso{\code{\link{arimapred}}, \code{\link{marimapred}}, \code{\link{fittestArima}}, \code{\link{fittestArimaKF}}, \code{\link{fittestPolyR}}, \code{\link{fittestPolyRKF}}, \code{\link{fittestLM}}
 %%~~ Optional links to other man pages, e.g. ~~
 %%~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
