@@ -11,4 +11,4 @@ Description: Functions for time series preprocessing, decomposition, prediction 
 Imports: forecast, KFAS, stats, MuMIn, EMD, wavelets, vars
 License: GPL (>= 2)
 BugReports: https://github.com/RebeccaSalles/TSPred/issues
-URL: https://sourceforge.net/p/gpca/wiki/TSPred/
+URL: https://github.com/RebeccaSalles/TSPred/wiki

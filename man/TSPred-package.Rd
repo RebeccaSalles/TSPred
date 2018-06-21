@@ -19,7 +19,7 @@ Imports: \tab forecast, KFAS, stats, MuMIn, EMD, wavelets, vars\cr
 LinkingTo: \tab dlmodeler\cr
 License: \tab GPL (>= 2)\cr
 BugReports: \tab \url{https://github.com/RebeccaSalles/TSPred/issues}\cr
-URL: \tab \url{https://sourceforge.net/p/gpca/wiki/TSPred/}\cr
+URL: \tab \url{https://github.com/RebeccaSalles/TSPred/wiki}\cr
 }
 \describe{
 Most important functions:
