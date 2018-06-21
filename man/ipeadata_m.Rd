@@ -37,7 +37,7 @@ data("ipeadata_m.cont")}
     \item{[BM12_PIB12}{GDP - R$ - Bacen / Boletim / Ativ. Ec..}
     \item{MTE12_SALMIN12}{Minimum wage - R$ - MTE.}
     \item{BM12_TJOVER12}{Interest rate - Overnight/Selic - (\% p.m.) - Bacen/Boletim/M. Finan..}
-    \item{SEADE12_TDTGSP12}{Unemployment rate - São Paulo - (\%) - Seade/PED.}
+    \item{SEADE12_TDTGSP12}{Unemployment rate - Sao Paulo - (\%) - Seade/PED.}
     \item{PMEN12_TD12}{Unemployment rate - reference: 30 days - RMs - (\%) - IBGE/PME - obs:  PME closed in 2016-mar.}
   }
 }

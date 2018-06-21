@@ -16,7 +16,7 @@ data("ipeadata_d.cont")}
   The \code{ipeadata_d} dataset contains 12 time series of 901 to 8154 observations.
   The 12 time series are provided as the following variables of a data frame.
   \describe{
-    \item{GM366_IBVSP366}{Stock Index: São Paulo Stock Exchange  - closed - BM&FBovespa.}
+    \item{GM366_IBVSP366}{Stock Index: Sao Paulo Stock Exchange  - closed - BM&FBovespa.}
     \item{GM366_ERC366}{Exchange rate - R$ / US$ - commercial - purchase - mean - R$ - Bacen Outras/SGS.}
     \item{GM366_EREURO366}{Euro area - exchange rate - euro / US$ - mean - Euro - Bacen Outras/SGS.}
     \item{GM366_ERPV366}{Exchange rate - R$ / US$ - parallel - selling - mean - R$ - Economic value.}
