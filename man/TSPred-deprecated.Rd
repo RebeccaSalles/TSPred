@@ -48,8 +48,10 @@ R.H. Shumway and D.S. Stoffer, 2010, Time Series Analysis and Its Applications: 
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+\dontrun{
 data(SantaFe.A)
 arimapar(SantaFe.A[,1])
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
