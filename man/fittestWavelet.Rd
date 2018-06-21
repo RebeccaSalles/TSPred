@@ -98,6 +98,9 @@ Rebecca Pontes Salles
 data(CATS)
 \dontrun{
 fW <- fittestWavelet(CATS[,1],h=20,model="arima")
+
+#plot wavelet transform/decomposition
+plot(fW$WT)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

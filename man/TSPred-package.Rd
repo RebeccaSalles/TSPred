@@ -23,12 +23,16 @@ URL: \tab \url{https://sourceforge.net/p/gpca/wiki/TSPred/}\cr
 }
 \describe{
 Most important functions:
+
 \item{\code{fittestLM}}{Automatically finding fittest linear model for prediction.}
 \item{\code{fittestArima}}{Automatic ARIMA fitting, prediction and accuracy evaluation.}
 \item{\code{fittestArimaKF}}{Automatic ARIMA fitting and prediction with Kalman filter.}
 \item{\code{fittestPolyR}}{Automatic fitting and prediction of polynomial regression.}
 \item{\code{fittestPolyRKF}}{Automatic fitting and prediction of polynomial regression with Kalman filter.}
-\item{\code{marimapred}}{Multiple time series automatic ARIMA fitting and prediction.}
+
+\item{\code{fittestMAS}}{Automatic prediction with moving average smoothing.}
+\item{\code{fittestWavelet}}{Automatic prediction with wavelet transform.}
+\item{\code{fittestEMD}}{Automatic prediction with empirical mode decomposition.}
 }
 %%~~ An overview of how to use the package, including the most important functions ~~
 }
@@ -64,7 +68,7 @@ Rebecca Pontes Salles <rebeccapsalles@acm.org> and Eduardo Ogasawara from CEFET/
 \keyword{ wavelet }
 \keyword{ EMD }
 
-\seealso{\code{\link{arimapred}}, \code{\link{marimapred}}, \code{\link{fittestArima}}, \code{\link{fittestArimaKF}}, \code{\link{fittestPolyR}}, \code{\link{fittestPolyRKF}}, \code{\link{fittestLM}}
+\seealso{\code{\link{fittestArima}}, \code{\link{fittestArimaKF}}, \code{\link{fittestPolyR}}, \code{\link{fittestPolyRKF}}, \code{\link{fittestLM}}, \code{\link{fittestMAS}}, \code{\link{fittestWavelet}}, \code{\link{fittestEMD}}
 %%~~ Optional links to other man pages, e.g. ~~
 %%~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
 }
@@ -72,7 +76,7 @@ Rebecca Pontes Salles <rebeccapsalles@acm.org> and Eduardo Ogasawara from CEFET/
 #======== Fittest linear model ========
 \dontrun{
 data(CATS,CATS.cont)
-fittest <- fittestLM(CATS[,1],CATS.cont[,1], maxorder=5, se.fit=TRUE, filtered=TRUE)
+fittest <- fittestLM(CATS[,1],CATS.cont[,1])
 
 #fittest model information
 fittest$rank[1,]
@@ -96,7 +100,7 @@ marimapred(SantaFe.A,SantaFe.A.cont)
 data(CATS,CATS.cont)
 fArima <- fittestArima(CATS[,1],CATS.cont[,1])
 #predicted values
-pred <- fArima$pred$pred
+pred <- fArima$pred$mean
 #model information
 cbind(AICc=fArima$AICc, AIC=fArima$AIC, BIC=fArima$BIC,
  logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE, 
@@ -107,18 +111,16 @@ plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),
  xlab="Time",ylab="ARIMA")
 #plotting the predicted values
 lines(ts(pred,start=981),lwd=2,col='blue')
-#plotting the confidence interval
+#plotting prediction intervals
 lines(ts(fArima$pred$upper[,2],start=981),lwd=2,col='light blue')
 lines(ts(fArima$pred$lower[,2],start=981),lwd=2,col='light blue')
 
 
 #Example 4 - automatic fitting with Kalman filter, prediction and accuracy evaluation
 data(CATS,CATS.cont)
-fArimaKF <- fittestArimaKF(CATS[,2],CATS.cont[,2], se.fit=TRUE, filtered=TRUE)
-#predicted values and estimated standard errors
+fArimaKF <- fittestArimaKF(CATS[,2],CATS.cont[,2])
+#predicted values
 pred <- fArimaKF$pred
-#model information
-fArimaKF$rank[1,]
 
 #extracting Kalman filtered and smoothed time series from the best fitted model
 fs <- KFAS::KFS(fArimaKF$model,filtering=c("state","mean"),smoothing=c("state","mean"))
@@ -132,38 +134,34 @@ lines(f,col='red',lty=2,lwd=2)
 #plotting the Kalman smoothed time series
 lines(s,col='green',lty=2,lwd=2)
 #plotting predicted values
-lines(ts(pred[,1],start=981),lwd=2,col='blue')
-#plotting estimated standard errors (confidence interval)
-lines(ts(pred[,1]+pred[,4],start=981),lwd=2,col='light blue')
-lines(ts(pred[,1]-pred[,4],start=981),lwd=2,col='light blue')
+lines(ts(pred$mean,start=981),lwd=2,col='blue')
+#plotting prediction intervals
+lines(ts(pred$upper,start=981),lwd=2,col='light blue')
+lines(ts(pred$lower,start=981),lwd=2,col='light blue')
 #======== ================ ========
 
 #======== Polynomial regression fitting and prediction ========
 #Example 1 - automatic fitting, prediction and accuracy evaluation
 data(CATS,CATS.cont)
-fPolyR <- fittestPolyR(CATS[,1],CATS.cont[,1], maxorder=5, se.fit=TRUE)
-#predicted values and estimated standard errors
+fPolyR <- fittestPolyR(CATS[,3],CATS.cont[,3])
+#predicted values
 pred <- fPolyR$pred
-#model information
-fPolyR$rank[1,]
 
 #plotting the time series data
-plot(c(CATS[,1],CATS.cont[,1]),type='o',lwd=2,xlim=c(960,1000),ylim=c(0,200),
- xlab="Time",ylab="PR")
+plot(c(CATS[,3],CATS.cont[,3]),type='o',lwd=2,xlim=c(960,1000),ylim=c(-100,300),
+xlab="Time",ylab="PR")
 #plotting predicted values
-lines(ts(pred$fit,start=981),lwd=2,col='blue')
-#plotting estimated standard errors (confidence interval)
-lines(ts(pred$fit+pred$se.fit,start=981),lwd=2,col='light blue')
-lines(ts(pred$fit-pred$se.fit,start=981),lwd=2,col='light blue')
+lines(ts(pred$mean,start=981),lwd=2,col='blue')
+#plotting prediction intervals
+lines(ts(pred$lower,start=981),lwd=2,col='light blue')
+lines(ts(pred$upper,start=981),lwd=2,col='light blue')
 
 
 #Example 2 - automatic fitting with Kalman filter, prediction and accuracy evaluation
 data(CATS,CATS.cont)
-fPolyRKF <- fittestPolyRKF(CATS[,1],CATS.cont[,1], maxorder=5, se.fit=TRUE, filtered=TRUE)
-#predicted values and estimated standard errors
+fPolyRKF <- fittestPolyRKF(CATS[,1],CATS.cont[,1])
+#predicted values
 pred <- fPolyRKF$pred
-#model information
-fPolyRKF$rank[1,]
 
 #extracting Kalman filtered and smoothed time series from the best fitted model
 fs <- KFAS::KFS(fPolyRKF$model,filtering=c("state","mean"),smoothing=c("state","mean"))
@@ -177,11 +175,29 @@ lines(f,col='red',lty=2,lwd=2)
 #plotting the Kalman smoothed time series
 lines(s,col='green',lty=2,lwd=2)
 #plotting predicted values
-lines(ts(pred[,1],start=981),lwd=2,col='blue')
-#plotting estimated standard errors (confidence interval)
-lines(ts(pred[,1]+pred[,4],start=981),lwd=2,col='light blue')
-lines(ts(pred[,1]-pred[,4],start=981),lwd=2,col='light blue')
-}
+lines(ts(pred$mean,start=981),lwd=2,col='blue')
+#plotting prediction intervals
+lines(ts(pred$lower,start=981),lwd=2,col='light blue')
+lines(ts(pred$upper,start=981),lwd=2,col='light blue')
 #======== ============================================ ========
+
+#======== Automatic moving average smoothing and ARIMA prediction ========
+fMAS <- fittestMAS(CATS[,1],h=20,model="arima")
+
+#automatically selected order of moving average
+mas.order <- fMAS$order
+#======== ======================================================= ========
+
+#======== Automatic wavelet transform and ARIMA prediction ========
+fW <- fittestWavelet(CATS[,1],h=20,model="arima")
+
+#plot wavelet transform/decomposition
+plot(fW$WT)
+#======== ================================================ ========
+
+#======== Automatic empirical mode decomposition and VAR prediction ========
+femd <- fittestEMD(CATS[,1],h=20)
+#======== =========================================================== ========
+}
 %%~~ simple examples of the most important functions ~~
 }

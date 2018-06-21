@@ -94,9 +94,9 @@ Rebecca Pontes Salles
 \examples{
 data(CATS)
 \dontrun{
-#automatically select order of moving average
 fMAS <- fittestMAS(CATS[,1],h=20,model="arima")
 
+#automatically selected order of moving average
 mas.order <- fMAS$order
 }
 }
