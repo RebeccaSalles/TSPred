@@ -182,6 +182,7 @@ lines(ts(pred$upper,start=981),lwd=2,col='light blue')
 #======== ============================================ ========
 
 #======== Automatic moving average smoothing and ARIMA prediction ========
+data(CATS,CATS.cont)
 fMAS <- fittestMAS(CATS[,1],h=20,model="arima")
 
 #automatically selected order of moving average
@@ -189,6 +190,7 @@ mas.order <- fMAS$order
 #======== ======================================================= ========
 
 #======== Automatic wavelet transform and ARIMA prediction ========
+data(CATS,CATS.cont)
 fW <- fittestWavelet(CATS[,1],h=20,model="arima")
 
 #plot wavelet transform/decomposition
@@ -196,6 +198,7 @@ plot(fW$WT)
 #======== ================================================ ========
 
 #======== Automatic empirical mode decomposition and VAR prediction ========
+data(CATS,CATS.cont)
 femd <- fittestEMD(CATS[,1],h=20)
 #======== =========================================================== ========
 }
