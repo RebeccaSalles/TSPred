@@ -77,12 +77,13 @@ updt.results <- function(obj,par=NULL,value=NULL){
     result <- obj$results[[r]]
     
     if(is.null(value)){
-      if(par %in% names(attributes(result$res))) value <- attr(result$res,par)
-      else if(par %in% names(result$res)) value <- result$res$par
+      if(par %in% names(attributes(result$res))) value_found <- attr(result$res,par)
+      else if(par %in% names(result$res)) value_found <- result$res$par
       else stop(paste("no value found for updating parameter",par,sep=" "),call. = FALSE)
     }
+    else value_found <- value
     
-    result$obj <- updt(result$obj, par=par, value=value)
+    result$obj <- updt(result$obj, par=par, value=value_found)
     
     obj$results[[r]] <- result
   }
@@ -92,19 +93,22 @@ updt.results <- function(obj,par=NULL,value=NULL){
 
 objs.results <- function(obj,...){
   objs <- list()
-  for(r in c(1:length(obj$results))) objs[[r]] <- obj$results[[r]]$obj
+  for(r in c(1:length(obj$results))) objs[[attr(obj$results[[r]]$res,"name")]] <- obj$results[[r]]$obj
   return(objs)
 }
 
 res.results <- function(obj,...){
   res <- list()
-  for(r in c(1:length(obj$results))) res[[r]] <- obj$results[[r]]$res
+  if(length(obj$results)==1 && is.list(obj$results[[1]]$res)) res <- obj$results[[1]]$res
+  else{
+    for(r in c(1:length(obj$results))) res[[attr(obj$results[[r]]$res,"name")]] <- obj$results[[r]]$res
+  }
   return(res)
 }
 
 summary.results <- function(obj,...){
   for(r in c(1:length(obj$results))){
-    if(length(obj$results)>1) cat("\nData object",r,"of",length(obj$results),"\n")
+    if(length(obj$results)>1) cat("\nData object",r,"of",length(obj$results),":",attr(obj$results[[r]]$res,"name"),"\n")
     summary(obj$results[[r]]$obj)
   }
 }

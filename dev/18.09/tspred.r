@@ -46,7 +46,7 @@ validate_tspred <- function(tspred_obj){
         stop("argument 'evaluating' must be NULL or a list of evaluating ('evaluating') objects",call. = FALSE)
   if(!is.null(values$data) && length(values$data)>0)
     for(d in values$data)
-      if(!is.null(d)&&!is.data.frame(d)&&!is.ts(d)&&!is.matrix(d)&&!is.vector(d))
+      if(!is.null(d)&&!is.data.frame(d)&&!is.ts(d)&&!is.matrix(d)&&!is.vector(d)&&!is.list(d))
         stop("argument 'data' must be NULL or a list of data ('data.frame','ts','matrix','vector') objects",call. = FALSE)
   if(!is.null(values$n.ahead) && !is.numeric(values$n.ahead))
     stop("argument 'n.ahead' must be NULL or a integer ('numeric') value",call. = FALSE)
@@ -63,15 +63,13 @@ validate_tspred <- function(tspred_obj){
 }
 
 tspred <- function(processing=NULL, modeling=NULL, evaluating=NULL,
-                   data_raw=NULL, data_prep=NULL, data_train=NULL, data_val=NULL, data_test=NULL, data_test_pred=NULL,
+                   data_raw=NULL, data_prep=NULL, data_train=NULL, data_test=NULL,
                    model=NULL, n.ahead=NULL, pred_raw=NULL, pred_postp=NULL, eval=NULL, ..., subclass=NULL){
   
   data <- list( raw = data_raw, 
                 prep = data_prep,
                 train = data_train,
-                val = data_val, 
-                test = data_test,
-                test_pred = data_test_pred)
+                test = data_test)
   pred <- list( raw = pred_raw,
                 postp = pred_postp)
   
@@ -86,7 +84,7 @@ is.tspred <- function(tspred_obj){
   is(tspred_obj,"tspred")
 }
 
-prep.tspred <- function(obj,data=NULL,...){ #DO
+prep.tspred <- function(obj,data=NULL,...){
   
   if(is.null(data)){
     if(is.null(obj$data$raw)) stop("no data was provided for computation",call. = FALSE)
@@ -142,7 +140,7 @@ summary.tspred <- function(obj,...){
   for(l in c(1:length(obj$processing))){
     cat("\nMethod",l,"of",length(obj$processing),"...\n")
     for(p in c(1:length(obj$processing[[l]]))){
-      if(length(obj$processing[[l]])>1) cat("\nProcessing for data object",r,"of",length(obj$processing[[l]]),"\n")
+      if(length(obj$processing[[l]])>1) cat("\nProcessing for data object",p,"of",length(obj$processing[[l]]),"\n")
       summary(obj$processing[[l]][[p]])
     }
   }

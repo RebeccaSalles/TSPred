@@ -7,6 +7,7 @@ data("CATS")
 	#Obtaining objects of the processing class
   proc1 <- LT(base=2)
   proc2 <- BCT(lambda=NULL)
+  proc3 <- WT(level=NULL,filter=c("la8","d4","bl14","c6"),prep_par=list(model="arima"))
   
   #Obtaining objects of the modeling class
   modl1 <- ARIMA()
@@ -15,7 +16,7 @@ data("CATS")
   eval1 <- MSE()
   
 #Defining (not running) the first time series prediction process
-  tspred_1_specs <- tspred(processing=list(LT=proc1,BCT=proc2), modeling=modl1, evaluating=list(eval1))
+  tspred_1_specs <- tspred(processing=list(BCT=proc2,WT=proc3), modeling=modl1, evaluating=list(eval1))
 				 
 #Running the first time series prediction process (optional)
   tspred_1 <- prep.tspred(tspred_1_specs,data=CATS[3])

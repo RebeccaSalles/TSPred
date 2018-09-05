@@ -121,7 +121,7 @@ is.processing <- function(processing_obj){
   is(processing_obj,"processing")
 }
 
-run.processing <- function(obj,data,...,iterate_data=TRUE,rev=FALSE){
+run.processing <- function(obj,data,...,map=TRUE,rev=FALSE){
   
   proc <- function(obj,data,...,rev=FALSE){
     if(!rev) run(obj$prep,data,...)
@@ -129,11 +129,12 @@ run.processing <- function(obj,data,...,iterate_data=TRUE,rev=FALSE){
   }
   
   res <- list()
-  if(iterate_data){
+  if(map){
     for(d in c(1:length(data))){
       data_d <- as.ts(data[[d]])
       
       proc_res <- proc(obj,data_d,...,rev=rev)
+      attr(proc_res,"name") <- names(data[d])
       res[[d]] <- result(obj,proc_res)
     }
   }

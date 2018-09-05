@@ -37,6 +37,39 @@ summary.BCT <- function(obj,...){
 }
 
 
+#Subclass WT  #DO
+WT <- function(level=NULL,filter=NULL,boundary="periodic",prep_par=NULL,postp_par=NULL,...){
+  processing(prep_func = WaveletT, prep_par = c(list(level=level,filter=filter,boundary=boundary),prep_par),
+             postp_func = WaveletT.rev, postp_par = c(list(wt_obj=NULL),postp_par),
+             method = "Wavelet transform",..., subclass ="WT")
+}
+run.WT <- function(obj,...,rev=FALSE){
+  #get result from run.processing
+  results <- NextMethod()
+  #browser()
+  
+  #if preprocessing with undefined parameters, update computed values of parameters in the WT object(s)
+  if(!rev){
+    if(is.null(obj$postp$par$wt_obj)) results <- updt(results, par="wt_obj")
+    if(is.null(obj$prep$par$level)) results <- updt(results, par="level", value=results[[1]]$obj$postp$par$wt_obj@level) 
+    if(is.null(obj$prep$par$filter)) results <- updt(results, par="filter", value=results[[1]]$obj$postp$par$wt_obj@filter)
+  }
+  
+  return(results)
+}
+summary.WT <- function(obj,...){
+  NextMethod()
+  if(!is.null(obj$prep$par) || !is.null(obj$postp$par))  cat("Parameters:\n")
+  cat("\tLevel: ",obj$prep$par$level,"\n")
+  cat("\tFilter: ",obj$prep$par$filter,"\n")
+  cat("\tBoundary: ",obj$prep$par$boundary,"\n")
+  if(length(obj$prep$par)>3){
+    cat("\nOther parameters:\n")
+    print(obj$prep$par[-(1:3)])
+  }
+}
+
+
 
 
 
@@ -121,24 +154,6 @@ summary.LT <- function(obj,...){
 }
 
 #Subclass EMD  #DO
-LT <- function(){
-  processing(prep_func=TSPred::LT, postp_func=TSPred::LT.rev, method="Logarithmic transform", subclass="LT")
-}
-
-summary.LT <- function(obj,...){
-  NextMethod()
-  if(!is.null(obj$prep$par) || !is.null(obj$postp$par))  cat("Parameters:\n")
-  if(!is.null(obj$prep$par)){
-    cat("\tPre-processing:\n")
-    print(obj$prep$par)
-  }
-  if(!is.null(obj$postp$par)){
-    cat("\tPost-processing:\n")
-    print(obj$postp$par)
-  }
-}
-
-#Subclass WT  #DO
 LT <- function(){
   processing(prep_func=TSPred::LT, postp_func=TSPred::LT.rev, method="Logarithmic transform", subclass="LT")
 }
