@@ -31,15 +31,16 @@ validate_tspred <- function(tspred_obj){
   
   if(!is.null(values$processing) && length(values$processing)>0)
     for(p in values$processing){
-      #browser()
       if(!is.processing(p)){
         for(pp in p)
           if(!is.processing(pp))
             stop("argument 'processing' must be NULL or a list of processing ('processing') objects",call. = FALSE)
       }
     }
-  if(!is.null(values$modeling) && !is.modeling(values$modeling))
-        stop("argument 'modeling' must be NULL or a modeling ('modeling') object",call. = FALSE)
+  if(!is.null(values$modeling) && !is.modeling(values$modeling) && length(values$processing)>0)
+    for(m in values$modeling)
+      if(!is.modeling(m))
+        stop("argument 'modeling' must be NULL or a (list of) modeling ('modeling') object(s)",call. = FALSE)
   if(!is.null(values$evaluating) && length(values$evaluating)>0)
     for(e in values$evaluating)
       if(!is.evaluating(e))
@@ -84,7 +85,7 @@ is.tspred <- function(tspred_obj){
   is(tspred_obj,"tspred")
 }
 
-prep.tspred <- function(obj,data=NULL,...){
+preprocess.tspred <- function(obj,data=NULL,...){
   
   if(is.null(data)){
     if(is.null(obj$data$raw)) stop("no data was provided for computation",call. = FALSE)
@@ -163,9 +164,9 @@ train.tspred <- function(obj,data=NULL,...){
 
 #============== DO ==============
 
-pred.tspred <- function(obj,...){}
-postp.tspred <- function(obj,...){}
-eval.tspred <- function(obj,...){}
+predict.tspred <- function(obj,...){}
+postprocess.tspred <- function(obj,...){}
+evaluate.tspred <- function(obj,...){}
 
 run.tspred <- function(obj,...){}
 

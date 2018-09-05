@@ -20,7 +20,10 @@ data("CATS")
   tspred_1_specs <- tspred(processing=list(BCT=proc2,WT=proc3), modeling=modl1, evaluating=list(eval1))
 				 
 #Running the first time series prediction process (optional)
-  tspred_1 <- prep.tspred(tspred_1_specs,data=CATS[3])
+  tspred_1_prep <- preprocess(tspred_1_specs,data=CATS[3])
+  tspred_1_train <- train(tspred_1_prep)
+  #Note: 1- allowing running the same tspred obj more than once (tip: always prepare to the case of lists),
+  #      2- update validate_tspred
   
   summary(tspred_1)
   

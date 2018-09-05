@@ -15,3 +15,20 @@ objs <- function(obj,...){
 res <- function(obj,...){
   UseMethod("res")
 }
+
+preprocess <- function(obj,...){
+  UseMethod("preprocess")
+}
+train <- function(obj,...){
+  UseMethod("train")
+}
+#predict is already a generic method
+#predict <- function(obj,...){
+#  UseMethod("predict")
+#}
+postprocess <- function(obj,...){
+  UseMethod("postprocess")
+}
+evaluate <- function(obj,...){
+  UseMethod("evaluate")
+}
