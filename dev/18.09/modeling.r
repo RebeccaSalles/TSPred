@@ -147,10 +147,6 @@ run.modeling <- function(obj,input,...,map=TRUE,pred=FALSE){
   return(results(res))
 }
 
-
-
-
-
 #Summary method
 summary.modeling <- function(obj,...){
   cat("Modeling class object\n")
