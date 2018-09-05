@@ -7,7 +7,8 @@ data("CATS")
 	#Obtaining objects of the processing class
   proc1 <- LT(base=2)
   proc2 <- BCT(lambda=NULL)
-  proc3 <- WT(level=NULL,filter=c("la8","d4","bl14","c6"),prep_par=list(model="arima"))
+  proc3 <- WT(level=NULL, filter=c("la8","d4","bl14","c6"),
+              prep_par=list(model="arima",h=20))
   
   #Obtaining objects of the modeling class
   modl1 <- ARIMA()

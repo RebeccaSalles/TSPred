@@ -121,14 +121,34 @@ is.modeling <- function(modeling_obj){
   is(modeling_obj,"modeling")
 }
 
-run.modeling <- function(obj,...,pred=FALSE){
-  if(!pred)
-    result <- run(obj$train,...)
-  else
-    result <- run(obj$pred,...)
+run.modeling <- function(obj,input,...,map=TRUE,pred=FALSE){
   
-  return(list(obj=obj,res=result))
+  mdl <- function(obj,input,...,pred=FALSE){
+    if(!pred) run(obj$train,input,...)
+    else run(obj$pred,input,...)
+  }
+  
+  res <- list()
+  if(map){
+    for(i in c(1:length(input))){
+      input_i <- input[[i]]
+      if(!pred) input_i <- as.ts(input[[i]])
+      
+      proc_res <- proc(obj,input_i,...,pred=pred)
+      attr(proc_res,"name") <- names(input[i])
+      res[[i]] <- result(obj,proc_res)
+    }
+  }
+  else {
+    proc_res <- proc(obj,input,...,pred=pred)
+    res[[1]] <- result(obj,proc_res)
+  }
+  
+  return(results(res))
 }
+
+
+
 
 
 #Summary method

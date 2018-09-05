@@ -91,12 +91,12 @@ prep.tspred <- function(obj,data=NULL,...){
     else data <- obj$data$raw
   }
   else{
-    if(!is.null(obj$data$raw)) message("Updating data ('data$raw') in the tspred object")
+    if(!is.null(obj$data$raw)) warning("Updating data ('data$raw') in the tspred object")
     obj$data$raw <- data
   }
   
   if(!is.null(obj$data$prep)){
-    message("Updating data ('data$prep') in the tspred object")
+    warning("Updating data ('data$prep') in the tspred object")
     obj$data$prep <- NULL
   }
   
@@ -122,17 +122,52 @@ prep.tspred <- function(obj,data=NULL,...){
 }
 
 
-
+train.tspred <- function(obj,data=NULL,...){
+  
+  if(is.null(data)){
+    if(!is.null(obj$data$prep)) data <- obj$data$prep
+    else if(!is.null(obj$data$raw)) data <- obj$data$raw
+    else stop("no data was provided for computation",call. = FALSE)
+  }
+  else{
+    if(!is.null(obj$data$raw)) warning("Updating data ('data$raw') in the tspred object")
+    if(!is.null(obj$data$prep)) warning("Preprocessed data ('data$prep') is now obsolete. Removing inconsistent data ('data$prep') in the tspred object")
+    if(!is.null(obj$processing)&&length(obj$processing)>0) warning("Processing objects ('processing') were ignored in the tspred object")
+    obj$data$raw <- data
+    obj$data$prep <- NULL
+    obj$processing <- list()
+  }
+  
+  if(!is.null(obj$model)){
+    warning("Updating model in the tspred object")
+    obj$model <- NULL
+  }
+  
+  cat("\nRunning modeling method...")
+    
+  proc_res <- run(obj$modeling, data, ..., pred=FALSE)
+  
+  obj$modeling <- objs(proc_res)
+  
+  models <- res(proc_res)
+  
+  cat("\nSummary:\n")
+  summary(proc_res)
+  cat("DONE!\n")
+ 
+  obj$model <- models
+  
+  return(validate_tspred(obj))
+}
 
 
 #============== DO ==============
 
-train.tspred <- function(obj,...,pred=FALSE){}
-pred.tspred <- function(obj,...,pred=FALSE){}
-postp.tspred <- function(obj,...,pred=FALSE){}
-eval.tspred <- function(obj,...,pred=FALSE){}
+pred.tspred <- function(obj,...){}
+postp.tspred <- function(obj,...){}
+eval.tspred <- function(obj,...){}
 
-run.tspred <- function(obj,...,pred=FALSE){}
+run.tspred <- function(obj,...){}
 
 summary.tspred <- function(obj,...){
   cat("\nTSPred class object\n\n")
