@@ -23,7 +23,7 @@ NNET <- function(size=5,train_par=NULL, pred_par=list(level=c(80,95))){
   
   nnet_io <- function(data,...){
     io <- mlm_io(data)
-    do.call(nnet::nnet,c(io$input,io$output,list(...)))
+    do.call(nnet::nnet,c(list(x=io$input),list(y=io$output),list(...)))
   }
   
   modeling(train_func = nnet_io, train_par=c(list(size=size),train_par),
@@ -33,14 +33,14 @@ NNET <- function(size=5,train_par=NULL, pred_par=list(level=c(80,95))){
 summary.NNET <- function(obj,...){
   NextMethod()
   if(!is.null(obj$train$par) || !is.null(obj$pred$par))  cat("Parameters:\n")
-  cat("\tUnits in the hidden layer: ",obj$train$size,"\n")
+  cat("\tUnits in the hidden layer: ",obj$train$par$size,"\n")
   if(length(obj$train$par)>1){
     cat("\nOther parameters:\n")
     print(obj$train$par[-1])
   }
   
   if(!is.null(obj$pred$par)){
-    cat("\tPredicting parameters:\n")
+    cat("Predicting parameters:\n")
     print(obj$pred$par)
   }
 }

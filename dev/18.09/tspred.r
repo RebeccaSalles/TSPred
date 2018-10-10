@@ -218,10 +218,48 @@ train.tspred <- function(obj,data=NULL,...){
   return(validate_tspred(obj))
 }
 
-
+predict.tspred <- function(obj,data=NULL,...){
+  if(is.null(data)){
+    if(!is.null(obj$data$train)) data <- obj$data$train
+    else if(!is.null(obj$data$prep)) data <- obj$data$prep
+    else if(!is.null(obj$data$raw)) data <- obj$data$raw
+    else stop("no data was provided for computation",call. = FALSE)
+  }
+  else{
+    if(!is.null(obj$data$train)) warning("Updating training data ('data$train') in the tspred object")
+    if(!is.null(obj$data$raw)) warning("Updating data ('data$raw') in the tspred object")
+    if(!is.null(obj$data$prep)) warning("Preprocessed data ('data$prep') is now obsolete. Removing inconsistent data ('data$prep') in the tspred object")
+    if(!is.null(obj$processing)&&length(obj$processing)>0) warning("Processing objects ('processing') were ignored in the tspred object")
+    obj$data$train <- data
+    obj$data$raw <- data
+    obj$data$prep <- NULL
+    obj$processing <- list()
+  }
+  
+  if(!is.null(obj$model)){
+    warning("Updating model in the tspred object")
+    obj$model <- NULL
+  }
+  
+  cat("\nRunning modeling method...")
+  
+  proc_res <- run(obj$modeling, data, ..., pred=FALSE)
+  
+  obj$modeling <- objs(proc_res)
+  
+  models <- res(proc_res)
+  
+  cat("\nSummary:\n")
+  summary(proc_res)
+  cat("DONE!\n")
+  
+  obj$model <- models
+  
+  
+  return(validate_tspred(obj))
+}
 #============== DO ==============
 
-predict.tspred <- function(obj,...){}
 postprocess.tspred <- function(obj,...){}
 evaluate.tspred <- function(obj,...){}
 
