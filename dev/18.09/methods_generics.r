@@ -19,16 +19,24 @@ res <- function(obj,...){
 preprocess <- function(obj,...){
   UseMethod("preprocess")
 }
+
+subset <- function(obj,...){
+  UseMethod("subset")
+}
+
 train <- function(obj,...){
   UseMethod("train")
 }
+
 #predict is already a generic method
 #predict <- function(obj,...){
 #  UseMethod("predict")
 #}
+
 postprocess <- function(obj,...){
   UseMethod("postprocess")
 }
+
 evaluate <- function(obj,...){
   UseMethod("evaluate")
 }

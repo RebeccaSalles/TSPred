@@ -70,6 +70,35 @@ summary.WT <- function(obj,...){
   }
 }
 
+
+#Subclass subset
+subsetting <- function(train_perc=0.8, test_len=NULL){
+  processing(prep_func = train_test_subset, prep_par = list(train_perc=train_perc,test_len=test_len),
+             postp_func = NULL, postp_par = NULL,
+             method = "Subsetting data into training and testing sets", subclass ="subsetting")
+}
+summary.subsetting <- function(obj,...){
+  NextMethod()
+  if(!is.null(obj$prep$par) || !is.null(obj$postp$par))  cat("Parameters:\n")
+  if(!is.null(obj$prep$par$test_len))
+    cat("\tTesting set length: ",obj$prep$par$test_len,"\n")
+  else
+    cat("\tTraining set percentage: ",obj$prep$par$train_perc,"\n")
+}
+
+
+#Subclass sw
+SW <- function(window_len=NULL){
+  processing(prep_func = sw, prep_par = list(k=window_len),
+             postp_func = NULL, postp_par = NULL,
+             method = "Sliding windows", subclass ="SW")
+}
+summary.SW <- function(obj,...){
+  NextMethod()
+  if(!is.null(obj$prep$par) || !is.null(obj$postp$par))  cat("Parameters:\n")
+  cat("\tWindow length: ",obj$prep$par$k,"\n")
+}
+
 #============== DO ==============
 
 #Subclass PCT  #DO

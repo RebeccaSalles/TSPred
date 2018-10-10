@@ -1,5 +1,5 @@
 #Class train
-new_train <- function(func, par, ..., subclass=NULL){
+new_trn <- function(func, par, ..., subclass=NULL){
   stopifnot(is.function(func))
   if(!is.null(par)) stopifnot(is.list(par))
   
@@ -9,12 +9,12 @@ new_train <- function(func, par, ..., subclass=NULL){
       par = par,
       ...
     ),
-    class = c(subclass,"train")
+    class = c(subclass,"trn")
   )
 }
 
-validate_train <- function(train_obj){
-  values <- unclass(train_obj)
+validate_trn <- function(trn_obj){
+  values <- unclass(trn_obj)
   
   if(is.null(values$func) || !is.function(values$func)) {
     stop("argument 'func' must be a non-missing training function",call. = FALSE)
@@ -23,19 +23,19 @@ validate_train <- function(train_obj){
     stop("argument 'par' must be NULL or a list of named parameters",call. = FALSE)
   }
   
-  return(train_obj)
+  return(trn_obj)
 }
 
-train <- function(func, par=NULL, ..., subclass=NULL){
-  validate_train(new_train(func, par, ..., subclass=subclass))
+trn <- function(func, par=NULL, ..., subclass=NULL){
+  validate_trn(new_trn(func, par, ..., subclass=subclass))
 }
 
-is.train <- function(train_obj){
-  is(train_obj,"train")
+is.trn <- function(trn_obj){
+  is(trn_obj,"trn")
 }
 
-run.train <- function(obj,...){
-  do.call(obj$func,c(obj$par,list(...)))
+run.trn <- function(obj,...){
+  do.call(obj$func,c(list(...),obj$par))
 }
 
 
@@ -76,13 +76,13 @@ is.pred <- function(pred_obj){
 }
 
 run.pred <- function(obj,...){
-  do.call(obj$func,c(obj$par,list(...)))
+  do.call(obj$func,c(list(...),obj$par))
 }
 
 
 #Class modeling
 new_modeling <- function(train, pred, ..., subclass=NULL){
-  stopifnot(is.train(train))
+  stopifnot(is.trn(train))
   if(!is.null(pred)) stopifnot(is.pred(pred))
   
   structure(
@@ -98,8 +98,8 @@ new_modeling <- function(train, pred, ..., subclass=NULL){
 validate_modeling <- function(modeling_obj){
   values <- unclass(modeling_obj)
   
-  if(is.null(values$train) || !is.train(values$train)) {
-    stop("argument 'train' must be a non-missing training ('train') object",call. = FALSE)
+  if(is.null(values$train) || !is.trn(values$train)) {
+    stop("argument 'train' must be a non-missing training ('trn') object",call. = FALSE)
   }
   if(!is.null(values$pred) && !is.pred(values$pred)) {
     stop("argument 'pred' must be NULL or a prediction ('pred') object",call. = FALSE)
@@ -108,11 +108,12 @@ validate_modeling <- function(modeling_obj){
   return(modeling_obj)
 }
 
+
 modeling <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, ..., subclass=NULL){
-  train_obj <- do.call(train,c(train_func, train_par, subclass=NULL))
+  train_obj <- do.call(trn,list(func=train_func, par=train_par, subclass=NULL))
   pred_obj <- NULL
   if(!is.null(pred_func))
-    pred_obj <- do.call(pred,c(pred_func, pred_par, subclass=NULL))
+    pred_obj <- do.call(pred,list(func=pred_func, par=pred_par, subclass=NULL))
   
   validate_modeling(new_modeling(train_obj, pred_obj, ..., subclass=subclass))
 }
@@ -154,5 +155,5 @@ summary.modeling <- function(obj,...){
   if(is.null(obj$method)) cat("Method: Description not provided\n")
   else cat("Method: ",obj$method,"\n")
   
-  if(is.null(obj$train$par) && is.null(obj$pred$par)) cat("Parameters: N/A\n")
+  if(is.null(obj$trn$par) && is.null(obj$pred$par)) cat("Parameters: N/A\n")
 }
