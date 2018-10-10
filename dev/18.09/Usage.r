@@ -29,7 +29,6 @@ data("CATS")
   
   tspred_1_train <- train(tspred_1_subset)
   
-  
   summary(tspred_1)
   
   View(tspred_1)
