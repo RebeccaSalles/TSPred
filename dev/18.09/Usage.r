@@ -39,6 +39,7 @@ data("CATS")
   #preprocessed data == BCT(LT(data)) ? YES!
   all( round(tspred_1$data$prep[[1]],5) == round(TSPred::BCT(LogT(CATS[,3],2)),5) ,na.rm=TRUE)
   
-  
+  io <- mlm_io(tspred_1_subset$data$train$W1)
+  mdl <- nnet::nnet(x=io$input,y=io$output,size=5)
 
 #Note: 1- update validate_tspred
