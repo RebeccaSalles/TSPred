@@ -14,7 +14,7 @@ data("CATS")
   
   #Obtaining objects of the modeling class
   modl1 <- ARIMA()
-  modl2 <- NNET(size=5)
+  modl2 <- NNET(size=5,train_par=list())
   
   #Obtaining objects of the evaluating class
   eval1 <- MSE()
@@ -28,6 +28,8 @@ data("CATS")
   tspred_1_subset <- subset(tspred_1_prep)
   
   tspred_1_train <- train(tspred_1_subset)
+  
+  tspred_1_pred <- predict(tspred_1_train, input_test_data=TRUE)
   
   summary(tspred_1)
   

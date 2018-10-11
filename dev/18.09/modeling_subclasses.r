@@ -26,8 +26,15 @@ NNET <- function(size=5,train_par=NULL, pred_par=list(level=c(80,95))){
     do.call(nnet::nnet,c(list(x=io$input),list(y=io$output),list(...)))
   }
   
+  predict_io <- function(input,...){
+    mdl <- input[[1]]
+    newdata <- input[[2]]
+    io <- mlm_io(newdata)
+    do.call(predict,c(list(object=mdl),list(newdata=io$input),list(...)))
+  }
+  
   modeling(train_func = nnet_io, train_par=c(list(size=size),train_par),
-           pred_func = predict, pred_par=c(list(pred_par)),
+           pred_func = predict_io, pred_par=c(pred_par),
            method="Artificial Neural Network model", subclass="NNET")
 }
 summary.NNET <- function(obj,...){

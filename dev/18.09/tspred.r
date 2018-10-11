@@ -148,7 +148,7 @@ subset.tspred <- function(obj,data=NULL,...){
     obj$data$test <- NULL
   }
   
-  cat("\nSubsetting the data into training and testing ")
+  cat("\nSubsetting the data into training and testing...")
   
   if(!is.null(obj$n.ahead)){
     warning("Setting testing set length from the prediction horizon ('n.ahead') of the tspred object")
@@ -202,14 +202,14 @@ train.tspred <- function(obj,data=NULL,...){
   
   cat("\nRunning modeling method...")
     
-  proc_res <- run(obj$modeling, data, ..., pred=FALSE)
+  mdl_res <- run(obj$modeling, data, ..., pred=FALSE)
   
-  obj$modeling <- objs(proc_res)
+  obj$modeling <- objs(mdl_res)
   
-  models <- res(proc_res)
+  models <- res(mdl_res)
   
   cat("\nSummary:\n")
-  summary(proc_res)
+  summary(mdl_res)
   cat("DONE!\n")
  
   obj$model <- models
@@ -218,46 +218,42 @@ train.tspred <- function(obj,data=NULL,...){
   return(validate_tspred(obj))
 }
 
-predict.tspred <- function(obj,data=NULL,...){
-  if(is.null(data)){
-    if(!is.null(obj$data$train)) data <- obj$data$train
-    else if(!is.null(obj$data$prep)) data <- obj$data$prep
-    else if(!is.null(obj$data$raw)) data <- obj$data$raw
-    else stop("no data was provided for computation",call. = FALSE)
+predict.tspred <- function(obj,input_test_data=FALSE,...){
+  if(input_test_data){
+    if(!is.null(obj$data$test)) data <- obj$data$test
+    else stop("no input data was provided for prediction ('data$test is NULL')",call. = FALSE)
   }
   else{
-    if(!is.null(obj$data$train)) warning("Updating training data ('data$train') in the tspred object")
-    if(!is.null(obj$data$raw)) warning("Updating data ('data$raw') in the tspred object")
-    if(!is.null(obj$data$prep)) warning("Preprocessed data ('data$prep') is now obsolete. Removing inconsistent data ('data$prep') in the tspred object")
-    if(!is.null(obj$processing)&&length(obj$processing)>0) warning("Processing objects ('processing') were ignored in the tspred object")
-    obj$data$train <- data
-    obj$data$raw <- data
-    obj$data$prep <- NULL
-    obj$processing <- list()
+    data <- NULL
+  }
+
+  if(!is.null(obj$pred$raw)){
+    warning("Updating predicted data ('pred$raw') in the tspred object")
+    obj$pred$raw <- NULL
   }
   
-  if(!is.null(obj$model)){
-    warning("Updating model in the tspred object")
-    obj$model <- NULL
+  cat("\nRunning prediction method...")
+  
+  if(!is.null(data)){
+    pred_input <- lapply(seq_along(obj$model),function(i) c(list(obj$model[[i]]),list(data[[i]])))
+    names(pred_input) <- names(data)
+    mdl_res <- run(obj$modeling[[1]], pred_input, ..., pred=TRUE)
   }
+  else
+    mdl_res <- run(obj$modeling[[1]], obj$model, ..., pred=TRUE)
   
-  cat("\nRunning modeling method...")
+  pred_prep <- res(mdl_res)
   
-  proc_res <- run(obj$modeling, data, ..., pred=FALSE)
-  
-  obj$modeling <- objs(proc_res)
-  
-  models <- res(proc_res)
+  obj$pred$raw <- pred_prep
   
   cat("\nSummary:\n")
-  summary(proc_res)
+  summary(mdl_res)
   cat("DONE!\n")
-  
-  obj$model <- models
-  
   
   return(validate_tspred(obj))
 }
+
+
 #============== DO ==============
 
 postprocess.tspred <- function(obj,...){}
