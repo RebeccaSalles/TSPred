@@ -21,17 +21,18 @@ data("CATS")
   
 #Defining (not running) the first time series prediction process
   tspred_1_specs <- tspred(processing=list(BCT=proc2, WT=proc3, SW=proc4), 
-                           subsetting=proc5, modeling=modl2, evaluating=list(eval1))
+                           subsetting=proc5, modeling=modl2, evaluating=list(MSE=eval1))
 				 
-#Running the first time series prediction process (optional)
-  tspred_1_prep <- preprocess(tspred_1_specs,data=CATS[3])
-  tspred_1_subset <- subset(tspred_1_prep)
+#Running the first time series prediction process
+  tspred_1_subset <- subset(tspred_1_specs, data=CATS[3])
   
-  tspred_1_train <- train(tspred_1_subset)
+  tspred_1_prep <- preprocess(tspred_1_subset,prep_test=TRUE)
+  
+  tspred_1_train <- train(tspred_1_prep)
   
   tspred_1_pred <- predict(tspred_1_train, input_test_data=TRUE)
   
-  summary(tspred_1)
+  summary(tspred_1_specs)
   
   View(tspred_1)
   
