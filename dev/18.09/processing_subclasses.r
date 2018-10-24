@@ -123,6 +123,28 @@ summary.NAS <- function(obj,...){
 }
 
 
+#Subclass minmax
+MinMax <- function(min=NULL,max=NULL){
+  processing(prep_func = minmax, prep_par = list(min=min,max=max),
+             postp_func = minmax.rev, postp_par = list(min=min,max=max),
+             method = "MinMax normalization", subclass ="MinMax")
+}
+run.MinMax <- function(obj,...,rev=FALSE){
+  results <- NextMethod()
+  
+  if(!rev && is.null(obj$prep$par$min)) results <- updt(results, par="min")
+  if(!rev && is.null(obj$prep$par$max)) results <- updt(results, par="max")
+  
+  return(results)
+}
+summary.MinMax <- function(obj,...){
+  NextMethod()
+  if(!is.null(obj$prep$par) || !is.null(obj$postp$par))  cat("Parameters:\n")
+  cat("\tMin: ",obj$prep$par$min,"\n")
+  cat("\tMax: ",obj$prep$par$max,"\n")
+}
+
+
 #============== DO ==============
 
 #Subclass PCT  #DO
@@ -131,7 +153,6 @@ summary.NAS <- function(obj,...){
 #Subclass DIF  #DO
 #Subclass EMD  #DO
 #Subclass THieF  #DO
-#Subclass SW  #DO
 #Subclass minmax  #DO
 #Subclass zscore  #DO
 #Subclass AN  #DO

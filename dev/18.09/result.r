@@ -93,7 +93,11 @@ updt.results <- function(obj,par=NULL,value=NULL){
 
 objs.results <- function(obj,...){
   objs <- list()
-  for(r in c(1:length(obj$results))) objs[[attr(obj$results[[r]]$res,"name")]] <- obj$results[[r]]$obj
+  for(r in c(1:length(obj$results))){
+    ts_name <- attr(obj$results[[r]]$res,"name")
+    if(is.null(ts_name)) ts_name <- "tmp_name"
+    objs[[ts_name]] <- obj$results[[r]]$obj
+  }
   return(objs)
 }
 

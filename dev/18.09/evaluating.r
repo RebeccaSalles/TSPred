@@ -34,10 +34,12 @@ is.evaluating <- function(evaluating_obj){
   is(evaluating_obj,"evaluating")
 }
 
-run.evaluating <- function(obj,...){
-  result <- do.call(obj$func,c(obj$par,list(...)))
-  
-  return(list(obj=obj,res=result))
+run.evaluating <- function(obj, test, pred, ...){
+  result <- do.call(obj$func,c(list(test),list(pred),list(...),obj$par))
+  attr(result,"name") <- attr(test,"name")
+  res <- list(result(obj,result))
+
+  return(results(res))
 }
 
 

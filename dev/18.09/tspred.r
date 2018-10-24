@@ -52,7 +52,9 @@ validate_tspred <- function(tspred_obj){
   if(!is.null(values$evaluating) && length(values$evaluating)>0)
     for(e in values$evaluating)
       if(!is.evaluating(e))
-        stop("argument 'evaluating' must be NULL or a list of evaluating ('evaluating') objects",call. = FALSE)
+        for(ee in e)
+          if(!is.evaluating(ee))
+            stop("argument 'evaluating' must be NULL or a list of evaluating ('evaluating') objects",call. = FALSE)
   if(!is.null(values$data) && length(values$data)>0)
     for(d in values$data)
       if(!is.null(d)&&!is.data.frame(d)&&!is.ts(d)&&!is.matrix(d)&&!is.vector(d)&&!is.list(d))
@@ -263,7 +265,7 @@ predict.tspred <- function(obj,input_test_data=FALSE,...){
     mdl_res <- run(obj$modeling[[1]], pred_input, ..., pred=TRUE)
   }
   else
-    mdl_res <- run(obj$modeling[[1]], obj$model, ..., pred=TRUE)
+    mdl_res <- run(obj$modeling[[1]], obj$model, obj$n.ahead, ..., pred=TRUE)
   
   pred_prep <- res(mdl_res)
   
@@ -337,10 +339,43 @@ postprocess.tspred <- function(obj,...){
   return(validate_tspred(obj))
 }
 
+evaluate.tspred <- function(obj,...){
+  
+  if(!is.null(obj$pred$postp)) pred <- obj$pred$postp[[1]]
+  else if(!is.null(obj$pred$raw)) pred <- obj$pred$raw[[1]]
+  else stop("no predicted data was provided for computation",call. = FALSE)
+  
+  if(!is.null(obj$data$test)) data_test <- obj$data$test[[1]]
+  else stop("no test data was provided for computation",call. = FALSE)
+  
+  if(!is.null(obj$eval)){
+    warning("Updating eval in the tspred object")
+    obj$eval <- NULL
+  }
+  
+  attr(pred,"name") <- attr(data_test,"name") <- names(obj$pred$postp)
+  eval <- list()
+  
+  for(e in c(1:length(obj$evaluating))){
+    cat("\nRunning evaluating method",e,"of",length(obj$evaluating),"...")
+    
+    proc_res <- run(obj$evaluating[[e]], data_test, pred, ...)
+    
+    obj$evaluating[[e]] <- objs(proc_res)
+    
+    eval[[names(obj$evaluating[e])]] <- res(proc_res)
+    
+    cat("\nSummary:\n")
+    summary(proc_res)
+    cat("DONE!\n")
+  }
+  
+  obj$eval <- eval
+  
+  return(validate_tspred(obj))
+}
+
 #============== DO ==============
-
-
-evaluate.tspred <- function(obj,...){}
 
 run.tspred <- function(obj,...){}
 
@@ -349,10 +384,7 @@ summary.tspred <- function(obj,...){
   cat("====Data processing:====\n")
   for(l in c(1:length(obj$processing))){
     cat("\nMethod",l,"of",length(obj$processing),"...\n")
-    for(p in c(1:length(obj$processing[[l]]))){
-      if(length(obj$processing[[l]])>1) cat("\nProcessing for data object",p,"of",length(obj$processing[[l]]),"\n")
-      summary(obj$processing[[l]][[p]])
-    }
+    summary(obj$processing[[l]])
   }
   cat("\n====Modelling:====\n\n")
   summary(obj$modeling)
