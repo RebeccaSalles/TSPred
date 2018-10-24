@@ -99,9 +99,15 @@ objs.results <- function(obj,...){
 
 res.results <- function(obj,...){
   res <- list()
-  if(length(obj$results)==1 && is.list(obj$results[[1]]$res)) res <- obj$results[[1]]$res
+  if(length(obj$results)==1 && is.list(obj$results[[1]]$res)){
+    res <- obj$results[[1]]$res
+  }
   else{
-    for(r in c(1:length(obj$results))) res[[attr(obj$results[[r]]$res,"name")]] <- obj$results[[r]]$res
+    for(r in c(1:length(obj$results))) {
+      ts_name <- attr(obj$results[[r]]$res,"name")
+      if(is.null(ts_name)) ts_name <- "tmp_name"
+      res[[ts_name]] <- obj$results[[r]]$res
+    }
   }
   return(res)
 }

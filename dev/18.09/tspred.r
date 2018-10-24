@@ -167,18 +167,27 @@ preprocess.tspred <- function(obj,prep_test=FALSE,...){
   for(p in c(1:length(obj$processing))){
     cat("\nRunning preprocessing method",p,"of",length(obj$processing),"...")
     
+    attr(data_prep,"subset") <- "train"
+    
     proc_res <- run(obj$processing[[p]], data_prep, ..., rev=FALSE)
     
     obj$processing[[p]] <- list()
     obj$processing[[p]]$train <- objs(proc_res)
     obj$processing[[p]]$test <- list()
     
+    last_data_prep <- data_prep
     data_prep <- res(proc_res)
     
     if(prep_test){
       for(ts in names(obj$processing[[p]]$train)){
         data_prep_test_ts <- list(data_prep_test[[ts]])
         names(data_prep_test_ts) <- ts
+        
+        last_data_prep_ts <- last_data_prep[[ts]]
+        names(last_data_prep_ts) <- ts
+        
+        attr(data_prep_test_ts,"subset") <- "test"
+        attr(data_prep_test_ts,"train_data") <- last_data_prep_ts
         
         proc_res_test <- run(obj$processing[[p]]$train[[ts]], data_prep_test_ts, ..., rev=FALSE)
         
@@ -267,10 +276,70 @@ predict.tspred <- function(obj,input_test_data=FALSE,...){
   return(validate_tspred(obj))
 }
 
+postprocess.tspred <- function(obj,...){
+  
+  if(!is.null(obj$pred$raw)) pred <- obj$pred$raw
+  else stop("no predicted data provided for computation",call. = FALSE)
+  
+  if(!is.null(obj$pred$postp)){
+    warning("Updating data ('pred$postp') in the tspred object")
+    obj$pred$postp <- NULL
+  }
+  
+  pred_postp <- pred
+  
+  for(p in c(length(obj$processing):1)){
+    
+    if(length(obj$processing[[p]]$train)>1){
+      for(ts in names(obj$processing[[p]]$train)){
+        if(!is.null(obj$processing[[p]]$train[[ts]]$postp)){
+          
+          cat("\nReversing preprocessing method",class(obj$processing[[p]]$train[[ts]])[[1]],"...")
+          
+          pred_postp_ts <- list(pred_postp[[ts]])
+          names(pred_postp_ts) <- ts
+          
+          proc_res <- run(obj$processing[[p]]$train[[ts]], pred_postp_ts, ..., rev=TRUE)
+          
+          if(names(res(proc_res))[1] != ts) pred_postp <- res(proc_res)
+          else pred_postp[ts] <- res(proc_res)
+          
+          cat("\nSummary for data object",ts,":\n")
+          summary(proc_res)
+          cat("\nDONE!\n")
+        }
+      }
+      
+    }
+    else if(length(obj$processing[[p]]$train)==1){
+      if(!is.null(obj$processing[[p]]$train[[1]]$postp)){
+        
+        cat("\nReversing preprocessing method",class(obj$processing[[p]]$train[[1]])[[1]],"...")
+        
+        proc_res <- run(obj$processing[[p]]$train[[1]], pred_postp, ..., rev=TRUE)
+        attr(proc_res,"name") <- names(obj$processing[[p]]$train[1])
+        
+        pred_postp <- res(proc_res)
+        names(pred_postp) <- names(obj$processing[[p]]$train[1])
+        
+        cat("\nSummary:\n")
+        summary(proc_res)
+        cat("\nDONE!\n")
+      }
+    }
+    else{
+      stop(paste("no processing object found in processing$",names(obj$processing[p]),"$train",sep=""),call. = FALSE)
+    }
+  }
+  
+  obj$pred$postp <- pred_postp
+  
+  return(validate_tspred(obj))
+}
 
 #============== DO ==============
 
-postprocess.tspred <- function(obj,...){}
+
 evaluate.tspred <- function(obj,...){}
 
 run.tspred <- function(obj,...){}

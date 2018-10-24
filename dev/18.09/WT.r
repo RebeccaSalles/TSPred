@@ -40,7 +40,7 @@ WaveletT.rev <- function(pred=NULL,wt_obj){
     #inverse maximal overlap discrete wavelet transform
     iwt <- wavelets::imodwt(wt)
     #gets prediction time series
-    pred <- ts(tail(iwt,n.ahead),start=(n.ahead+1))
+    pred <- ts(tail(iwt,n.ahead),start=(length(iwt)-n.ahead+1))
     
     return(pred)
   }

@@ -45,7 +45,8 @@ WT <- function(level=NULL,filter=NULL,boundary="periodic",prep_par=NULL,postp_pa
 }
 run.WT <- function(obj,...,rev=FALSE){
   #get result from run.processing
-  results <- NextMethod()
+  if(rev) results <- NextMethod(obj,...,map=FALSE,rev=rev)
+  else results <- NextMethod()
   
   #if preprocessing with undefined parameters, update computed values of parameters in the WT object(s)
   if(!rev){
@@ -93,11 +94,34 @@ SW <- function(window_len=NULL){
              postp_func = NULL, postp_par = NULL,
              method = "Sliding windows", subclass ="SW")
 }
+run.SW <- function(obj,data,...,map=TRUE,rev=FALSE){
+  if(attr(data,"subset") == "test")
+    data[[1]] <- c( tail(attr(data,"train_data"),obj$prep$par$k-1), data[[1]] )
+  
+  NextMethod(obj,data,...,map=map,rev=rev)
+}
 summary.SW <- function(obj,...){
   NextMethod()
-  if(!is.null(obj$prep$par) || !is.null(obj$postp$par))  cat("Parameters:\n")
+  if(!is.null(obj$prep$par))  cat("Parameters:\n")
   cat("\tWindow length: ",obj$prep$par$k,"\n")
 }
+
+
+#Subclass NAS
+NAS <- function(na.action=na.omit,prep_par=NULL){
+  processing(prep_func = na.action, prep_par = c(list(prep_par)),
+             postp_func = NULL, postp_par = NULL,
+             method = "Missing values treatment", subclass ="NAS")
+}
+summary.NAS <- function(obj,...){
+  NextMethod()
+  cat("\tFunction: ",as.character(substitute(obj$prep$func)),"\n")
+  if(!is.null(obj$prep$par) && (length(obj$prep$par)>0)){
+    cat("Parameters:\n")
+    print(obj$prep$par)
+  }
+}
+
 
 #============== DO ==============
 

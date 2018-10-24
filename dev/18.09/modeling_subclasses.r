@@ -22,7 +22,6 @@ summary.ARIMA <- function(obj,...){
 NNET <- function(size=5,train_par=NULL, pred_par=list(level=c(80,95))){
   
   nnet_io <- function(data,...){
-    data <- na.omit(data)
     io <- mlm_io(data)
     do.call(nnet::nnet,c(list(x=io$input),list(y=io$output),list(...)))
   }
@@ -30,7 +29,6 @@ NNET <- function(size=5,train_par=NULL, pred_par=list(level=c(80,95))){
   predict_io <- function(input,...){
     mdl <- input[[1]]
     newdata <- input[[2]]
-    newdata <- na.omit(newdata)
     io <- mlm_io(newdata)
     do.call(predict,c(list(object=mdl),list(newdata=io$input),list(...)))
   }

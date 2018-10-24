@@ -11,6 +11,7 @@ data("CATS")
               prep_par=list(model="arima",h=20))
   proc4 <- SW(window_len = 6)
   proc5 <- subsetting(test_len=20)
+  proc6 <- NAS(na.action=na.omit)
   
   #Obtaining objects of the modeling class
   modl1 <- ARIMA()
@@ -20,8 +21,9 @@ data("CATS")
   eval1 <- MSE()
   
 #Defining (not running) the first time series prediction process
-  tspred_1_specs <- tspred(processing=list(BCT=proc2, WT=proc3, SW=proc4), 
-                           subsetting=proc5, modeling=modl2, evaluating=list(MSE=eval1))
+  tspred_1_specs <- tspred(subsetting=proc5,
+                           processing=list(BCT=proc2, WT=proc3, SW=proc4, NAS=proc6), 
+                           modeling=modl2, evaluating=list(MSE=eval1))
 				 
 #Running the first time series prediction process
   tspred_1_subset <- subset(tspred_1_specs, data=CATS[3])
@@ -31,6 +33,8 @@ data("CATS")
   tspred_1_train <- train(tspred_1_prep)
   
   tspred_1_pred <- predict(tspred_1_train, input_test_data=TRUE)
+  
+  tspred_1_postp <- postprocess(tspred_1_pred)
   
   summary(tspred_1_specs)
   
