@@ -7,8 +7,8 @@
 	#Obtaining objects of the processing class
   proc1 <- LT(base=2)
   proc2 <- BCT(lambda=NULL)
-  proc3 <- WT(level=1, filter="bl14",#c("la8","d4","bl14","c6"),
-              prep_par=list(model="arima",h=20))
+  proc3 <- WT(level=1, filter="bl14")#,c("la8","d4","bl14","c6"),
+              #prep_par=list(model="arima",h=20))
   proc4 <- SW(window_len = 6)
   proc5 <- subsetting(test_len=20)
   proc6 <- NAS(na.action=na.omit)
