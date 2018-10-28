@@ -43,6 +43,15 @@
   tspred_1_postp <- postprocess(tspred_1_pred)
   tspred_1_eval <- evaluate(tspred_1_postp)
   
+  library(magrittr)
+  tspred_1_eval_pipe <- tspred_1_specs %>%
+                        subset(data=CATS[3]) %>%
+                        preprocess(prep_test=TRUE) %>%
+                        train() %>%
+                        predict(input_test_data=TRUE)  %>%
+                        postprocess() %>%
+                        evaluate()
+  
   View(tspred_1_eval)
   
 #Defining (not running) the first time series prediction process
