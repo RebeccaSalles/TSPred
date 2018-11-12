@@ -33,24 +33,15 @@
                            modeling=modl2,
                            evaluating=list(MSE=eval1)
                           )
-  summary(tspred_1_specs)
+  #summary(tspred_1_specs)
   
 #Running the first time series prediction process
   tspred_1_subset <- subset(tspred_1_specs, data=CATS[3])
   tspred_1_prep <- preprocess(tspred_1_subset,prep_test=TRUE)
   tspred_1_train <- train(tspred_1_prep)
-  tspred_1_pred <- predict(tspred_1_train, input_test_data=TRUE)
+  tspred_1_pred <- predict(tspred_1_train, onestep=TRUE)
   tspred_1_postp <- postprocess(tspred_1_pred)
   tspred_1_eval <- evaluate(tspred_1_postp)
-  
-  library(magrittr)
-  tspred_1_eval_pipe <- tspred_1_specs %>%
-                        subset(data=CATS[3]) %>%
-                        preprocess(prep_test=TRUE) %>%
-                        train() %>%
-                        predict(input_test_data=TRUE)  %>%
-                        postprocess() %>%
-                        evaluate()
   
   View(tspred_1_eval)
   
@@ -63,17 +54,29 @@
                            modeling=modl1,
                            evaluating=list(MSE=eval1)
                           )
-  summary(tspred_2_specs)
+  #summary(tspred_2_specs)
   
 #Running the first time series prediction process
   tspred_2_subset <- subset(tspred_2_specs, data=CATS[3])
   tspred_2_prep <- preprocess(tspred_2_subset,prep_test=FALSE)
   tspred_2_train <- train(tspred_2_prep)
-  tspred_2_pred <- predict(tspred_2_train, input_test_data=FALSE)
+  tspred_2_pred <- predict(tspred_2_train, onestep=TRUE)
   tspred_2_postp <- postprocess(tspred_2_pred)
   tspred_2_eval <- evaluate(tspred_2_postp)
   
   View(tspred_2_eval)
+
+  
+#Pipeline usage
+  library(magrittr)
+  tspred_1_eval_pipe <- tspred_1_specs %>%
+                        subset(data=CATS[3]) %>%
+                        preprocess(prep_test=TRUE) %>%
+                        train() %>%
+                        predict(input_test_data=TRUE)  %>%
+                        postprocess() %>%
+                        evaluate()
+  
   
 #Testing
   #preprocessed data == BCT(LT(data)) ? YES!

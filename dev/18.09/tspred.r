@@ -126,7 +126,7 @@ subset.tspred <- function(obj,data=NULL,...){
     obj$n.ahead <- obj$subsetting$prep$par$test_len
   }
   
-  proc_res <- run(obj$subsetting, data, ...)
+  proc_res <- preprocess(obj$subsetting, data, ...)
   
   obj$subsetting <- objs(proc_res)[[1]]
   
@@ -171,7 +171,7 @@ preprocess.tspred <- function(obj,prep_test=FALSE,...){
     
     attr(data_prep,"subset") <- "train"
     
-    proc_res <- run(obj$processing[[p]], data_prep, ..., rev=FALSE)
+    proc_res <- preprocess(obj$processing[[p]], data_prep, ...)
     
     obj$processing[[p]] <- list()
     obj$processing[[p]]$train <- objs(proc_res)
@@ -191,7 +191,7 @@ preprocess.tspred <- function(obj,prep_test=FALSE,...){
         attr(data_prep_test_ts,"subset") <- "test"
         attr(data_prep_test_ts,"train_data") <- last_data_prep_ts
         
-        proc_res_test <- run(obj$processing[[p]]$train[[ts]], data_prep_test_ts, ..., rev=FALSE)
+        proc_res_test <- preprocess(obj$processing[[p]]$train[[ts]], data_prep_test_ts, ...)
         
         obj$processing[[p]]$test[ts] <- objs(proc_res_test)
         
@@ -226,7 +226,7 @@ train.tspred <- function(obj,...){
   
   cat("\nRunning modeling method...")
     
-  mdl_res <- run(obj$modeling, data, ..., pred=FALSE)
+  mdl_res <- train(obj$modeling, data, ...)
   
   obj$modeling <- objs(mdl_res)
   
@@ -242,14 +242,13 @@ train.tspred <- function(obj,...){
   return(validate_tspred(obj))
 }
 
-predict.tspred <- function(obj,input_test_data=FALSE,...){
-  if(input_test_data){
-    if(!is.null(obj$data$prep)) data <- obj$data$prep$test
-    else if(!is.null(obj$data$test)) data <- obj$data$test
-    else stop("no input data was provided for prediction ('data$prep$test' and 'data$test are NULL')",call. = FALSE)
-  }
+predict.tspred <- function(obj,onestep=TRUE,...){
+  
+  if(!is.null(obj$data$prep$test) && length(obj$data$prep$test)>0) data <- obj$data$prep$test
+  else if(!is.null(obj$data$test)) data <- obj$data$test
   else{
-    data <- NULL
+    if(is.linear(obj$modeling[[1]]) && !onestep) data <- NULL
+    else stop("no input data was provided for prediction ('data$prep$test' and 'data$test are NULL')",call. = FALSE)
   }
 
   if(!is.null(obj$pred$raw)){
@@ -257,15 +256,14 @@ predict.tspred <- function(obj,input_test_data=FALSE,...){
     obj$pred$raw <- NULL
   }
   
+  #if(!is.null(obj$one_step)){
+  #  warning("Updating type of prediction ('onestep') in the tspred object")
+  #  obj$one_step <- onestep
+  #}
+  
   cat("\nRunning prediction method...")
   
-  if(!is.null(data)){
-    pred_input <- lapply(seq_along(obj$model),function(i) c(list(obj$model[[i]]),list(data[[i]])))
-    names(pred_input) <- names(data)
-    mdl_res <- run(obj$modeling[[1]], pred_input, ..., pred=TRUE)
-  }
-  else
-    mdl_res <- run(obj$modeling[[1]], obj$model, obj$n.ahead, ..., pred=TRUE)
+  mdl_res <- predict(obj$modeling[[1]], obj$model, data, obj$n.ahead, ..., onestep=onestep)
   
   pred_prep <- res(mdl_res)
   
@@ -301,7 +299,7 @@ postprocess.tspred <- function(obj,...){
           pred_postp_ts <- list(pred_postp[[ts]])
           names(pred_postp_ts) <- ts
           
-          proc_res <- run(obj$processing[[p]]$train[[ts]], pred_postp_ts, ..., rev=TRUE)
+          proc_res <- postprocess(obj$processing[[p]]$train[[ts]], pred_postp_ts, ...)
           
           if(names(res(proc_res))[1] != ts) pred_postp <- res(proc_res)
           else pred_postp[ts] <- res(proc_res)
@@ -318,7 +316,7 @@ postprocess.tspred <- function(obj,...){
         
         cat("\nReversing preprocessing method",class(obj$processing[[p]]$train[[1]])[[1]],"...")
         
-        proc_res <- run(obj$processing[[p]]$train[[1]], pred_postp, ..., rev=TRUE)
+        proc_res <- postprocess(obj$processing[[p]]$train[[1]], pred_postp, ...)
         attr(proc_res,"name") <- names(obj$processing[[p]]$train[1])
         
         pred_postp <- res(proc_res)
@@ -359,7 +357,7 @@ evaluate.tspred <- function(obj,...){
   for(e in c(1:length(obj$evaluating))){
     cat("\nRunning evaluating method",e,"of",length(obj$evaluating),"...")
     
-    proc_res <- run(obj$evaluating[[e]], data_test, pred, ...)
+    proc_res <- evaluate(obj$evaluating[[e]], data_test, pred, ...)
     
     obj$evaluating[[e]] <- objs(proc_res)
     
@@ -376,9 +374,6 @@ evaluate.tspred <- function(obj,...){
 }
 
 #============== DO ==============
-
-run.tspred <- function(obj,...){}
-
 summary.tspred <- function(obj,...){
   cat("\nTSPred class object\n\n")
   cat("====Data processing:====\n")

@@ -34,7 +34,7 @@ is.prep <- function(prep_obj){
   is(prep_obj,"prep")
 }
 
-run.prep <- function(obj,...){
+preprocess.prep <- function(obj,...){
   do.call(obj$func,c(list(...),obj$par))
 }
 
@@ -75,7 +75,7 @@ is.postp <- function(postp_obj){
   is(postp_obj,"postp")
 }
 
-run.postp <- function(obj,...){
+postprocess.postp <- function(obj,...){
   do.call(obj$func,c(list(...),obj$par))
 }
 
@@ -121,25 +121,40 @@ is.processing <- function(processing_obj){
   is(processing_obj,"processing")
 }
 
-run.processing <- function(obj,data,...,map=TRUE,rev=FALSE){
-  
-  proc <- function(obj,data,...,rev=FALSE){
-    if(!rev) run(obj$prep,data,...)
-    else run(obj$postp,data,...)
+preprocess.processing <- function(obj,data,...,map=TRUE){
+
+  res <- list()
+  if(map){
+    for(d in c(1:length(data))){
+      data_d <- as.ts(data[[d]])
+      
+      proc_res <- preprocess(obj$prep,data_d,...)
+      attr(proc_res,"name") <- names(data[d])
+      res[[d]] <- result(obj,proc_res)
+    }
   }
+  else {
+    proc_res <- preprocess(obj$prep,data,...)
+    res[[1]] <- result(obj,proc_res)
+  }
+  
+  return(results(res))
+}
+
+postprocess.processing <- function(obj,data,...,map=TRUE){
   
   res <- list()
   if(map){
     for(d in c(1:length(data))){
       data_d <- as.ts(data[[d]])
       
-      proc_res <- proc(obj,data_d,...,rev=rev)
+      proc_res <- postprocess(obj$postp,data_d,...)
       attr(proc_res,"name") <- names(data[d])
       res[[d]] <- result(obj,proc_res)
     }
   }
   else {
-    proc_res <- proc(obj,data,...,rev=rev)
+    proc_res <- postprocess(obj$postp,data,...)
     res[[1]] <- result(obj,proc_res)
   }
   
@@ -153,7 +168,7 @@ updt.processing <- function(obj,par=NULL,value=NULL){
   return(obj)
 }
 
-is.run.processing.result <- function(res){
+is.processing.result <- function(res){
   is(res,"list") && names(res)==c("obj","res")
 }
 

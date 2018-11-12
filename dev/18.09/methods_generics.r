@@ -1,8 +1,3 @@
-#Run method
-run <- function(obj,...){
-  UseMethod("run")
-}
-
 #Updating parameters
 updt <- function(obj,...){
   UseMethod("updt")

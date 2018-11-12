@@ -34,7 +34,7 @@ is.trn <- function(trn_obj){
   is(trn_obj,"trn")
 }
 
-run.trn <- function(obj,...){
+train.trn <- function(obj,...){
   do.call(obj$func,c(list(...),obj$par))
 }
 
@@ -75,7 +75,7 @@ is.pred <- function(pred_obj){
   is(pred_obj,"pred")
 }
 
-run.pred <- function(obj,...){
+predict.pred <- function(obj,...){
   do.call(obj$func,c(list(...),obj$par))
 }
 
@@ -122,38 +122,158 @@ is.modeling <- function(modeling_obj){
   is(modeling_obj,"modeling")
 }
 
-run.modeling <- function(obj,input,...,map=TRUE,pred=FALSE){
-  
-  mdl <- function(obj,input,...,pred=FALSE){
-    if(!pred) run(obj$train,input,...)
-    else run(obj$pred,input,...)
-  }
-  
-  res <- list()
-  if(map){
-    for(i in c(1:length(input))){
-      input_i <- input[[i]]
-      if(!pred) input_i <- as.ts(input[[i]])
-      
-      proc_res <- mdl(obj,input_i,...,pred=pred)
-      attr(proc_res,"name") <- names(input[i])
-      res[[i]] <- result(obj,proc_res)
-    }
-  }
-  else {
-    proc_res <- mdl(obj,input,...,pred=pred)
-    res[[1]] <- result(obj,proc_res)
-  }
-  
-  return(results(res))
-}
-
 #Summary method
 summary.modeling <- function(obj,...){
   cat("Modeling class object\n")
   
   if(is.null(obj$method)) cat("Method: Description not provided\n")
   else cat("Method: ",obj$method,"\n")
+  
+  if(is.null(obj$trn$par) && is.null(obj$pred$par)) cat("Parameters: N/A\n")
+}
+
+
+#Subclass MLM
+MLM <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, ..., subclass=NULL){
+  modeling(train_func=train_func, 
+           train_par=train_par,
+           pred_func=pred_func,
+           pred_par=pred_par,
+           ...,
+           subclass="MLM")
+}
+
+is.MLM <- function(MLM_obj){
+  is(MLM_obj,"MLM")
+}
+
+train.MLM <- function(obj,data,...){
+  res <- list()
+  
+  for(i in c(1:length(data))){
+    data_i <- as.ts(data[[i]])
+    io <- mlm_io(data_i)
+    
+    proc_res <- train(obj$train, io$input, io$output, ...)
+    attr(proc_res,"name") <- names(data[i])
+    res[[i]] <- result(obj,proc_res)
+  }
+  
+  return(results(res))
+}
+
+predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
+  res <- list()
+  
+  for(i in c(1:length(mdl))){
+    mdl_i <- mdl[[i]]
+    data_i <- as.ts(data[[i]])
+    io <- mlm_io(data_i)
+    
+    if(onestep){
+      proc_res <- predict(obj$pred, mdl_i, io$input,...)
+      attr(proc_res,"name") <- names(data[i])
+      res[[i]] <- result(obj,proc_res)
+    }
+    else{
+      predictions <- NULL
+      tuple <- io$input[1,]
+      len_tuple <- length(tuple)
+      for(p in c(1:n.ahead)){
+        proc_res <- predict(obj$pred, mdl_i, tuple,...)
+        predictions <- c(predictions,proc_res)
+        tuple <- tail(c(tuple,proc_res),len_tuple)
+      }
+      attr(predictions,"name") <- names(data[i])
+      res[[i]] <- result(obj,predictions)
+    }
+  }
+  
+  return(results(res))
+}
+
+summary.MLM <- function(obj,...){
+  cat("Modeling class object\n")
+  
+  if(is.null(obj$method)) cat("Method: Description not provided\n")
+  else cat("Method: ",obj$method,"\n")
+  
+  cat("Type: Machine learning model\n")
+  
+  if(is.null(obj$trn$par) && is.null(obj$pred$par)) cat("Parameters: N/A\n")
+}
+
+
+#Subclass linear
+linear <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, ..., subclass=NULL){
+  modeling(train_func=train_func, 
+           train_par=train_par,
+           pred_func=pred_func,
+           pred_par=pred_par,
+           ...,
+           subclass="linear")
+}
+
+is.linear <- function(linear_obj){
+  is(linear_obj,"linear")
+}
+
+train.linear <- function(obj,data,...){
+  res <- list()
+  
+  for(i in c(1:length(data))){
+    data_i <- as.ts(data[[i]])
+    
+    proc_res <- train(obj$train, data_i, ...)
+    attr(proc_res,"name") <- names(data[i])
+    res[[i]] <- result(obj,proc_res)
+  }
+  
+  return(results(res))
+}
+
+predict.linear <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
+  res <- list()
+  
+  for(i in c(1:length(mdl))){
+    mdl_i <- mdl[[i]]
+    
+    if(!onestep){
+      proc_res <- predict(obj$pred, mdl_i, n.ahead,...)
+      attr(proc_res,"name") <- names(mdl[i])
+      res[[i]] <- result(obj,proc_res)
+    }
+    else{
+      if(length(data)==1) test_i <- as.ts(data[[1]])
+      else test_i <- as.ts(data[[i]])
+      
+      train_data <- fitted(mdl_i)+residuals(mdl_i)
+      mdl_res <- mdl_i
+      
+      predictions <- NULL
+      
+      for(p in c(1:n.ahead)){
+        proc_res <- predict(obj$pred, mdl_res, 1,...)
+        predictions <- c(predictions,proc_res)
+        
+        train_data <- c(train_data,test_i[p])
+        mdl_res <- train(obj$train, train_data, ...)
+      }
+      attr(predictions,"name") <- names(mdl[i])
+      res[[i]] <- result(obj,predictions)
+    }
+  }
+  
+  return(results(res))
+}
+
+summary.linear <- function(obj,...){
+  cat("Modeling class object\n")
+  
+  if(is.null(obj$method)) cat("Method: Description not provided\n")
+  else cat("Method: ",obj$method,"\n")
+  
+  cat("Type: Linear model\n")
   
   if(is.null(obj$trn$par) && is.null(obj$pred$par)) cat("Parameters: N/A\n")
 }

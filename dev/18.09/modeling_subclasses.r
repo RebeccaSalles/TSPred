@@ -5,9 +5,9 @@ ARIMA <- function(train_par=list(), pred_par=list(level=c(80,95))){
     do.call(forecast::forecast,c(list(...)))$mean
   }
   
-  modeling(train_func = forecast::auto.arima, train_par=c(train_par),
-           pred_func = forecast_mean, pred_par=c(pred_par),
-           method="ARIMA model", subclass="ARIMA")
+  linear(train_func = forecast::auto.arima, train_par=c(train_par),
+        pred_func = forecast_mean, pred_par=c(pred_par),
+        method="ARIMA model", subclass="ARIMA")
 }
 summary.ARIMA <- function(obj,...){
   NextMethod()
@@ -25,31 +25,9 @@ summary.ARIMA <- function(obj,...){
 
 #Subclass NNET
 NNET <- function(size=5,train_par=NULL, pred_par=list(level=c(80,95))){
-  
-  #incluir no pred_par flag para previsao 1-step ahead e n-step ahead 
-  #implementar funções io isoladas
-  nnet_io <- function(data,...){
-    io <- mlm_io(data)
-    do.call(nnet::nnet,c(list(x=io$input),list(y=io$output),list(...)))
-  }
-  
-  #implementar funções 1 e n step ahead isoladas
-  predict_io <- function(input,...){
-    mdl <- input[[1]]
-    newdata <- input[[2]]
-    io <- mlm_io(newdata)
-    #for tupla \in io$input
-    #do.call(predict,c(list(object=mdl),list(newdata=tupla),list(...)))
-    #ajustar tupla+1 com previsao
-    #
-    #
-    do.call(predict,c(list(object=mdl),list(newdata=io$input),list(...)))
-  }
-  
-  #if flag pred_func = predict1() else predictn()
-  modeling(train_func = nnet_io, train_par=c(list(size=size),train_par),
-           pred_func = predict_io, pred_par=c(pred_par),
-           method="Artificial Neural Network model", subclass="NNET")
+  MLM(train_func = nnet::nnet, train_par=c(list(size=size),train_par),
+      pred_func = predict, pred_par=c(pred_par),
+      method="Artificial Neural Network model", subclass="NNET")
 }
 summary.NNET <- function(obj,...){
   NextMethod()

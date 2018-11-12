@@ -17,12 +17,11 @@ BCT <- function(lambda=NULL,prep_par=NULL,postp_par=NULL,...){
              postp_func = TSPred::BCT.rev, postp_par = c(list(lambda=lambda),postp_par),
              method = "Box-Cox transform",..., subclass ="BCT")
 }
-run.BCT <- function(obj,...,rev=FALSE){
-  #get result from run.processing
+preprocess.BCT <- function(obj,...){
   results <- NextMethod()
   
   #if preprocessing with undefined lambda, update value of computed lambda parameter in the BCT object(s)
-  if(!rev && is.null(obj$prep$par$lambda)) results <- updt(results, par="lambda")
+  if(is.null(obj$prep$par$lambda)) results <- updt(results, par="lambda")
   
   return(results)
 }
@@ -43,21 +42,20 @@ WT <- function(level=NULL,filter=NULL,boundary="periodic",prep_par=NULL,postp_pa
              postp_func = WaveletT.rev, postp_par = c(list(wt_obj=NULL),postp_par),
              method = "Wavelet transform",..., subclass ="WT")
 }
-run.WT <- function(obj,...,rev=FALSE){
-  #get result from run.processing
-  if(rev) results <- NextMethod(obj,...,map=FALSE,rev=rev)
-  else results <- NextMethod()
+preprocess.WT <- function(obj,...){
+  results <- NextMethod()
   
   #if preprocessing with undefined parameters, update computed values of parameters in the WT object(s)
-  if(!rev){
-    if(is.null(obj$postp$par$wt_obj)) results <- updt(results, par="wt_obj")
-    if(is.null(obj$prep$par$level)||is.null(obj$prep$par$filter)){
-      results <- updt(results, par="level", value=results[[1]][[1]]$obj$postp$par$wt_obj@level) 
-      results <- updt(results, par="filter", value=results[[1]][[1]]$obj$postp$par$wt_obj@filter@wt.name)
-    }
+  if(is.null(obj$postp$par$wt_obj)) results <- updt(results, par="wt_obj")
+  if(is.null(obj$prep$par$level)||is.null(obj$prep$par$filter)){
+    results <- updt(results, par="level", value=results[[1]][[1]]$obj$postp$par$wt_obj@level) 
+    results <- updt(results, par="filter", value=results[[1]][[1]]$obj$postp$par$wt_obj@filter@wt.name)
   }
   
   return(results)
+}
+postprocess.WT <- function(obj,...){
+  NextMethod(obj,...,map=FALSE)
 }
 summary.WT <- function(obj,...){
   NextMethod()
@@ -94,11 +92,11 @@ SW <- function(window_len=NULL){
              postp_func = NULL, postp_par = NULL,
              method = "Sliding windows", subclass ="SW")
 }
-run.SW <- function(obj,data,...,map=TRUE,rev=FALSE){
+preprocess.SW <- function(obj,data,...,map=TRUE){
   if(attr(data,"subset") == "test")
     data[[1]] <- c( tail(attr(data,"train_data"),obj$prep$par$k-1), data[[1]] )
   
-  NextMethod(obj,data,...,map=map,rev=rev)
+  NextMethod(obj,data,...,map=map)
 }
 summary.SW <- function(obj,...){
   NextMethod()
@@ -129,11 +127,11 @@ MinMax <- function(min=NULL,max=NULL){
              postp_func = minmax.rev, postp_par = list(min=min,max=max),
              method = "MinMax normalization", subclass ="MinMax")
 }
-run.MinMax <- function(obj,...,rev=FALSE){
+preprocess.MinMax <- function(obj,...){
   results <- NextMethod()
   
-  if(!rev && is.null(obj$prep$par$min)) results <- updt(results, par="min")
-  if(!rev && is.null(obj$prep$par$max)) results <- updt(results, par="max")
+  if(is.null(obj$prep$par$min)) results <- updt(results, par="min")
+  if(is.null(obj$prep$par$max)) results <- updt(results, par="max")
   
   return(results)
 }
