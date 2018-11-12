@@ -1,6 +1,6 @@
 #Class tspred
 new_tspred <- function(subsetting=NULL, processing=NULL, modeling=NULL, evaluating=NULL,
-                       data=NULL, model=NULL, n.ahead=NULL, pred=NULL, eval=NULL, ..., subclass=NULL){
+                       data=NULL, model=NULL, n.ahead=NULL, one_step=NULL, pred=NULL, eval=NULL, ..., subclass=NULL){
   
   if(!is.null(processing) && length(processing)>0) for(p in processing) stopifnot(is.processing(p))
   if(!is.null(subsetting)) stopifnot(is.processing(subsetting))
@@ -8,6 +8,7 @@ new_tspred <- function(subsetting=NULL, processing=NULL, modeling=NULL, evaluati
   if(!is.null(evaluating) && length(evaluating)>0) for(e in evaluating) stopifnot(is.evaluating(e))
   if(!is.null(data) && length(data)>0) for(d in data) stopifnot(is.null(d)||is.data.frame(d)||is.ts(d)||is.matrix(d)||is.vector(d))
   if(!is.null(n.ahead)) stopifnot(is.numeric(n.ahead))
+  if(!is.null(one_step)) stopifnot(is.logical(one_step))
   if(!is.null(pred) && length(pred)>0) for(d in pred) stopifnot(is.null(d)||is.data.frame(d)||is.ts(d)||is.matrix(d)||is.vector(d))
   if(!is.null(eval) && length(eval)>0) for(e in eval) stopifnot(is.data.frame(e)||is.numeric(e)||is.matrix(e)||is.vector(e))
   
@@ -20,6 +21,7 @@ new_tspred <- function(subsetting=NULL, processing=NULL, modeling=NULL, evaluati
       data = data,
       model = model, 
       n.ahead = n.ahead,
+      one_step = one_step,
       pred = pred, 
       eval = eval,
       ...
@@ -61,6 +63,8 @@ validate_tspred <- function(tspred_obj){
         stop("argument 'data' must be NULL or a list of data ('data.frame','ts','matrix','vector') objects",call. = FALSE)
   if(!is.null(values$n.ahead) && !is.numeric(values$n.ahead))
     stop("argument 'n.ahead' must be NULL or a integer ('numeric') value",call. = FALSE)
+  if(!is.null(values$one_step) && !is.logical(values$one_step))
+    stop("argument 'one_step' must be NULL or a logical value",call. = FALSE)
   if(!is.null(values$pred) && length(values$pred)>0)
     for(d in values$pred)
       if(!is.null(d)&&!is.data.frame(d)&&!is.ts(d)&&!is.matrix(d)&&!is.vector(d))
@@ -74,7 +78,7 @@ validate_tspred <- function(tspred_obj){
 }
 
 tspred <- function(subsetting=NULL, processing=NULL, modeling=NULL, evaluating=NULL,
-                   data=NULL, n.ahead=NULL, ..., subclass=NULL){
+                   data=NULL, n.ahead=NULL, one_step=FALSE, ..., subclass=NULL){
   
   data <- list( raw = data, 
                 prep = NULL,
@@ -90,7 +94,7 @@ tspred <- function(subsetting=NULL, processing=NULL, modeling=NULL, evaluating=N
   
   
   validate_tspred(new_tspred(subsetting=subsetting, processing=processing, modeling=modeling, evaluating=evaluating,
-                             data=data, model=model, n.ahead=n.ahead, pred=pred, eval=eval, ..., subclass=subclass))
+                             data=data, model=model, n.ahead=n.ahead, one_step=one_step, pred=pred, eval=eval, ..., subclass=subclass))
 }
 
 is.tspred <- function(tspred_obj){
@@ -242,7 +246,7 @@ train.tspred <- function(obj,...){
   return(validate_tspred(obj))
 }
 
-predict.tspred <- function(obj,onestep=TRUE,...){
+predict.tspred <- function(obj,onestep=obj$one_step,...){
   
   if(!is.null(obj$data$prep$test) && length(obj$data$prep$test)>0) data <- obj$data$prep$test
   else if(!is.null(obj$data$test)) data <- obj$data$test
@@ -256,12 +260,15 @@ predict.tspred <- function(obj,onestep=TRUE,...){
     obj$pred$raw <- NULL
   }
   
-  #if(!is.null(obj$one_step)){
-  #  warning("Updating type of prediction ('onestep') in the tspred object")
-  #  obj$one_step <- onestep
-  #}
+  if(!is.logical(onestep)) stop("argument 'one_step' must be logical",call. = FALSE)
+  if(onestep != obj$one_step){
+    warning("Updating type of prediction ('onestep') in the tspred object")
+    obj$one_step <- onestep
+  }
   
   cat("\nRunning prediction method...")
+  if(onestep) cat("\nType: 1-step-ahead prediction\n")
+  else cat("\nType: n-step-ahead prediction\n")
   
   mdl_res <- predict(obj$modeling[[1]], obj$model, data, obj$n.ahead, ..., onestep=onestep)
   
