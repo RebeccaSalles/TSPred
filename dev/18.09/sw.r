@@ -13,5 +13,5 @@ sw <- function(x,k){
   col <- paste("t",c((k-1):0), sep="")
   rownames(sw) <- NULL
   colnames(sw) <- col
-  return (sw)
+  return (na.omit(sw))
 }

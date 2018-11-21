@@ -98,6 +98,9 @@ preprocess.SW <- function(obj,data,...,map=TRUE){
   
   NextMethod(obj,data,...,map=map)
 }
+is.SW <- function(sw_obj){
+  is(sw_obj,"SW")
+}
 summary.SW <- function(obj,...){
   NextMethod()
   if(!is.null(obj$prep$par))  cat("Parameters:\n")

@@ -134,13 +134,31 @@ summary.modeling <- function(obj,...){
 
 
 #Subclass MLM
-MLM <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, ..., subclass=NULL){
-  modeling(train_func=train_func, 
-           train_par=train_par,
-           pred_func=pred_func,
-           pred_par=pred_par,
-           ...,
-           subclass="MLM")
+MLM <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, sw=NULL, proc=NULL, ..., subclass=NULL){
+  mlm_obj <- modeling( train_func=train_func, 
+                       train_par=train_par,
+                       pred_func=pred_func,
+                       pred_par=pred_par,
+                       sw=sw,
+                       proc=proc,
+                       ...,
+                       subclass="MLM")
+  validate_MLM(mlm_obj)
+}
+validate_MLM <- function(mlm_obj){
+  mlm_obj <- validate_modeling(mlm_obj)
+  values <- unclass(mlm_obj)
+  
+  if(!is.null(values$sw) && !is.SW(values$sw)) {
+    stop("argument 'sw' must be NULL or a sliding windows processing ('SW') object",call. = FALSE)
+  }
+  if(!is.null(values$proc) && length(values$proc)>0) {
+    for(p in values$proc)
+      if(!is.processing(p))
+        stop("argument 'proc' must be NULL or a list of processing ('processing') objects",call. = FALSE)
+  }
+  
+  return(mlm_obj)
 }
 
 is.MLM <- function(MLM_obj){
@@ -151,42 +169,83 @@ train.MLM <- function(obj,data,...){
   res <- list()
   
   for(i in c(1:length(data))){
-    data_i <- as.ts(data[[i]])
+    data_i <- data[i]
+    obj_i <- obj
+    
+    if(!is.null(obj$sw)){
+      attr(data_i,"subset") <- "train"
+      sw_res <- preprocess(obj$sw,data_i)
+      obj_i$sw <- objs(sw_res)[[1]]
+      attr(obj_i$sw,"train_data") <- tail(data_i[[1]],obj_i$sw$prep$par$k-1)
+      data_i <- res(sw_res)
+    }
+    if(!is.null(obj$proc)){
+      for(p in c(1:length(obj$proc))){
+        attr(data_i,"subset") <- "train"
+        proc_res <- preprocess(obj$proc[[p]],data_i)
+        obj_i$proc[[p]] <- objs(proc_res)[[1]]
+        data_i <- res(proc_res)
+      }
+    }
+    
+    data_i <- as.ts(data_i[[1]])
     io <- mlm_io(data_i)
     
     proc_res <- train(obj$train, io$input, io$output, ...)
     attr(proc_res,"name") <- names(data[i])
-    res[[i]] <- result(obj,proc_res)
+    res[[i]] <- result(obj_i,proc_res)
   }
   
   return(results(res))
 }
 
 predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
-  res <- list()
+  ts_name <- names(data)
   
-  for(i in c(1:length(mdl))){
-    mdl_i <- mdl[[i]]
-    data_i <- as.ts(data[[i]])
-    io <- mlm_io(data_i)
+  if(!is.null(obj$sw)){
+    data[[1]] <- c( attr(obj$sw,"train_data"), data[[1]] )
+    attr(data,"subset") <- "test"
+    sw_res <- preprocess(obj$sw,data)
+    data <- res(sw_res)
+  }
+  if(!is.null(obj$proc)){
+    for(p in c(1:length(obj$proc))){
+      attr(data,"subset") <- "test"
+      proc_res <- preprocess(obj$proc[[p]],data)
+      data <- res(proc_res)
+    }
+  }
+  
+  data <- as.ts(data[[1]])
+  io <- mlm_io(data)
+  
+  if(onestep){
+    proc_res <- predict(obj$pred, mdl, io$input,...)
     
-    if(onestep){
-      proc_res <- predict(obj$pred, mdl_i, io$input,...)
-      attr(proc_res,"name") <- names(data[i])
-      res[[i]] <- result(obj,proc_res)
-    }
-    else{
-      predictions <- NULL
-      tuple <- io$input[1,]
-      len_tuple <- length(tuple)
-      for(p in c(1:n.ahead)){
-        proc_res <- predict(obj$pred, mdl_i, tuple,...)
-        predictions <- c(predictions,proc_res)
-        tuple <- tail(c(tuple,proc_res),len_tuple)
+    if(!is.null(obj$proc)){
+      for(p in c(length(obj$proc):1)){
+        proc_res <- list(proc_res)
+        names(proc_res) <- ts_name
+        proc_res <- postprocess(obj$proc[[p]],proc_res)
+        proc_res <- res(proc_res)[[1]]
       }
-      attr(predictions,"name") <- names(data[i])
-      res[[i]] <- result(obj,predictions)
     }
+    
+    attr(proc_res,"name") <- ts_name
+    res <- list(result(obj,proc_res))
+  }
+  else{
+    #TODO
+    predictions <- NULL
+    tuple <- io$input[1,]
+    len_tuple <- length(tuple)
+    for(p in c(1:n.ahead)){
+      proc_res <- predict(obj$pred, mdl, tuple,...)
+      predictions <- c(predictions,proc_res)
+      tuple <- tail(c(tuple,proc_res),len_tuple)
+    }
+    attr(predictions,"name") <- names(ts_name)
+    res <- list(result(obj,predictions))
   }
   
   return(results(res))
@@ -257,7 +316,7 @@ predict.linear <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
         predictions <- c(predictions,proc_res)
         
         train_data <- c(train_data,test_i[p])
-        mdl_res <- train(obj$train, train_data, ...)
+        mdl_res <- train(obj$train, train_data)
       }
       attr(predictions,"name") <- names(mdl[i])
       res[[i]] <- result(obj,predictions)

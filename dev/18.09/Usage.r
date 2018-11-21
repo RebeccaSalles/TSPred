@@ -16,7 +16,7 @@
   
   #Obtaining objects of the modeling class
   modl1 <- ARIMA()
-  modl2 <- NNET(size=5,train_par=list())
+  modl2 <- NNET(size=5,train_par=list(),sw=proc4,proc=list(MM=proc7))
   
   #Obtaining objects of the evaluating class
   eval1 <- MSE()
@@ -26,10 +26,9 @@
                            subsetting=proc5,
                            processing=list(
                                            BCT=proc2, 
-                                           WT=proc3,
-                                           MM=proc7,
-                                           SW=proc4,
-                                           NAS=proc6), 
+                                           WT=proc3),
+                                           #SW=proc4,
+                                           #MM=proc7), 
                            modeling=modl2,
                            evaluating=list(MSE=eval1)
                           )

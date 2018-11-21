@@ -24,9 +24,10 @@ summary.ARIMA <- function(obj,...){
 
 
 #Subclass NNET
-NNET <- function(size=5,train_par=NULL, pred_par=list(level=c(80,95))){
+NNET <- function(size=5,train_par=NULL, pred_par=list(level=c(80,95)), sw=SW(window_len = size+1), proc=list(MM=MinMax())){
   MLM(train_func = nnet::nnet, train_par=c(list(size=size),train_par),
       pred_func = predict, pred_par=c(pred_par),
+      sw=sw, proc=proc,
       method="Artificial Neural Network model", subclass="NNET")
 }
 summary.NNET <- function(obj,...){

@@ -216,7 +216,7 @@ preprocess.tspred <- function(obj,prep_test=FALSE,...){
 }
 
 
-train.tspred <- function(obj,...){
+train.tspred <- function(obj){
   
   if(!is.null(obj$data$prep)) data <- obj$data$prep$train
   else if(!is.null(obj$data$train)) data <- obj$data$train
@@ -230,7 +230,7 @@ train.tspred <- function(obj,...){
   
   cat("\nRunning modeling method...")
     
-  mdl_res <- train(obj$modeling, data, ...)
+  mdl_res <- train(obj$modeling, data)
   
   obj$modeling <- objs(mdl_res)
   
@@ -270,15 +270,21 @@ predict.tspred <- function(obj,onestep=obj$one_step,...){
   if(onestep) cat("\nType: 1-step-ahead prediction\n")
   else cat("\nType: n-step-ahead prediction\n")
   
-  mdl_res <- predict(obj$modeling[[1]], obj$model, data, obj$n.ahead, ..., onestep=onestep)
+  pred_prep <- list()
   
-  pred_prep <- res(mdl_res)
+  for(m in names(obj$modeling)){
+    cat("\nPredicting data object",m,"...")
+    
+    mdl_res <- predict(obj$modeling[[m]], obj$model[[m]], data[m], obj$n.ahead, ..., onestep=onestep)
+    #browser()
+    pred_prep[[m]] <- res(mdl_res)[[1]]
+    
+    cat("\nSummary:\n")
+    summary(mdl_res)
+    cat("DONE!\n")
+  }
   
   obj$pred$raw <- pred_prep
-  
-  cat("\nSummary:\n")
-  summary(mdl_res)
-  cat("DONE!\n")
   
   return(validate_tspred(obj))
 }
