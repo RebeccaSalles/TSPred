@@ -233,7 +233,7 @@ train.tspred <- function(obj){
   mdl_res <- train(obj$modeling, data)
   
   obj$modeling <- objs(mdl_res)
-  
+  #browser()
   models <- res(mdl_res)
   
   cat("\nSummary:\n")
@@ -364,7 +364,7 @@ evaluate.tspred <- function(obj,...){
     obj$eval <- NULL
   }
   
-  attr(pred,"name") <- attr(data_test,"name") <- names(obj$pred$postp)
+  attr(pred,"name") <- attr(data_test,"name") <- names(obj$pred$raw)
   eval <- list()
   
   for(e in c(1:length(obj$evaluating))){

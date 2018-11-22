@@ -167,7 +167,7 @@ is.MLM <- function(MLM_obj){
 
 train.MLM <- function(obj,data,...){
   res <- list()
-  
+  browser()
   for(i in c(1:length(data))){
     data_i <- data[i]
     obj_i <- obj
@@ -201,7 +201,8 @@ train.MLM <- function(obj,data,...){
 
 predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
   ts_name <- names(data)
-  
+  data <- as.list(data)
+  #browser()
   if(!is.null(obj$sw)){
     data[[1]] <- c( attr(obj$sw,"train_data"), data[[1]] )
     attr(data,"subset") <- "test"

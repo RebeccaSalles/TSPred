@@ -146,6 +146,30 @@ summary.MinMax <- function(obj,...){
 }
 
 
+#Subclass AN
+AN <- function(min=NULL,max=NULL,alpha=1.5){
+  processing(prep_func = an, prep_par = list(min=min,max=max,alpha=alpha),
+             postp_func = an.rev, postp_par = list(min=min,max=max,an=NULL),
+             method = "Adaptive normalization", subclass ="AN")
+}
+preprocess.AN <- function(obj,...){
+  results <- NextMethod()
+  
+  if(is.null(obj$prep$par$min)) results <- updt(results, par="min")
+  if(is.null(obj$prep$par$max)) results <- updt(results, par="max")
+  results <- updt(results, par="an")
+  
+  return(results)
+}
+summary.AN <- function(obj,...){
+  NextMethod()
+  if(!is.null(obj$prep$par) || !is.null(obj$postp$par))  cat("Parameters:\n")
+  cat("\tMin: ",obj$prep$par$min,"\n")
+  cat("\tMax: ",obj$prep$par$max,"\n")
+  cat("\tMeans: ",obj$postp$par$max,"\n")
+}
+
+
 #============== DO ==============
 
 #Subclass PCT  #DO

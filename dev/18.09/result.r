@@ -103,7 +103,7 @@ objs.results <- function(obj,...){
 
 res.results <- function(obj,...){
   res <- list()
-  if(length(obj$results)==1 && is.list(obj$results[[1]]$res)){
+  if(length(obj$results)==1 && is.list(obj$results[[1]]$res) && "list" %in% class(obj$results[[1]]$res)){
     res <- obj$results[[1]]$res
   }
   else{

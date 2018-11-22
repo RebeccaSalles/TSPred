@@ -127,6 +127,7 @@ preprocess.processing <- function(obj,data,...,map=TRUE){
   if(map){
     for(d in c(1:length(data))){
       data_d <- as.ts(data[[d]])
+      attributes(data_d) <- c(attributes(data_d),attributes(data[d]))
       
       proc_res <- preprocess(obj$prep,data_d,...)
       attr(proc_res,"name") <- names(data[d])
@@ -147,6 +148,7 @@ postprocess.processing <- function(obj,data,...,map=TRUE){
   if(map){
     for(d in c(1:length(data))){
       data_d <- as.ts(data[[d]])
+      attributes(data_d) <- c(attributes(data_d),attributes(data[[d]]))
       
       proc_res <- postprocess(obj$postp,data_d,...)
       attr(proc_res,"name") <- names(data[d])
