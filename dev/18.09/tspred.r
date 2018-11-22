@@ -276,7 +276,7 @@ predict.tspred <- function(obj,onestep=obj$one_step,...){
     cat("\nPredicting data object",m,"...")
     
     mdl_res <- predict(obj$modeling[[m]], obj$model[[m]], data[m], obj$n.ahead, ..., onestep=onestep)
-    #browser()
+    
     pred_prep[[m]] <- res(mdl_res)[[1]]
     
     cat("\nSummary:\n")

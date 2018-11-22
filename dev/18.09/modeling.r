@@ -208,25 +208,31 @@ predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
     sw_res <- preprocess(obj$sw,data)
     data <- res(sw_res)
   }
-  if(!is.null(obj$proc)){
-    for(p in c(1:length(obj$proc))){
-      attr(data,"subset") <- "test"
-      proc_res <- preprocess(obj$proc[[p]],data)
-      data <- res(proc_res)
-    }
-  }
   
   data <- as.ts(data[[1]])
   io <- mlm_io(data)
   
   if(onestep){
-    proc_res <- predict(obj$pred, mdl, io$input,...)
+    input <- io$input
     
+    obj_test <- NULL
     if(!is.null(obj$proc)){
-      for(p in c(length(obj$proc):1)){
+      obj_test <- list()
+      for(p in c(1:length(obj$proc))){
+        attr(input,"subset") <- "test"
+        proc_res <- preprocess(obj$proc[[p]],list(input))
+        obj_test[[p]] <- objs(proc_res)[[1]]
+        input <- res(proc_res)[[1]]
+      }
+    }
+    
+    proc_res <- predict(obj$pred, mdl, input,...)
+    
+    if(!is.null(obj_test)){
+      for(p in c(length(obj_test):1)){
         proc_res <- list(proc_res)
         names(proc_res) <- ts_name
-        proc_res <- postprocess(obj$proc[[p]],proc_res)
+        proc_res <- postprocess(obj_test[[p]],proc_res)
         proc_res <- res(proc_res)[[1]]
       }
     }
@@ -235,16 +241,42 @@ predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
     res <- list(result(obj,proc_res))
   }
   else{
-    #TODO
+    
     predictions <- NULL
     tuple <- io$input[1,]
     len_tuple <- length(tuple)
-    for(p in c(1:n.ahead)){
+    
+    for(i in c(1:n.ahead)){
+      
+      obj_test <- NULL
+      if(!is.null(obj$proc)){
+        obj_test <- list()
+        for(p in c(1:length(obj$proc))){
+          attr(tuple,"subset") <- "test"
+          proc_res <- preprocess(obj$proc[[p]],list(tuple))
+          attr(proc_res$results[[1]]$res,"name") <- ts_name
+          obj_test[[p]] <- objs(proc_res)[[1]]
+          tuple <- res(proc_res)[[1]]
+        }
+      }
+      
       proc_res <- predict(obj$pred, mdl, tuple,...)
-      predictions <- c(predictions,proc_res)
       tuple <- tail(c(tuple,proc_res),len_tuple)
+      
+      if(!is.null(obj_test)){
+        for(p in c(length(obj_test):1)){
+          tuple <- list(tuple)
+          names(tuple) <- ts_name
+          tuple <- postprocess(obj_test[[p]],tuple)
+          tuple <- res(tuple)[[1]]
+        }
+      }
+      
+      predictions <- c(predictions,tail(tuple,1))
+      
     }
-    attr(predictions,"name") <- names(ts_name)
+    
+    attr(predictions,"name") <- ts_name
     res <- list(result(obj,predictions))
   }
   

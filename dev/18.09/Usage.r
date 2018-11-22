@@ -38,7 +38,7 @@
   tspred_1_subset <- subset(tspred_1_specs, data=CATS[3])
   tspred_1_prep <- preprocess(tspred_1_subset,prep_test=TRUE)
   tspred_1_train <- train(tspred_1_prep)
-  tspred_1_pred <- predict(tspred_1_train, onestep=TRUE)
+  tspred_1_pred <- predict(tspred_1_train, onestep=FALSE)
   tspred_1_postp <- postprocess(tspred_1_pred)
   tspred_1_eval <- evaluate(tspred_1_postp)
   
