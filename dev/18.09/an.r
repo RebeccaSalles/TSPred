@@ -1,5 +1,5 @@
 an <- function(data, max, min, alpha=1.5, output=TRUE){
-  #browser()
+  
   if(attr(data,"subset") == "test") input <- data
   else input <- data[,1:ncol(data)-1]
   
@@ -13,7 +13,7 @@ an <- function(data, max, min, alpha=1.5, output=TRUE){
     norm$an <- NULL
   }
   
-  norm <- minmax(norm,max,min)  
+  norm <- minmax(norm,max,min)
 
   attr(norm,"an") <- an
   

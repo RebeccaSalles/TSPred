@@ -13,10 +13,11 @@
   proc5 <- subsetting(test_len=20)
   proc6 <- NAS(na.action=na.omit)
   proc7 <- MinMax()
+  proc8 <- AN()
   
   #Obtaining objects of the modeling class
   modl1 <- ARIMA()
-  modl2 <- NNET(size=5,train_par=list(),sw=proc4,proc=list(MM=proc7))
+  modl2 <- NNET(size=5,train_par=list(),sw=proc4,proc=list(AN=proc8))
   
   #Obtaining objects of the evaluating class
   eval1 <- MSE()
@@ -24,9 +25,9 @@
 #Defining (not running) the first time series prediction process
   tspred_1_specs <- tspred(
                            subsetting=proc5,
-                           processing=list(
-                                           BCT=proc2, 
-                                           WT=proc3),
+                           processing=list(),
+                                           #BCT=proc2, 
+                                           #WT=proc3),
                                            #SW=proc4,
                                            #MM=proc7), 
                            modeling=modl2,
@@ -36,11 +37,11 @@
   
 #Running the first time series prediction process
   tspred_1_subset <- subset(tspred_1_specs, data=CATS[3])
-  tspred_1_prep <- preprocess(tspred_1_subset,prep_test=TRUE)
-  tspred_1_train <- train(tspred_1_prep)
-  tspred_1_pred <- predict(tspred_1_train, onestep=FALSE)
-  tspred_1_postp <- postprocess(tspred_1_pred)
-  tspred_1_eval <- evaluate(tspred_1_postp)
+  #tspred_1_prep <- preprocess(tspred_1_subset,prep_test=TRUE)
+  tspred_1_train <- train(tspred_1_subset)
+  tspred_1_pred <- predict(tspred_1_train, onestep=TRUE)
+  #tspred_1_postp <- postprocess(tspred_1_pred)
+  tspred_1_eval <- evaluate(tspred_1_pred)
   
   View(tspred_1_eval)
   

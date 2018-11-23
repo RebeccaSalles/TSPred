@@ -167,7 +167,7 @@ is.MLM <- function(MLM_obj){
 
 train.MLM <- function(obj,data,...){
   res <- list()
-  browser()
+  #browser()
   for(i in c(1:length(data))){
     data_i <- data[i]
     obj_i <- obj
@@ -202,7 +202,7 @@ train.MLM <- function(obj,data,...){
 predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
   ts_name <- names(data)
   data <- as.list(data)
-  #browser()
+  
   if(!is.null(obj$sw)){
     data[[1]] <- c( attr(obj$sw,"train_data"), data[[1]] )
     attr(data,"subset") <- "test"
@@ -222,6 +222,7 @@ predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
       for(p in c(1:length(obj$proc))){
         attr(input,"subset") <- "test"
         proc_res <- preprocess(obj$proc[[p]],list(input))
+        attr(proc_res$results[[1]]$res,"name") <- ts_name
         obj_test[[p]] <- objs(proc_res)[[1]]
         input <- res(proc_res)[[1]]
       }
@@ -254,10 +255,10 @@ predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
         obj_test <- list()
         for(p in c(1:length(obj$proc))){
           attr(tuple,"subset") <- "test"
-          proc_res <- preprocess(obj$proc[[p]],list(tuple))
+          proc_res <- preprocess(obj$proc[[p]],list(t(tuple)))
           attr(proc_res$results[[1]]$res,"name") <- ts_name
           obj_test[[p]] <- objs(proc_res)[[1]]
-          tuple <- res(proc_res)[[1]]
+          tuple <- as.matrix(res(proc_res)[[1]])
         }
       }
       
