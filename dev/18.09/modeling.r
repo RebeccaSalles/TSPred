@@ -326,35 +326,29 @@ train.linear <- function(obj,data,...){
 }
 
 predict.linear <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
-  res <- list()
   
-  for(i in c(1:length(mdl))){
-    mdl_i <- mdl[[i]]
+  if(!onestep){
+    proc_res <- predict(obj$pred, mdl, n.ahead,...)
+    attr(proc_res,"name") <- attr(mdl,"name")
+    res <- list(result(obj,proc_res))
+  }
+  else{
+    test <- as.ts(data[[1]])
     
-    if(!onestep){
-      proc_res <- predict(obj$pred, mdl_i, n.ahead,...)
-      attr(proc_res,"name") <- names(mdl[i])
-      res[[i]] <- result(obj,proc_res)
+    train_data <- fitted(mdl)+residuals(mdl)
+    mdl_res <- mdl
+    
+    predictions <- NULL
+    
+    for(p in c(1:n.ahead)){
+      proc_res <- predict(obj$pred, mdl_res, 1,...)
+      predictions <- c(predictions,proc_res)
+      
+      train_data <- c(train_data,test[p])
+      mdl_res <- train(obj$train, train_data)
     }
-    else{
-      if(length(data)==1) test_i <- as.ts(data[[1]])
-      else test_i <- as.ts(data[[i]])
-      
-      train_data <- fitted(mdl_i)+residuals(mdl_i)
-      mdl_res <- mdl_i
-      
-      predictions <- NULL
-      
-      for(p in c(1:n.ahead)){
-        proc_res <- predict(obj$pred, mdl_res, 1,...)
-        predictions <- c(predictions,proc_res)
-        
-        train_data <- c(train_data,test_i[p])
-        mdl_res <- train(obj$train, train_data)
-      }
-      attr(predictions,"name") <- names(mdl[i])
-      res[[i]] <- result(obj,predictions)
-    }
+    attr(predictions,"name") <- attr(mdl,"name")
+    res <- list(result(obj,predictions))
   }
   
   return(results(res))

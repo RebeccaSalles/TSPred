@@ -35,3 +35,7 @@ postprocess <- function(obj,...){
 evaluate <- function(obj,...){
   UseMethod("evaluate")
 }
+
+workflow <- function(obj,...){
+  UseMethod("workflow")
+}

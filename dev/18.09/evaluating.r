@@ -42,8 +42,6 @@ evaluate.evaluating <- function(obj, test, pred, ...){
   return(results(res))
 }
 
-
-#Summary method
 summary.evaluating <- function(obj,...){
   cat("Evaluating class object\n")
   
@@ -51,4 +49,56 @@ summary.evaluating <- function(obj,...){
   else cat("Method: ",obj$method,"\n")
   
   if(is.null(obj$par)) cat("Parameters: N/A\n")
+}
+
+#============== TODO ==============
+#Subclass fitness
+fitness <- function(eval_func, eval_par=NULL, ..., subclass=NULL){
+  evaluating(eval_func=eval_func, 
+             eval_par=eval_par,
+             ...,
+             subclass="fitness")
+}
+
+is.fitness <- function(fitness_obj){
+  is(fitness_obj,"fitness")
+}
+
+evaluate.fitness <- function(obj, mdl, test, pred, ...){
+  result <- do.call(obj$func,c(list(mdl),list(...),obj$par))
+  attr(result,"name") <- attr(mdl,"name")
+  res <- list(result(obj,result))
+  
+  return(results(res))
+}
+
+
+#Subclass error
+error <- function(eval_func, eval_par=NULL, mdl_error=FALSE, ..., subclass=NULL){
+  evaluating(eval_func=eval_func, 
+             eval_par=eval_par,
+             mdl_error=mdl_error,
+             ...,
+             subclass="error")
+}
+
+is.error <- function(error_obj){
+  is(error_obj,"error")
+}
+
+evaluate.error <- function(obj, mdl, test, pred, ...){
+  if(obj$mdl_error){
+    test <- fitted(mdl)+residuals(mdl)
+    pred <- fitted(mdl)
+    result <- do.call(obj$func,c(list(test),list(pred),list(...),obj$par))
+    attr(result,"name") <- attr(mdl,"name")
+  }
+  else{
+    result <- do.call(obj$func,c(list(test),list(pred),list(...),obj$par))
+    attr(result,"name") <- attr(test,"name")
+  }
+  
+  res <- list(result(obj,result))
+  
+  return(results(res))
 }

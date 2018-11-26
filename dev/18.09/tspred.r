@@ -103,6 +103,10 @@ is.tspred <- function(tspred_obj){
 
 
 subset.tspred <- function(obj,data=NULL,...){
+  if(is.null(obj$subsetting)) {
+    warning("No subsetting setup in the tspred object.")
+    return(obj)
+  }
   
   if(is.null(data)){
     if(is.null(obj$data$raw)) stop("no data was provided for computation",call. = FALSE)
@@ -150,6 +154,10 @@ subset.tspred <- function(obj,data=NULL,...){
 
 
 preprocess.tspred <- function(obj,prep_test=FALSE,...){
+  if(is.null(obj$processing) || length(obj$processing)==0){
+    warning("No preprocessing setup in the tspred object.")
+    return(obj)
+  }
   
   if(!is.null(obj$data$train)) data <- obj$data$train
   else if(!is.null(obj$data$raw)) data <- obj$data$raw
@@ -217,6 +225,10 @@ preprocess.tspred <- function(obj,prep_test=FALSE,...){
 
 
 train.tspred <- function(obj){
+  if(is.null(obj$modeling)){
+    warning("No modeling setup in the tspred object.")
+    return(obj)
+  }
   
   if(!is.null(obj$data$prep)) data <- obj$data$prep$train
   else if(!is.null(obj$data$train)) data <- obj$data$train
@@ -247,6 +259,10 @@ train.tspred <- function(obj){
 }
 
 predict.tspred <- function(obj,onestep=obj$one_step,...){
+  if(is.null(obj$modeling) || length(obj$modeling)==0){
+    warning("No predicting setup in the tspred object.")
+    return(obj)
+  }
   
   if(!is.null(obj$data$prep$test) && length(obj$data$prep$test)>0) data <- obj$data$prep$test
   else if(!is.null(obj$data$test)) data <- obj$data$test
@@ -290,6 +306,10 @@ predict.tspred <- function(obj,onestep=obj$one_step,...){
 }
 
 postprocess.tspred <- function(obj,...){
+  if(is.null(obj$processing) || length(obj$processing)==0){
+    warning("No postprocessing setup in the tspred object.")
+    return(obj)
+  }
   
   if(!is.null(obj$pred$raw)) pred <- obj$pred$raw
   else stop("no predicted data provided for computation",call. = FALSE)
@@ -351,6 +371,10 @@ postprocess.tspred <- function(obj,...){
 }
 
 evaluate.tspred <- function(obj,...){
+  if(is.null(obj$evaluating) || length(obj$evaluating)==0){
+    warning("No evaluating setup in the tspred object.")
+    return(obj)
+  }
   
   if(!is.null(obj$pred$postp)) pred <- obj$pred$postp[[1]]
   else if(!is.null(obj$pred$raw)) pred <- obj$pred$raw[[1]]
@@ -386,7 +410,22 @@ evaluate.tspred <- function(obj,...){
   return(validate_tspred(obj))
 }
 
-#============== DO ==============
+
+workflow.tspred <- function(obj,data=NULL,prep_test=FALSE,onestep=obj$one_step){
+  require(magrittr)
+  
+  tspred <- obj %>%
+            subset(data=data) %>%
+            preprocess(prep_test=prep_test) %>%
+            train() %>%
+            predict(onestep=onestep)  %>%
+            postprocess() %>%
+            evaluate()
+  
+  return(tspred)
+}
+
+#============== TODO ==============
 summary.tspred <- function(obj,...){
   cat("\nTSPred class object\n\n")
   cat("====Data processing:====\n")
