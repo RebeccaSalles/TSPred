@@ -10,7 +10,7 @@ new_tspred <- function(subsetting=NULL, processing=NULL, modeling=NULL, evaluati
   if(!is.null(n.ahead)) stopifnot(is.numeric(n.ahead))
   if(!is.null(one_step)) stopifnot(is.logical(one_step))
   if(!is.null(pred) && length(pred)>0) for(d in pred) stopifnot(is.null(d)||is.data.frame(d)||is.ts(d)||is.matrix(d)||is.vector(d))
-  if(!is.null(eval) && length(eval)>0) for(e in eval) stopifnot(is.data.frame(e)||is.numeric(e)||is.matrix(e)||is.vector(e))
+  if(!is.null(eval) && length(eval)>0) for(e in eval) stopifnot(is.null(e)||is.data.frame(e)||is.numeric(e)||is.matrix(e)||is.vector(e))
   
   structure(
     list(
@@ -71,7 +71,7 @@ validate_tspred <- function(tspred_obj){
         stop("argument 'pred' must be NULL or a list of data ('data.frame','ts','matrix','vector') objects",call. = FALSE)
   if(!is.null(values$eval) && length(values$eval)>0)
     for(e in values$eval)
-      if(!is.data.frame(e)&&!is.numeric(e)&&!is.matrix(e)&&!is.vector(e))
+      if(!is.null(e)&&!is.data.frame(e)&&!is.numeric(e)&&!is.matrix(e)&&!is.vector(e)&&!is.list(e))
         stop("argument 'eval' must be NULL or a list of data ('data.frame','ts','matrix','vector') objects",call. = FALSE)
   
   return(tspred_obj)
@@ -87,7 +87,8 @@ tspred <- function(subsetting=NULL, processing=NULL, modeling=NULL, evaluating=N
   pred <- list( raw = NULL,
                 postp = NULL)
   model <- NULL
-  eval <- NULL
+  eval <- list( fit = NULL,
+                pred = NULL)
   
   if(!is.null(processing) && !is.list(processing)) processing <- list(processing)
   if(!is.null(evaluating) && !is.list(evaluating)) evaluating <- list(evaluating)
@@ -241,7 +242,7 @@ train.tspred <- function(obj){
   }
   
   cat("\nRunning modeling method...")
-    
+   
   mdl_res <- train(obj$modeling, data)
   
   obj$modeling <- objs(mdl_res)
@@ -287,7 +288,7 @@ predict.tspred <- function(obj,onestep=obj$one_step,...){
   else cat("\nType: n-step-ahead prediction\n")
   
   pred_prep <- list()
-  
+  #browser()
   for(m in names(obj$modeling)){
     cat("\nPredicting data object",m,"...")
     
@@ -370,48 +371,92 @@ postprocess.tspred <- function(obj,...){
   return(validate_tspred(obj))
 }
 
-evaluate.tspred <- function(obj,...){
+evaluate.tspred <- function(obj,fitness=TRUE,...){
   if(is.null(obj$evaluating) || length(obj$evaluating)==0){
     warning("No evaluating setup in the tspred object.")
     return(obj)
   }
   
+  pred <- data_test <- NULL
+  
   if(!is.null(obj$pred$postp)) pred <- obj$pred$postp[[1]]
   else if(!is.null(obj$pred$raw)) pred <- obj$pred$raw[[1]]
-  else stop("no predicted data was provided for computation",call. = FALSE)
-  
-  if(!is.null(obj$data$test)) data_test <- obj$data$test[[1]]
-  else stop("no test data was provided for computation",call. = FALSE)
-  
-  if(!is.null(obj$eval)){
-    warning("Updating eval in the tspred object")
-    obj$eval <- NULL
+  else{
+    if(!fitness) stop("no predicted data was provided for computation",call. = FALSE)
+    else warning("no predicted data was provided for computation")
   }
   
-  attr(pred,"name") <- attr(data_test,"name") <- names(obj$pred$raw)
+  if(!is.null(obj$data$test)) data_test <- obj$data$test[[1]]
+  else{
+    if(!fitness) stop("no test data was provided for computation",call. = FALSE)
+    else warning("no test data was provided for computation")
+  }
+  
+  if(!is.null(pred) && !is.null(data_test))
+    attr(pred,"name") <- attr(data_test,"name") <- names(obj$data$test)
+  
+  if(fitness){
+    if(!is.null(obj$eval$fit)){
+      warning("Updating eval$fit in the tspred object")
+      obj$eval$fit <- NULL
+    }
+  }
+  if(!is.null(obj$eval$pred)){
+    warning("Updating eval$pred in the tspred object")
+    obj$eval$pred <- NULL
+  }
+  
   eval <- list()
   
-  for(e in c(1:length(obj$evaluating))){
-    cat("\nRunning evaluating method",e,"of",length(obj$evaluating),"...")
+  if(fitness){
+    for(e in c(1:length(obj$evaluating))){
+      cat("\nComputing fitness evaluating criteria",e,"of",length(obj$evaluating),"...")
+      
+      for(m in names(obj$model)){
+        proc_res <- evaluate(obj$evaluating[[e]], obj$model[[m]], data_test, pred, ...,fitness=fitness)
+        attr(proc_res,"name") <- m
+        
+        #obj$evaluating[[e]]$fit <- objs(proc_res)
+        
+        eval[[names(obj$evaluating[e])]][[m]] <- res(proc_res)[[1]]
+      }
+      
+      cat("\nSummary:\n")
+      summary(proc_res)
+      cat("DONE!\n")
+    }
     
-    proc_res <- evaluate(obj$evaluating[[e]], data_test, pred, ...)
+    obj$eval$fit <- eval
+  }
+  
+  eval <- list()
+  
+  error_eval_index <- which(sapply(obj$evaluating,is.error))
+  i <- 1
+  for(e in error_eval_index){
+    cat("\nComputing preditcion error measure",i,"of",length(error_eval_index),"...")
     
-    obj$evaluating[[e]] <- objs(proc_res)
+    proc_res <- evaluate(obj$evaluating[[e]], NULL, data_test, pred, ...,fitness=FALSE)
+    attr(proc_res,"name") <- attr(data_test,"name")
+    
+    #obj$evaluating[[e]]$pred <- objs(proc_res)
     
     eval[[names(obj$evaluating[e])]] <- res(proc_res)
     
     cat("\nSummary:\n")
     summary(proc_res)
     cat("DONE!\n")
+    
+    i <- i+1
   }
   
-  obj$eval <- eval
+  obj$eval$pred <- eval
   
   return(validate_tspred(obj))
 }
 
 
-workflow.tspred <- function(obj,data=NULL,prep_test=FALSE,onestep=obj$one_step){
+workflow.tspred <- function(obj,data=NULL,prep_test=FALSE,onestep=obj$one_step,eval_fitness=TRUE){
   require(magrittr)
   
   tspred <- obj %>%
@@ -420,10 +465,12 @@ workflow.tspred <- function(obj,data=NULL,prep_test=FALSE,onestep=obj$one_step){
             train() %>%
             predict(onestep=onestep)  %>%
             postprocess() %>%
-            evaluate()
+            evaluate(fitness=eval_fitness)
   
   return(tspred)
 }
+
+benchmark.tspred <- function(...){}
 
 #============== TODO ==============
 summary.tspred <- function(obj,...){

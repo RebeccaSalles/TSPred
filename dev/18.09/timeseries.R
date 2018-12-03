@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-#setwd("C:/Users/eduar/Dropbox/Git/dev/Timeseries")
+#setwd("C:/Users/eduar/OneDrive - cefet-rj.br/Git/dev2/Timeseries")
 
 loadlibrary <- function(x)
 {
@@ -13,6 +13,12 @@ loadlibrary <- function(x)
 loadlibrary("nnet")
 loadlibrary("smooth")
 loadlibrary("Mcomp")
+loadlibrary("ModelMetrics")
+loadlibrary("randomForest")
+loadlibrary("RSNNS")
+loadlibrary("kernlab")
+loadlibrary("elmNNRcpp")
+loadlibrary("e1071")
 
 ts.lagPad <- function(x, k) 
 {
@@ -39,17 +45,6 @@ ts.swProject <- function(sw)
   output <- sw[,ncol(sw)]
   return (list(input=input, output=output))
 } 
-
-ts.swSelect <- function(data, perc=0.8, len=NA)
-{
-  if (is.na(len))
-    idx = 1:(as.integer(perc*nrow(data)))
-  else
-    idx = 1:len
-  train = data[idx,]
-  test = data[-idx,]
-  return (list(train=train, test=test))
-}
 
 ts.outliers.boxplot <- function(data, alpha = 1.5)
 {
@@ -103,7 +98,7 @@ ts.ml <- function(method, ...) {
   return(list(mlm=method, arguments = list(...)))
 }
 
-ts.train <- function(data, fnorm, outlier = ts.outliers.boxplot, eml) {
+ts.train <- function(data, fnorm, outlier = ts.outliers.boxplot, eml, predict_custom = predict) {
   if (!is.null(outlier))
     data <- outlier(data)
 
@@ -111,33 +106,39 @@ ts.train <- function(data, fnorm, outlier = ts.outliers.boxplot, eml) {
   
   io = ts.swProject(data)
   
-  mlmodel <- do.call(function(...) eml$mlm(io$input, io$output, ...), eml$arguments)
+  mlmodel <- do.call(function(...) eml$mlm(as.matrix(io$input), as.matrix(io$output), ...), eml$arguments)
+  
+  prediction <- predict_custom(mlmodel, as.matrix(io$input))
 
-  prediction <- predict(mlmodel, io$input)
   prediction <- as.vector(prediction)
   prediction <- fnorm$dnorm(prediction, fnorm$par)
   output <- fnorm$dnorm(io$output, fnorm$par)
 
-  train.mse = TSPred::MSE(output,prediction)
+  train.mse = mse(prediction, output)
   print(train.mse)
   
   return (list(mlmodel=mlmodel, train.mse=train.mse))
 }
 
-ts.test <- function(model, fnorm, test) {
+ts.test <- function(model, fnorm, test, test.pred, predict_custom = predict) {
   test <- fnorm$norm(test, fnorm$par)
+  test <- as.matrix(test)
   
-  io = ts.swProject(test)
-  
-  prediction <- predict(model$mlmodel, io$input)
-  prediction <- as.vector(prediction)
+  if ((nrow(test) == 1) && (nrow(test) != length(test.pred))) {
+    prediction <- NULL
+    for (i in 1:length(test.pred)) {
+      pred <- as.vector(predict_custom(model$mlmodel, test))
+      test[1,] <- c(test[1,2:ncol(test)], pred)
+      prediction <- c(prediction, pred)
+    }
+  }
+  else 
+    prediction <- as.vector(predict_custom(model$mlmodel, test))
   prediction <- fnorm$dnorm(prediction, fnorm$par)
-  output <- fnorm$dnorm(io$output, fnorm$par)
-  print(TSPred::MSE(output,prediction))
+  print(mse(prediction, test.pred))
 }
 
-ts.an_train <- function(data, outlier = ts.outliers.boxplot, eml) {
-  browser()
+ts.an_train <- function(data, outlier = ts.outliers.boxplot, eml, predict_custom = predict) {
   an <- apply(ts.swProject(data)$input, 1, mean)
   data <- data/an
   
@@ -154,32 +155,44 @@ ts.an_train <- function(data, outlier = ts.outliers.boxplot, eml) {
   
   io = ts.swProject(data)
   
-  mlmodel <- do.call(function(...) eml$mlm(io$input, io$output, ...), eml$arguments)
+  mlmodel <- do.call(function(...) eml$mlm(as.matrix(io$input), as.matrix(io$output), ...), eml$arguments)
   
-  prediction <- predict(mlmodel, io$input)
+  prediction <- predict_custom(mlmodel, as.matrix(io$input))
+  
   prediction <- as.vector(prediction)
   prediction <- fnorm$dnorm(prediction, fnorm$par)*an
   output <- fnorm$dnorm(io$output, fnorm$par)*an
   
-  train.mse = TSPred::MSE(output,prediction)
+  train.mse = mse(prediction, output)
   print(train.mse)
   
   return (list(mlmodel=mlmodel, fnorm = fnorm, train.mse=train.mse))
 }
 
-ts.an_test <- function(model, fnorm, test) {
-  an <- apply(ts.swProject(test)$input, 1, mean)
-  test <- test/an
-
-  test <- fnorm$norm(test, fnorm$par)
-  
-  io = ts.swProject(test)
-  
-  prediction <- predict(model$mlmodel, io$input)
-  prediction <- as.vector(prediction)
-  prediction <- fnorm$dnorm(prediction, fnorm$par)*an
-  output <- fnorm$dnorm(io$output, fnorm$par)*an
-  print(TSPred::MSE(output,prediction))
+ts.an_test <- function(model, fnorm, test, test.pred, predict_custom = predict) {
+  test <- as.matrix(test)
+  if ((nrow(test) == 1) && (nrow(test) != length(test.pred))) {
+    prediction <- NULL
+    for (i in 1:length(test.pred)) {
+      an <- mean(test[1,])
+      test_an <- test/an
+      test_an <- fnorm$norm(test_an, fnorm$par)
+      
+      pred <- as.vector(predict_custom(model$mlmodel, test_an))
+      pred <- fnorm$dnorm(pred, fnorm$par)*an
+      
+      test[1,] <- c(test[1,2:ncol(test)], pred)
+      prediction <- c(prediction, pred)
+    }
+  }
+  else {
+    an <- apply(test, 1, mean)
+    test <- test/an
+    test <- fnorm$norm(test, fnorm$par)
+    prediction <- as.vector(predict_custom(model$mlmodel, as.matrix(test)))
+    prediction <- fnorm$dnorm(prediction, fnorm$par)*an
+  }
+  print(mse(prediction, test.pred))
 }
 
 library(TSPred)
@@ -189,18 +202,50 @@ sm <- na.omit(ma(x,order=5,centre=FALSE))
 plot(x)
 lines(sm,col="red")
 
-sw <- data.frame(ts.sw(x, 6))
-sw = ts.swSelect(sw, len=960)
-sw$train = na.omit(sw$train)
+
+#default 20 setup ahead
+sw <- list(train=na.omit(data.frame(ts.sw(x[1:960], 6))), test = na.omit(data.frame(ts.sw(x[956:961], 6))), test.pred = x[961:980])
+#uncomment next line for 1 setup ahead
+sw <- list(train=na.omit(data.frame(ts.sw(x[1:960], 6))), test = na.omit(data.frame(ts.sw(x[956:980], 6))), test.pred = x[961:980])
+sw$test$t0 <- NULL
 
 minmax <- ts.norm.minmax(x[1:960])
-model = ts.train(data = sw$train, fnorm = minmax, eml = ts.ml(nnet, size=5))
-ts.test(model, fnorm = minmax, sw$test)
-
 zscore <- ts.norm.zscore(x[1:960])
+
+model = ts.train(data = sw$train, fnorm = minmax, eml = ts.ml(nnet, size=5))
+print("min-max-nnet")
+ts.test(model, fnorm = minmax, sw$test, sw$test.pred)
+
+model = ts.train(data = sw$train, fnorm = minmax, eml = ts.ml(randomForest,ntree=400))
+print("min-max-randomForest")
+ts.test(model, fnorm = minmax, sw$test, sw$test.pred)
+
 model = ts.train(data = sw$train, fnorm = zscore, eml = ts.ml(nnet, size=5))
-ts.test(model, fnorm = zscore, sw$test)
+print("zscore-nnet")
+ts.test(model, fnorm = zscore, sw$test, sw$test.pred)
 
 model = ts.an_train(data = sw$train, eml = ts.ml(nnet, size=5))
-ts.an_test(model, fnorm = model$fnorm, sw$test)
+print("an-nnet")
+ts.an_test(model, fnorm = model$fnorm, sw$test, sw$test.pred)
+
+model = ts.an_train(data = sw$train, eml = ts.ml(randomForest, ntree=1000))
+print("an-randomForest")
+ts.an_test(model, fnorm = model$fnorm, sw$test, sw$test.pred)
+
+model = ts.an_train(data = sw$train, eml = ts.ml(rbf, size=5, maxit=100, initFuncParams=c(0, 1, 0, 0.01, 0.01), learnFuncParams=c(1e-8, 0, 1e-8, 0.1, 0.8), linOut=TRUE))
+print("an-rbf")
+ts.an_test(model, fnorm = model$fnorm, sw$test, sw$test.pred)
+
+model = ts.an_train(data = sw$train, eml = ts.ml(svm))
+print("an-svm")
+ts.an_test(model, fnorm = model$fnorm, sw$test, sw$test.pred)
+
+model = ts.an_train(data = sw$train, eml = ts.ml(mlp, size=5,learnFuncParams=c(0.1), maxit=1000))
+print("an-mlp")
+ts.an_test(model, fnorm = model$fnorm, sw$test, sw$test.pred)
+
+model = ts.an_train(data = sw$train, eml = ts.ml(elm_train, nhid = 1000, actfun = 'purelin', init_weights = "uniform_negative", bias = TRUE, verbose = T), predict_custom = elm_predict)
+print("an-elm_train")
+ts.an_test(model, fnorm = model$fnorm, sw$test, sw$test.pred, predict_custom = elm_predict)
+
 

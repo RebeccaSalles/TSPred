@@ -41,7 +41,7 @@
   tspred_1_train <- train(tspred_1_prep)
   tspred_1_pred <- predict(tspred_1_train, onestep=FALSE)
   tspred_1_postp <- postprocess(tspred_1_pred)
-  tspred_1_eval <- evaluate(tspred_1_postp)
+  tspred_1_eval <- evaluate(tspred_1_postp,fitness=TRUE)
   
   View(tspred_1_eval)
   

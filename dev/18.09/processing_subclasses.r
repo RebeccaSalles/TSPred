@@ -178,7 +178,4 @@ summary.AN <- function(obj,...){
 #Subclass DIF  #DO
 #Subclass EMD  #DO
 #Subclass THieF  #DO
-#Subclass minmax  #DO
 #Subclass zscore  #DO
-#Subclass AN  #DO
-#Subclass partition  #DO

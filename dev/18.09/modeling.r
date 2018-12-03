@@ -142,7 +142,7 @@ MLM <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, sw=NU
                        sw=sw,
                        proc=proc,
                        ...,
-                       subclass="MLM")
+                       subclass=c(subclass,"MLM"))
   validate_MLM(mlm_obj)
 }
 validate_MLM <- function(mlm_obj){
@@ -191,8 +191,16 @@ train.MLM <- function(obj,data,...){
     data_i <- as.ts(data_i[[1]])
     io <- mlm_io(data_i)
     
-    proc_res <- train(obj$train, io$input, io$output, ...)
+    proc_res <- train(obj$train, as.matrix(io$input), as.matrix(io$output), ...)
     attr(proc_res,"name") <- names(data[i])
+    attr(proc_res,"y") <- io$output
+    
+    if("list" %in% class(proc_res)) {
+      aux_res <- list()
+      aux_res[[attr(proc_res,"name")]] <- proc_res
+      proc_res <- aux_res
+    }
+    
     res[[i]] <- result(obj_i,proc_res)
   }
   
@@ -228,7 +236,7 @@ predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
       }
     }
     
-    proc_res <- predict(obj$pred, mdl, input,...)
+    proc_res <- predict(obj$pred, mdl, as.matrix(input),...)
     
     if(!is.null(obj_test)){
       for(p in c(length(obj_test):1)){
@@ -304,7 +312,7 @@ linear <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, ..
            pred_func=pred_func,
            pred_par=pred_par,
            ...,
-           subclass="linear")
+           subclass=c(subclass,"linear"))
 }
 
 is.linear <- function(linear_obj){
