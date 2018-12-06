@@ -470,7 +470,62 @@ workflow.tspred <- function(obj,data=NULL,prep_test=FALSE,onestep=obj$one_step,e
   return(tspred)
 }
 
-benchmark.tspred <- function(...){}
+benchmark.tspred <- function(tspred_obj,...,rank.by=c("MSE")){
+  
+  tspred_objs <- list(tspred_obj,...)
+  
+  if(!all(sapply(tspred_objs,is.tspred))) 
+    stop("argument 'tspred_objs' must be a list of tspred objects",call. = FALSE)
+  if(!all(sapply(tspred_objs,function(obj) !is.null(obj$eval$fit) || !is.null(obj$eval$pred)))) 
+    stop("one or more tspred objects are not evaluated. Consider running evaluate(tspred_obj)",call. = FALSE)
+  
+  rank <- data.frame()
+  for(obj in tspred_objs){
+    mdl <- class(obj$modeling[[1]])[[1]]
+    mdl_inner_procs <- sapply(obj$modeling[[1]]$proc,function(c) class(c)[[1]])
+    procs <- sapply(obj$processing, function(c) sapply(c$train,function(c) class(c)[[1]]))
+    
+    obj_id <- paste0(procs,ifelse(procs=="","","-"),mdl_inner_procs,ifelse(mdl_inner_procs=="","","-"),mdl,sep="")
+    
+    rank_obj <- data.frame(tspred_id=obj_id)
+    
+    for(f in names(obj$eval$fit)){
+      for(ts in names(obj$eval$fit[[f]])){
+        fit_criteria <- data.frame(obj$eval$fit[[f]][[ts]])
+        names(fit_criteria) <- paste(class(obj$evaluating[[f]])[[1]],ts,sep="-")
+        rank_obj <- cbind(rank_obj,fit_criteria)
+      }
+    }
+    for(e in names(obj$eval$pred)){
+      error <- data.frame(obj$eval$pred[[e]][[1]])
+      names(error) <- class(obj$evaluating[[e]])[[1]]
+      rank_obj <- cbind(rank_obj,error)
+    }
+    
+    require(plyr)
+    rank <- rbind.fill(rank,rank_obj)
+  }
+  
+  rownames(rank) <- NULL
+  
+  #create ranking criteria based on all measures referenced by rank.by
+  criteria <- rank[ , (names(rank) %in% rank.by), drop = FALSE]
+  if("logLik" %in% names(criteria)) criteria["logLik"] <- -criteria["logLik"]
+  TSPredC <- 0
+  for(c in names(criteria)) TSPredC <- TSPredC + rank(criteria[c])
+  names(TSPredC) <- NULL
+  
+  #ranking the candidate models based on all measures referenced by rank.by
+  rank <- cbind(rank,rank.position.sum=TSPredC)
+  order <- with(rank,order(rank.position.sum))
+  rank <- rank[order,]
+  
+  #candidate models are ranked and included as attribute of rank dataframe 
+  tspred_objs <- tspred_objs[order]
+  names(tspred_objs) <- rank$tspred_id
+  
+  return(list(rank=rank,ranked_tspred_objs=tspred_objs))
+}
 
 #============== TODO ==============
 summary.tspred <- function(obj,...){

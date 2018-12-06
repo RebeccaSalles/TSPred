@@ -16,6 +16,9 @@ loadlibrary("TSPred")
 
 #data("CATS")
 
+
+set.seed(1234)
+
 #======================== AN-NNET ========================
 tspred_an_nnet <- tspred(
   subsetting=subsetting(test_len=20),
@@ -124,3 +127,7 @@ tspred_tf <- tspred(
 tspred_tf_results <- workflow(tspred_tf,data=CATS[3],prep_test=FALSE,onestep=TRUE)
 View(tspred_tf_results)
 #====================================================
+
+
+bmrk <- benchmark(tspred_an_nnet_results,tspred_an_rfrst_results,tspred_an_rbf_results,tspred_an_svm_results,
+                  tspred_an_mlp_results,tspred_an_elm_results,tspred_arima_results,tspred_ets_results,tspred_tf_results)

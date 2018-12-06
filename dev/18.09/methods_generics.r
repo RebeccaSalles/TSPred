@@ -39,3 +39,7 @@ evaluate <- function(obj,...){
 workflow <- function(obj,...){
   UseMethod("workflow")
 }
+
+benchmark <- function(obj,...){
+  UseMethod("benchmark")
+}
