@@ -71,14 +71,16 @@ is.results <- function(results_obj){
   is(results_obj,"results")
 }
 
-updt.results <- function(obj,par=NULL,value=NULL){
+updt.results <- function(obj,par=NULL,refpar=NULL,value=NULL){
+  
+  if(is.null(refpar)) refpar <- par
   
   for(r in c(1:length(obj$results))){
     result <- obj$results[[r]]
     
     if(is.null(value)){
-      if(par %in% names(attributes(result$res))) value_found <- attr(result$res,par)
-      else if(par %in% names(result$res)) value_found <- result$res$par
+      if(refpar %in% names(attributes(result$res))) value_found <- attr(result$res,refpar)
+      else if(refpar %in% names(result$res)) value_found <- result$res$refpar
       else stop(paste("no value found for updating parameter",par,sep=" "),call. = FALSE)
     }
     else value_found <- value

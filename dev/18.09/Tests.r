@@ -19,6 +19,39 @@ loadlibrary("TSPred")
 
 set.seed(1234)
 
+#======================== PCT-AN-NNET ========================
+tspred_pct_an_nnet <- tspred(
+  subsetting=subsetting(test_len=20),
+  processing=list(PCT=PCT()),
+  modeling=NNET(size=5, sw=SW(window_len=6), proc=list(AN=AN())),
+  evaluating=list(MSE=MSE())
+)
+tspred_pct_an_nnet_results <- workflow(tspred_pct_an_nnet,data=CATS[3],prep_test=TRUE,onestep=TRUE,eval_fitness=FALSE)
+View(tspred_pct_an_nnet_results)
+#=========================================================
+
+#======================== MAS-AN-NNET ========================
+tspred_mas_an_nnet <- tspred(
+  subsetting=subsetting(test_len=20),
+  processing=list(MAS=MAS(order=3,prep_par=list(model="arima",h=20))),
+  modeling=NNET(size=5, sw=SW(window_len=6), proc=list(AN=AN())),
+  evaluating=list(MSE=MSE())
+)
+tspred_mas_an_nnet_results <- workflow(tspred_mas_an_nnet,data=CATS[3],prep_test=TRUE,onestep=TRUE,eval_fitness=FALSE)
+View(tspred_mas_an_nnet_results)
+#=========================================================
+
+#======================== DIF-AN-NNET ========================
+tspred_dif_an_nnet <- tspred(
+  subsetting=subsetting(test_len=20),
+  processing=list(DIF=DIF()),
+  modeling=NNET(size=5, sw=SW(window_len=6), proc=list(AN=AN())),
+  evaluating=list(MSE=MSE())
+)
+tspred_dif_an_nnet_results <- workflow(tspred_dif_an_nnet,data=CATS[3],prep_test=TRUE,onestep=TRUE,eval_fitness=FALSE)
+View(tspred_dif_an_nnet_results)
+#=========================================================
+
 #======================== AN-NNET ========================
 tspred_an_nnet <- tspred(
   subsetting=subsetting(test_len=20),
@@ -102,7 +135,7 @@ View(tspred_arima_results)
 tspred_ets <- tspred(
   subsetting=subsetting(test_len=20),
   modeling=ETS(train_par=list(h=20, initial="optimal")),
-  evaluating=list(MSE=MSE(),AIC=AIC())
+  evaluating=list(MSE=MSE())
 )
 tspred_ets_results <- workflow(tspred_ets,data=CATS[3],prep_test=FALSE,onestep=TRUE)
 View(tspred_ets_results)
@@ -121,8 +154,9 @@ View(tspred_hw_results)
 #======================== TF ========================
 tspred_tf <- tspred(
   subsetting=subsetting(test_len=20),
+  processing=list(DIF=DIF()),
   modeling=TF(train_par=list(h=1)),
-  evaluating=list(MSE=MSE(),AIC=AIC())
+  evaluating=list(MSE=MSE())
 )
 tspred_tf_results <- workflow(tspred_tf,data=CATS[3],prep_test=FALSE,onestep=TRUE)
 View(tspred_tf_results)

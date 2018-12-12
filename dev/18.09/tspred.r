@@ -183,6 +183,7 @@ preprocess.tspred <- function(obj,prep_test=FALSE,...){
     cat("\nRunning preprocessing method",p,"of",length(obj$processing),"...")
     
     attr(data_prep,"subset") <- "train"
+    attr(data_prep,"prep_test") <- prep_test
     
     proc_res <- preprocess(obj$processing[[p]], data_prep, ...)
     
@@ -203,6 +204,7 @@ preprocess.tspred <- function(obj,prep_test=FALSE,...){
         
         attr(data_prep_test_ts,"subset") <- "test"
         attr(data_prep_test_ts,"train_data") <- last_data_prep_ts
+        attr(data_prep_test_ts,"prep_test") <- prep_test
         
         proc_res_test <- preprocess(obj$processing[[p]]$train[[ts]], data_prep_test_ts, ...)
         
@@ -324,16 +326,18 @@ postprocess.tspred <- function(obj,...){
   
   for(p in c(length(obj$processing):1)){
     
-    if(length(obj$processing[[p]]$train)>1){
-      for(ts in names(obj$processing[[p]]$train)){
-        if(!is.null(obj$processing[[p]]$train[[ts]]$postp)){
+    procs <- ifelse(length(obj$processing[[p]]$test)>0, obj$processing[[p]]$test, obj$processing[[p]]$train)
+    
+    if(length(procs)>1){
+      for(ts in names(procs)){
+        if(!is.null(procs[[ts]]$postp)){
           
-          cat("\nReversing preprocessing method",class(obj$processing[[p]]$train[[ts]])[[1]],"...")
+          cat("\nReversing preprocessing method",class(procs[[ts]])[[1]],"...")
           
           pred_postp_ts <- list(pred_postp[[ts]])
           names(pred_postp_ts) <- ts
           
-          proc_res <- postprocess(obj$processing[[p]]$train[[ts]], pred_postp_ts, ...)
+          proc_res <- postprocess(procs[[ts]], pred_postp_ts, ...)
           
           if(names(res(proc_res))[1] != ts) pred_postp <- res(proc_res)
           else pred_postp[ts] <- res(proc_res)
@@ -345,16 +349,16 @@ postprocess.tspred <- function(obj,...){
       }
       
     }
-    else if(length(obj$processing[[p]]$train)==1){
-      if(!is.null(obj$processing[[p]]$train[[1]]$postp)){
+    else if(length(procs)==1){
+      if(!is.null(procs[[1]]$postp)){
         
-        cat("\nReversing preprocessing method",class(obj$processing[[p]]$train[[1]])[[1]],"...")
+        cat("\nReversing preprocessing method",class(procs[[1]])[[1]],"...")
         
-        proc_res <- postprocess(obj$processing[[p]]$train[[1]], pred_postp, ...)
-        attr(proc_res,"name") <- names(obj$processing[[p]]$train[1])
+        proc_res <- postprocess(procs[[1]], pred_postp, ...)
+        attr(proc_res,"name") <- names(procs[1])
         
         pred_postp <- res(proc_res)
-        names(pred_postp) <- names(obj$processing[[p]]$train[1])
+        names(pred_postp) <- names(procs[1])
         
         cat("\nSummary:\n")
         summary(proc_res)

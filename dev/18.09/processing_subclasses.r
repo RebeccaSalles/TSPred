@@ -169,13 +169,86 @@ summary.AN <- function(obj,...){
   cat("\tMeans: ",obj$postp$par$max,"\n")
 }
 
+#Subclass DIF
+DIF <- function(lag=NULL, differences=NULL, type="simple",postp_par=list(addinit=FALSE)){
+  processing(prep_func = diff, prep_par = list(lag=lag,differences=differences,type=type),
+             postp_func = diff.rev, postp_par = c(list(lag=lag,differences=differences,type=type,xi=NULL),postp_par),
+             method = "Differencing", subclass ="DIF")
+}
+preprocess.DIF <- function(obj,data,...,map=TRUE){
+  if(attr(data,"subset") == "test")
+    data[[1]] <- c( tail(attr(data,"train_data"),obj$prep$par$lag*obj$prep$par$differences), data[[1]] )
+  
+  results <- NextMethod(obj,data,...,map=map)
+  
+  if(is.null(obj$prep$par$lag)) results <- updt(results, par="lag")
+  if(is.null(obj$prep$par$differences)) results <- updt(results, par="differences")
+  if(is.null(obj$prep$par$type)) results <- updt(results, par="type")
+  
+  if(attr(data,"prep_test")) results <- updt(results, par="xi")
+  else results <- updt(results, par="xi", refpar="xf")
+  
+  return(results)
+}
+summary.DIF <- function(obj,...){
+  NextMethod()
+  if(!is.null(obj$prep$par) || !is.null(obj$postp$par))  cat("Parameters:\n")
+  cat("\tType: ",obj$postp$par$type,"\n")
+  cat("\tLag: ",obj$prep$par$lag,"\n")
+  cat("\tDifferences: ",obj$prep$par$differences,"\n")
+}
+
+
+#Subclass MAS
+MAS <- function(order=NULL,prep_par=NULL,postp_par=list(addinit=FALSE)){
+  processing(prep_func = mas, prep_par = c(list(order=order),prep_par),
+             postp_func = mas.rev, postp_par = c(list(order=order,xi=NULL),postp_par),
+             method = "Moving average smoothing", subclass ="MAS")
+}
+preprocess.MAS <- function(obj,data,...,map=TRUE){
+  if(attr(data,"subset") == "test")
+    data[[1]] <- c( tail(attr(data,"train_data"),obj$prep$par$order-1), data[[1]] )
+  
+  results <- NextMethod(obj,data,...,map=map)
+  
+  if(is.null(obj$prep$par$order)) results <- updt(results, par="order")
+  
+  if(attr(data,"prep_test")) results <- updt(results, par="xi")
+  else results <- updt(results, par="xi", refpar="xf")
+  
+  return(results)
+}
+summary.MAS <- function(obj,...){
+  NextMethod()
+  if(!is.null(obj$prep$par) || !is.null(obj$postp$par))  cat("Parameters:\n")
+  cat("\tOrder: ",obj$postp$par$order,"\n")
+}
+
+
+#Subclass PCT
+PCT <- function(postp_par=NULL){
+  processing(prep_func = pct, prep_par = NULL,
+             postp_func = pct.rev, postp_par = c(list(xi=NULL),postp_par),
+             method = "Percentage change transform", subclass ="PCT")
+}
+preprocess.PCT <- function(obj,data,...,map=TRUE){
+  if(attr(data,"subset") == "test")
+    data[[1]] <- c( tail(attr(data,"train_data"),1), data[[1]] )
+  
+  results <- NextMethod(obj,data,...,map=map)
+  
+  if(attr(data,"prep_test")) results <- updt(results, par="xi")
+  else results <- updt(results, par="xi", refpar="xf")
+  
+  return(results)
+}
+
 
 #============== DO ==============
 
 #Subclass PCT  #DO
 #Subclass MAS  #DO
 #Subclass detrend  #DO
-#Subclass DIF  #DO
 #Subclass EMD  #DO
 #Subclass THieF  #DO
 #Subclass zscore  #DO

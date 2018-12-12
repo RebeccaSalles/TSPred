@@ -80,8 +80,8 @@ fittestWavelet <-
       Wmodels <- Vmodels <- list()
       for(level in 1:maxlevel){
         if(modelType=="ets") {
-          Wmodels[[level]] <- forecast::ets(wdecomp@W[[level]],...)
-          Vmodels[[level]] <- forecast::ets(wdecomp@V[[level]],...)
+          Wmodels[[level]] <- forecast::ets(ts(wdecomp@W[[level]]),...)
+          Vmodels[[level]] <- forecast::ets(ts(wdecomp@V[[level]]),...)
         }
         else if(modelType=="arima"){
           Wmodels[[level]] <- forecast::auto.arima(wdecomp@W[[level]],...)
