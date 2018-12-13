@@ -13,11 +13,23 @@ loadlibrary("RSNNS")
 loadlibrary("elmNNRcpp")
 loadlibrary("e1071")
 loadlibrary("TSPred")
+loadlibrary("Rlibeemd")
 
 #data("CATS")
 
 
 set.seed(1234)
+
+#======================== EMD-AN-NNET ========================
+tspred_emd_an_nnet <- tspred(
+  subsetting=subsetting(test_len=20),
+  processing=list(EMD=EMD(meaningfulImfs=0)),
+  modeling=NNET(size=5, sw=SW(window_len=6), proc=list(AN=AN())),
+  evaluating=list(MSE=MSE())
+)
+tspred_emd_an_nnet_results <- workflow(tspred_emd_an_nnet,data=CATS[3],prep_test=TRUE,onestep=TRUE,eval_fitness=FALSE)
+View(tspred_emd_an_nnet_results)
+#=========================================================
 
 #======================== PCT-AN-NNET ========================
 tspred_pct_an_nnet <- tspred(

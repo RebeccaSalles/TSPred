@@ -243,6 +243,34 @@ preprocess.PCT <- function(obj,data,...,map=TRUE){
   return(results)
 }
 
+#Subclass EMD  #::TSPred
+EMD <- function(num_imfs=0,meaningfulImfs=NULL,prep_par=NULL){
+  processing(prep_func = emd, prep_par = c(list(num_imfs=num_imfs,meaningfulImfs=meaningfulImfs),prep_par),
+             postp_func = emd.rev, postp_par = NULL,
+             method = "Empirical mode decomposition", subclass ="EMD")
+}
+preprocess.EMD <- function(obj,...){
+  results <- NextMethod()
+  
+  #if preprocessing with undefined parameters, update computed values of parameters in the WT object(s)
+  if(is.null(obj$prep$par$num_imfs)||obj$prep$par$num_imfs==0) results <- updt(results, par="num_imfs")
+  if(is.null(obj$prep$par$meaningfulImfs)||obj$prep$par$meaningfulImfs==0) results <- updt(results, par="meaningfulImfs")
+  
+  return(results)
+}
+postprocess.EMD <- function(obj,...){
+  NextMethod(obj,...,map=FALSE)
+}
+summary.EMD <- function(obj,...){
+  NextMethod()
+  if(!is.null(obj$prep$par) || !is.null(obj$postp$par))  cat("Parameters:\n")
+  cat("\tNumber of IMF's: ",obj$prep$par$num_imfs,"\n")
+  cat("\tMeaningful IMF's: ",obj$prep$par$meaningfulImfs,"\n")
+  if(length(obj$prep$par)>2){
+    cat("\nOther parameters:\n")
+    print(obj$prep$par[-(1:2)])
+  }
+}
 
 #============== DO ==============
 

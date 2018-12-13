@@ -47,7 +47,7 @@ fittestEMD <-
     
     #prediction of residue series
     residue.pred <- function(emdt,n.ahead,level,rank.by){
-      fpoly <- TSPred::fittestPolyR(emdt$residue, h=n.ahead, level=level, rank.by=rank.by)
+      fpoly <- fittestPolyR(emdt$residue, h=n.ahead, level=level, rank.by=rank.by)
       return(list(pred=attr(fpoly$pred,"pred.lm"), model=fpoly$model))
     }
     
@@ -60,9 +60,9 @@ fittestEMD <-
     #computes quality measures acoording to rank.by
     fitness.criteria <- function(varModel){
       #computes quality measures acoording to rank.by
-      AIC <- AIC(varModel)
-      BIC <- BIC(varModel)
-      ll <- logLik(varModel)
+      AIC <- stats::AIC(varModel)
+      BIC <- stats::BIC(varModel)
+      ll <- stats::logLik(varModel)
       df <- attr(ll,"df")
       AICc <- AIC + 2*df*(df+1)/(nobs-df-1)
       
