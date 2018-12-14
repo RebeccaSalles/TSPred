@@ -10,7 +10,7 @@ emd <- function(x, num_imfs=0, S_number=4L, num_siftings=50L, meaningfulImfs=NUL
   
   if(!is.null(meaningfulImfs)){
     if(meaningfulImfs==0){
-      femd <- fittestEMD(x, h=h, max.imf= nimf-1,...)
+      femd <- fittestEMD(x, h=h, num_imfs= nimf-1, S_number=S_number, num_siftings=num_siftings,...)
       mimfs <- femd$meaningfulImfs
       mimfs <- as.numeric(substring(mimfs, 1, 1)):nimf
     }
