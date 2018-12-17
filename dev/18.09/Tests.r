@@ -17,9 +17,6 @@ loadlibrary("Rlibeemd")
 
 #data("CATS")
 
-
-set.seed(1234)
-
 #======================== EMD-AN-NNET ========================
 tspred_emd_an_nnet <- tspred(
   subsetting=subsetting(test_len=20),
@@ -146,34 +143,13 @@ View(tspred_arima_results)
 #======================== ETS ========================
 tspred_ets <- tspred(
   subsetting=subsetting(test_len=20),
-  modeling=ETS(train_par=list(h=20, initial="optimal")),
-  evaluating=list(MSE=MSE())
+  modeling=ETS(),
+  evaluating=list(MSE=MSE(),AIC=AIC())
 )
 tspred_ets_results <- workflow(tspred_ets,data=CATS[3],prep_test=FALSE,onestep=TRUE)
 View(tspred_ets_results)
 #=====================================================
 
-#======================== HW ========================
-tspred_hw <- tspred(
-  subsetting=subsetting(test_len=20),
-  modeling=HW(train_par=list(h=20, initial="optimal")),
-  evaluating=list(MSE=MSE(),AIC=AIC())
-)
-tspred_hw_results <- workflow(tspred_hw,data=CATS[3],prep_test=FALSE,onestep=TRUE)
-View(tspred_hw_results)
-#====================================================
-
-#======================== TF ========================
-tspred_tf <- tspred(
-  subsetting=subsetting(test_len=20),
-  processing=list(DIF=DIF()),
-  modeling=TF(train_par=list(h=1)),
-  evaluating=list(MSE=MSE())
-)
-tspred_tf_results <- workflow(tspred_tf,data=CATS[3],prep_test=FALSE,onestep=TRUE)
-View(tspred_tf_results)
-#====================================================
-
 
 bmrk <- benchmark(tspred_an_nnet_results,tspred_an_rfrst_results,tspred_an_rbf_results,tspred_an_svm_results,
-                  tspred_an_mlp_results,tspred_an_elm_results,tspred_arima_results,tspred_ets_results,tspred_tf_results)
+                  tspred_an_mlp_results,tspred_an_elm_results,tspred_arima_results,tspred_ets_results)

@@ -29,7 +29,7 @@ ETS <- function(train_par=list(), pred_par=list(level=c(80,95))){
     do.call(forecast::forecast,c(list(...)))$mean
   }
   
-  linear(train_func = forecast::ses, train_par=c(train_par),
+  linear(train_func = forecast::ets, train_par=c(train_par),
          pred_func = forecast_mean, pred_par=c(pred_par),
          method="Exponential Smoothing State Space model", subclass="ETS")
 }
@@ -76,8 +76,11 @@ TF <- function(train_par=list(), pred_par=list(level=c(80,95))){
   forecast_mean <- function(...){
     do.call(forecast::forecast,c(list(...)))$mean
   }
+  thetaf_model <- function(...){
+    do.call(forecast::thetaf,c(list(...)))$model
+  }
   
-  linear(train_func = forecast::thetaf, train_par=c(train_par),
+  linear(train_func = thetaf_model, train_par=c(train_par),
          pred_func = forecast_mean, pred_par=c(pred_par),
          method="Theta Forecasting model", subclass="TF")
 }

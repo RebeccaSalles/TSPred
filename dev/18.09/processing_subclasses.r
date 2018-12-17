@@ -125,16 +125,18 @@ summary.NAS <- function(obj,...){
 
 
 #Subclass minmax
-MinMax <- function(min=NULL,max=NULL){
-  processing(prep_func = minmax, prep_par = list(min=min,max=max),
+MinMax <- function(min=NULL,max=NULL,byRow=TRUE){
+  processing(prep_func = minmax, prep_par = list(min=min,max=max,byRow=byRow),
              postp_func = minmax.rev, postp_par = list(min=min,max=max),
              method = "MinMax normalization", subclass ="MinMax")
 }
 preprocess.MinMax <- function(obj,...){
+  if(obj$prep$par$byRow) obj$prep$par$min <- obj$prep$par$max <- NA
+  
   results <- NextMethod()
   
-  if(is.null(obj$prep$par$min)) results <- updt(results, par="min")
-  if(is.null(obj$prep$par$max)) results <- updt(results, par="max")
+  if(is.null(obj$prep$par$min) || obj$prep$par$byRow) results <- updt(results, par="min")
+  if(is.null(obj$prep$par$max) || obj$prep$par$byRow) results <- updt(results, par="max")
   
   return(results)
 }
@@ -147,16 +149,18 @@ summary.MinMax <- function(obj,...){
 
 
 #Subclass AN
-AN <- function(min=NULL,max=NULL,alpha=1.5){
-  processing(prep_func = an, prep_par = list(min=min,max=max,alpha=alpha),
+AN <- function(min=NULL,max=NULL,alpha=1.5,byRow=TRUE){
+  processing(prep_func = an, prep_par = list(min=min,max=max,alpha=alpha,byRow=byRow),
              postp_func = an.rev, postp_par = list(min=min,max=max,an=NULL),
              method = "Adaptive normalization", subclass ="AN")
 }
 preprocess.AN <- function(obj,...){
+  if(obj$prep$par$byRow) obj$prep$par$min <- obj$prep$par$max <- NA
+  
   results <- NextMethod()
   
-  if(is.null(obj$prep$par$min)) results <- updt(results, par="min")
-  if(is.null(obj$prep$par$max)) results <- updt(results, par="max")
+  if(is.null(obj$prep$par$min) || obj$prep$par$byRow) results <- updt(results, par="min")
+  if(is.null(obj$prep$par$max) || obj$prep$par$byRow) results <- updt(results, par="max")
   results <- updt(results, par="an")
   
   return(results)
@@ -273,10 +277,6 @@ summary.EMD <- function(obj,...){
 }
 
 #============== DO ==============
-
-#Subclass PCT  #DO
-#Subclass MAS  #DO
 #Subclass detrend  #DO
-#Subclass EMD  #DO
 #Subclass THieF  #DO
 #Subclass zscore  #DO

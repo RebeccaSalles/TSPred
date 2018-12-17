@@ -1,12 +1,12 @@
-minmax <- function(data, max, min){
+minmax <- function(data, max, min, byRow=FALSE){
   if(is.null(max)||is.na(max)||missing(max)){
-    #if(ncol(data)) max <- apply(data, 1, max)
-    #else 
+    if(byRow) max <- apply(data, 1, max)
+    else 
       max <- max(data)
   }
   if(is.null(min)||is.na(min)||missing(min)){
-    #if(ncol(data)) min <- apply(data, 1, min)
-    #else 
+    if(byRow) min <- apply(data, 1, min)
+    else 
       min <- min(data)
   }
   

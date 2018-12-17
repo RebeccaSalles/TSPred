@@ -460,8 +460,10 @@ evaluate.tspred <- function(obj,fitness=TRUE,...){
 }
 
 
-workflow.tspred <- function(obj,data=NULL,prep_test=FALSE,onestep=obj$one_step,eval_fitness=TRUE){
+workflow.tspred <- function(obj,data=NULL,prep_test=FALSE,onestep=obj$one_step,eval_fitness=TRUE,seed=1234){
   require(magrittr)
+  
+  set.seed(seed)
   
   tspred <- obj %>%
             subset(data=data) %>%
@@ -475,8 +477,8 @@ workflow.tspred <- function(obj,data=NULL,prep_test=FALSE,onestep=obj$one_step,e
 }
 
 benchmark.tspred <- function(tspred_obj,...,rank.by=c("MSE")){
-  
-  tspred_objs <- list(tspred_obj,...)
+  #browser()
+  tspred_objs <- c(list(tspred_obj),list(...))
   
   if(!all(sapply(tspred_objs,is.tspred))) 
     stop("argument 'tspred_objs' must be a list of tspred objects",call. = FALSE)
@@ -496,7 +498,7 @@ benchmark.tspred <- function(tspred_obj,...,rank.by=c("MSE")){
     for(f in names(obj$eval$fit)){
       for(ts in names(obj$eval$fit[[f]])){
         fit_criteria <- data.frame(obj$eval$fit[[f]][[ts]])
-        names(fit_criteria) <- paste(class(obj$evaluating[[f]])[[1]],ts,sep="-")
+        names(fit_criteria) <- paste("fit",class(obj$evaluating[[f]])[[1]],ts,sep="-")
         rank_obj <- cbind(rank_obj,fit_criteria)
       }
     }
@@ -541,8 +543,4 @@ summary.tspred <- function(obj,...){
   }
   cat("\n====Modelling:====\n\n")
   summary(obj$modeling)
-  cat("====Evaluating:====\n\n")
-  for(e in c(1:length(obj$evaluating))){
-    summary(obj$evaluating[[e]])
-  }
 }

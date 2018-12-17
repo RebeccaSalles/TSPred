@@ -1,4 +1,4 @@
-an <- function(data, max, min, alpha=1.5, output=TRUE){
+an <- function(data, max, min, alpha=1.5, byRow=FALSE){
   
   if(attr(data,"subset") == "test") input <- data
   else input <- data[,1:ncol(data)-1]
@@ -13,7 +13,7 @@ an <- function(data, max, min, alpha=1.5, output=TRUE){
     norm$an <- NULL
   }
   
-  norm <- minmax(norm,max,min)
+  norm <- minmax(norm,max,min,byRow)
 
   attr(norm,"an") <- an
   

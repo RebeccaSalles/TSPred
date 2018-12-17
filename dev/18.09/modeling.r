@@ -223,7 +223,7 @@ predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
   
   if(onestep){
     input <- io$input
-    
+    #browser()
     obj_test <- NULL
     if(!is.null(obj$proc)){
       obj_test <- list()
