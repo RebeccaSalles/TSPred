@@ -52,7 +52,7 @@ for(candidate in 1:nrow(hiperpar)){
   )
   #========================================================
   
-  cand_str <- paste(candidate,collapse ="-")
+  cand_str <- paste(hiperpar[candidate,],collapse ="-")
   
   invisible(capture.output(tspred_opts[[cand_str]] <- workflow(tspred_mlp,data=data,prep_test=prep_test,onestep=onestep,eval_fitness=eval_fitness)))
 }
