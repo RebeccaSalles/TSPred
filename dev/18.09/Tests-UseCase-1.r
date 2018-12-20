@@ -98,16 +98,10 @@ eval_fitness <- FALSE
 MM <- MinMax(byRow=TRUE)
 
 #Hiperparameters:
-#size_lyr_1 <- seq(2,20)
-#size_lyr_2 <- c(NA,seq(0,20))
-#learnFuncParams <- seq(0.1,1,0.1)
-#maxit <- c(1000,5000,10000)
-
-#Test - Delete
-size_lyr_1 <- seq(2,3)
-size_lyr_2 <- c(NA,seq(0,3))
-learnFuncParams <- c(0.1)
-maxit <- c(1000)
+size_lyr_1 <- seq(2,20)
+size_lyr_2 <- c(NA,seq(0,20))
+learnFuncParams <- seq(0.1,1,0.1)
+maxit <- c(1000,5000,10000)
 
 hiperpar <- expand.grid(size_lyr_1=size_lyr_1, size_lyr_2=size_lyr_2, learnFuncParams=learnFuncParams, maxit=maxit)
 
