@@ -11,7 +11,7 @@ loadlibrary("RSNNS")
 loadlibrary("TSPred")
 
 loadlibrary("foreach")
-install.packages("doParallel")
+loadlibrary("doParallel")
 
 generate_candidate_tspred <- function(candidate,data,test_len=20,prep_test=TRUE,onestep=FALSE,eval_fitness=FALSE){
   lyr1 <- candidate$size_lyr_1
@@ -28,7 +28,7 @@ generate_candidate_tspred <- function(candidate,data,test_len=20,prep_test=TRUE,
                  train_par=list(learnFuncParams=c(decay),
                                 maxit=its),
                  sw=SW(window_len=window),
-                 proc=list(MM=MM)),
+                 proc=list(MM=MinMax(byRow=TRUE))),
     evaluating=list(MSE=MSE())
   )
   #========================================================
@@ -38,17 +38,19 @@ generate_candidate_tspred <- function(candidate,data,test_len=20,prep_test=TRUE,
   return(tspred_candidate)
 }
 
-benchmark_hiperpar <- function(hiperpar,cl,log_file,...,rank.by=c("MSE")){
+benchmark_hiperpar <- function(hiperpar,cl,log_file,data,...,rank.by=c("MSE")){
   #browser()
   registerDoParallel(cl)
   
   require(plyr)
   
-  rank <- foreach(candidate=1:nrow(hiperpar), .combine=rbind.fill) %dopar% {
-    cat("Running TSPred workflow with candidate hiperparameters",candidate,"of",nrow(hiperpar),"\n", file = log_file, append = TRUE,sep=" ")
-    capture.output(hiperpar[candidate,], file = log_file, append = TRUE)
+  exports <- ls(.GlobalEnv)
+  
+  rank <- foreach(candidate=1:nrow(hiperpar), .combine=rbind.fill, .export=exports) %dopar% {
+    #cat("Running TSPred workflow with candidate hiperparameters",candidate,"of",nrow(hiperpar),"\n", file = log_file, append = TRUE,sep=" ")
+    #capture.output(hiperpar[candidate,], file = log_file, append = TRUE)
     
-    obj <- generate_candidate_tspred(hiperpar[candidate,],...)
+    obj <- generate_candidate_tspred(hiperpar[candidate,],data,...)
     
     mdl <- class(obj$modeling[[1]])[[1]]
     mdl_inner_procs <- sapply(obj$modeling[[1]]$proc,function(c) class(c)[[1]])
@@ -56,7 +58,7 @@ benchmark_hiperpar <- function(hiperpar,cl,log_file,...,rank.by=c("MSE")){
     
     obj_id <- paste0(procs,ifelse(procs=="","","-"),mdl_inner_procs,ifelse(mdl_inner_procs=="","","-"),mdl,sep="")
     
-    rank_obj <- data.frame(tspred_id=obj_id,hiperpar[candidate,])
+    rank_obj <- data.frame(ts=names(data),tspred_id=obj_id,hiperpar[candidate,])
     
     for(f in names(obj$eval$fit)){
       for(ts in names(obj$eval$fit[[f]])){
@@ -66,9 +68,9 @@ benchmark_hiperpar <- function(hiperpar,cl,log_file,...,rank.by=c("MSE")){
       }
     }
     for(e in names(obj$eval$pred)){
-      error <- data.frame(obj$eval$pred[[e]][[1]])
-      names(error) <- class(obj$evaluating[[e]])[[1]]
-      rank_obj <- cbind(rank_obj,error)
+      error_metrics <- data.frame(obj$eval$pred[[e]][[1]])
+      names(error_metrics) <- class(obj$evaluating[[e]])[[1]]
+      rank_obj <- cbind(rank_obj,error_metrics)
     }
     
     cat("\n","Results:","\n", file = log_file, append = TRUE,sep="")
@@ -76,9 +78,6 @@ benchmark_hiperpar <- function(hiperpar,cl,log_file,...,rank.by=c("MSE")){
     
     rank_obj
   }
-  
-  #stop cluster
-  stopCluster(cl)
   
   rownames(rank) <- NULL
   
@@ -98,38 +97,50 @@ benchmark_hiperpar <- function(hiperpar,cl,log_file,...,rank.by=c("MSE")){
 }
 
 
+usecase_1 <- function(data=CATS,test_len=20,prep_test=TRUE,onestep=FALSE,eval_fitness=FALSE,MM=MinMax(byRow=TRUE),
+                      cores=detectCores()-1,log_file="log_usecase1.txt",
+                      size_lyr_1=seq(2,20), size_lyr_2=c(NA,seq(0,20)), learnFuncParams=seq(0.1,1,0.1), maxit=c(1000,5000,10000)){
+  
+  hiperpar <- expand.grid(size_lyr_1=size_lyr_1, size_lyr_2=size_lyr_2, learnFuncParams=learnFuncParams, maxit=maxit)
+  
+  cl <- makeCluster(cores) #not to overload your computer
+  
+  bmrk_usecase_1 <- list()
+  for(ts in names(data)){
+    bmrk_usecase_1[[ts]] <- benchmark_hiperpar(hiperpar,cl,log_file,data=data[ts],test_len=test_len,prep_test=prep_test,onestep=onestep,eval_fitness=eval_fitness)
+  }
+  
+  #stop cluster
+  stopCluster(cl)
+  
+  return(bmrk_usecase_1)
+}
 
-#data("CATS")
 
-#Settings:
-data <- CATS[3]
+data("CATS")
+
+#========Settings:========
+data <- CATS
 test_len <- 20
-prep_test <- TRUE
 onestep <- FALSE
-eval_fitness <- FALSE
 #Sliding Windows: SW(window_len = size_lyr1+1)
-MM <- MinMax(byRow=TRUE)
+#Min-max: MinMax(byRow=TRUE)
+#Modelo: MLP
 
-#Hiperparameters:
-#size_lyr_1 <- seq(2,20)
-#size_lyr_2 <- c(NA,seq(0,20))
-#learnFuncParams <- seq(0.1,1,0.1)
-#maxit <- c(1000,5000,10000)
-
-size_lyr_1 <- seq(2,3)
-size_lyr_2 <- c(NA,seq(0,3))
-learnFuncParams <- seq(0.1,1,0.5)
+#=====Hiperparameters:=====
+size_lyr_1 <- seq(2,20)
+size_lyr_2 <- c(NA,seq(0,20))
+learnFuncParams <- seq(0.1,1,0.1)
 maxit <- c(1000,5000,10000)
 
-hiperpar <- expand.grid(size_lyr_1=size_lyr_1, size_lyr_2=size_lyr_2, learnFuncParams=learnFuncParams, maxit=maxit)
-
+#=======Processors:========
 #setup parallel backend to use many processors
-cores <- detectCores()
-cl <- makeCluster(cores[1]-1) #not to overload your computer
+cores <- detectCores()-1 #not to overload your computer
 
-log_file <- "/home/rebecca/TSPred/dev/18.09/log_usecase1.txt"
+#========Log file:=========
+log_file <- "log_usecase1.txt"
 
-bmrk_usecase_1 <- list()
-for(ts in names(CATS)){
-  bmrk_usecase_1[[ts]] <- benchmark_hiperpar(hiperpar,cl,log_file,data=CATS[ts],test_len=test_len,prep_test=prep_test,onestep=onestep,eval_fitness=eval_fitness)
-}
+bmrk_usecase_1 <- usecase_1(data=data,test_len=test_len,onestep=onestep,cores=cores,log_file=log_file,
+                            size_lyr_1=size_lyr_1, size_lyr_2=size_lyr_2, learnFuncParams=learnFuncParams, maxit=maxit)
+
+save(bmrk_usecase_1, file = "bmrk_usecase_1.RData")
