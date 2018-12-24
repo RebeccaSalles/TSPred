@@ -476,9 +476,9 @@ workflow.tspred <- function(obj,data=NULL,prep_test=FALSE,onestep=obj$one_step,e
   return(tspred)
 }
 
-benchmark.tspred <- function(tspred_obj,...,rank.by=c("MSE")){
+benchmark.tspred <- function(tspred_obj,bmrk_objs,rank.by=c("MSE")){
   #browser()
-  tspred_objs <- c(list(tspred_obj),list(...))
+  tspred_objs <- c(list(tspred_obj),bmrk_objs)
   
   if(!all(sapply(tspred_objs,is.tspred))) 
     stop("argument 'tspred_objs' must be a list of tspred objects",call. = FALSE)

@@ -151,5 +151,5 @@ View(tspred_ets_results)
 #=====================================================
 
 
-bmrk <- benchmark(tspred_an_nnet_results,tspred_an_rfrst_results,tspred_an_rbf_results,tspred_an_svm_results,
-                  tspred_an_mlp_results,tspred_an_elm_results,tspred_arima_results,tspred_ets_results)
+bmrk <- benchmark(tspred_an_nnet_results,list(tspred_an_rfrst_results,tspred_an_rbf_results,tspred_an_svm_results,
+                  tspred_an_mlp_results,tspred_an_elm_results,tspred_arima_results,tspred_ets_results))
