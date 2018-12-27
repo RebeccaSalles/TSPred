@@ -211,6 +211,8 @@ predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
   ts_name <- names(data)
   data <- as.list(data)
   
+  if(is.list(mdl) && length(mdl)==1 && names(mdl)==ts_name) mdl <- mdl[[1]]
+  
   if(!is.null(obj$sw)){
     data[[1]] <- c( attr(obj$sw,"train_data"), data[[1]] )
     attr(data,"subset") <- "test"
@@ -256,6 +258,8 @@ predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
     tuple <- io$input[1,]
     len_tuple <- length(tuple)
     
+    names_tuple <- names(tuple)
+    
     for(i in c(1:n.ahead)){
       
       obj_test <- NULL
@@ -270,7 +274,7 @@ predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
         }
       }
       
-      proc_res <- predict(obj$pred, mdl, tuple,...)
+      proc_res <- predict(obj$pred, mdl, as.matrix(tuple),...)
       tuple <- tail(c(tuple,proc_res),len_tuple)
       
       if(!is.null(obj_test)){
@@ -281,6 +285,8 @@ predict.MLM <- function(obj,mdl,data,n.ahead,...,onestep=TRUE){
           tuple <- res(tuple)[[1]]
         }
       }
+      
+      names(tuple) <- names_tuple
       
       predictions <- c(predictions,tail(tuple,1))
       
