@@ -1,4 +1,4 @@
-emd <- function(x, num_imfs=0, S_number=4L, num_siftings=50L, meaningfulImfs=NULL, h=1, ...){
+emd <- function(x, num_imfs=0, S_number=4L, num_siftings=50L, meaningfulImfs=NULL, h=1,...){
   #browser()
   require(Rlibeemd)
   emdt <- Rlibeemd::emd(x, num_imfs=num_imfs, S_number=S_number, num_siftings=num_siftings)
