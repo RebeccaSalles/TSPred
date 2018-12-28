@@ -73,7 +73,7 @@ benchmark_hiperpar <- function(hiperpar,cl,log_file,data,...,rank.by=c("MSE")){
       rank_obj <- cbind(rank_obj,error_metrics)
     }
     
-    cat("\n","Results: ",Sys.time()," \n", file = log_file, append = TRUE,sep="")
+    cat("\n","Results: ",capture.output(Sys.time())," \n", file = log_file, append = TRUE,sep="")
     capture.output(rank_obj, file = log_file, append = TRUE)
     
     rank_obj
