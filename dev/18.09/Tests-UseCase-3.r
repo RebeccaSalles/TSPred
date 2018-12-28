@@ -117,17 +117,17 @@ usecase_3 <- function(specs,models,data=CATS,test_len=20,prep_test=TRUE,onestep=
 }
 
 
-data("CATS")
+data("CATS","CATS.cont")
 
 #========Settings:========
-data <- CATS
+data <- rbind(CATS,CATS.cont)
 test_len <- 20
 onestep <- FALSE
 #Sliding Windows: SW(window_len = size_lyr1+1)
 #Min-max: MinMax(byRow=TRUE)
 #Modelo: MLP
 
-#=====Hiperparameters:====
+#=====Transforms:====
 load("bmrk_usecase_2.RData")
 specs <- sapply(bmrk_usecase_2,function(ts) as.character(ts[["rank"]]$tspred_id[1]))
 specs <- t(sapply(strsplit(specs, "-"),function(ts) if(length(ts)<3) c("None",ts) else ts))[,1:2]
