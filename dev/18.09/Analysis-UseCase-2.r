@@ -40,7 +40,7 @@ for(ts_name in names(bmrk_usecase_2)){
 #removing (super) outlier
 transf_errors_tmp <- transf_errors[!(transf_errors$proc=="PCT"&transf_errors$norm=="MinMax"&transf_errors$ts=="V1"),]
 
-boxplot_usecase_2 <- ggplot(transf_errors_tmp, aes(x=proc, y=MSE, fill=norm)) + 
+boxplot_usecase_2 <- ggplot(transf_errors_tmp, aes(x=reorder(proc, -MSE), y=MSE, fill=norm)) + 
   geom_boxplot() +
   scale_fill_manual(values=c("#007FFF", "#009000"))+
   labs(x="Method",
@@ -52,10 +52,9 @@ print(boxplot_usecase_2)
 ggsave("boxplot_usecase_2.pdf", plot = boxplot_usecase_2, width = pdf.width, height = pdf.height)
 
 summary_data <- summarySE(transf_errors_tmp, measurevar="MSE", groupvars=c("norm","proc"))
-summary_data <- summary_data[order(summary_data$MSE),]
 
 pd <- position_dodge(0.1) # move them .05 to the left and right
-lineplot_usecase_2 <- ggplot(summary_data, aes(x=proc, y=MSE, colour=norm, group=norm)) + 
+lineplot_usecase_2 <- ggplot(summary_data, aes(x=reorder(proc, -MSE), y=MSE, colour=norm, group=norm)) + 
   geom_errorbar(aes(ymin=MSE-se, ymax=MSE+se), colour="black", width=.1, position=pd) +
   scale_colour_manual(values=c("#007FFF", "#009000"))+
   geom_line(position=pd) +
