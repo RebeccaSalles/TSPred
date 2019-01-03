@@ -117,10 +117,10 @@ usecase_3 <- function(specs,models,data=CATS,test_len=20,prep_test=TRUE,onestep=
 }
 
 
-data("CATS","CATS.cont")
+data("CATS")
 
 #========Settings:========
-data <- rbind(CATS,CATS.cont)
+data <- CATS
 test_len <- 20
 onestep <- FALSE
 #Sliding Windows: SW(window_len = size_lyr1+1)

@@ -10,11 +10,6 @@ loadlibrary <- function(x)
 loadlibrary("TSPred")
 loadlibrary("RSNNS")
 
-loadlibrary("foreach")
-loadlibrary("doParallel")
-
-#data("CATS")
-
 generate_candidate_tspred <- function(data,test_len=20,lyr1=5,lyr2=NULL,decay=0.1,its=1000,
                                       proc=list(DIF=DIF()),norm=list(MM=MinMax(byRow=TRUE)),
                                       prep_test=TRUE,onestep=FALSE,eval_fitness=FALSE){
@@ -79,10 +74,10 @@ usecase_2 <- function(hiperpar,data=CATS,test_len=20,prep_test=TRUE,onestep=FALS
 }
 
 
-data("CATS","CATS.cont")
+data("CATS")
 
 #========Settings:========
-data <- rbind(CATS,CATS.cont)
+data <- CATS
 test_len <- 20
 onestep <- FALSE
 #Sliding Windows: SW(window_len = size_lyr1+1)
