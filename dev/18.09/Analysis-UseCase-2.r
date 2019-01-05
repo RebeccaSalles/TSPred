@@ -80,10 +80,10 @@ transf_errors_tmp <- transf_errors[!(transf_errors$proc=="PCT"&transf_errors$nor
 
 boxplot_usecase_2 <- ggplot(transf_errors_tmp, aes(x=reorder(proc, -MSE), y=MSE, fill=norm)) + 
   geom_boxplot() +
-  scale_fill_manual(values=c("#007FFF", "#009000"))+
+  scale_fill_manual(values=c("#007FFF", "#808080"))+
   labs(x="Method",
-    y="MSE errors",
-    fill="Normalization")+
+       y="MSE errors",
+       fill="Normalization")+
   theme_bw()
 
 print(boxplot_usecase_2)
