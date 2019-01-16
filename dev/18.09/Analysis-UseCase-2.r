@@ -31,7 +31,7 @@ for(ts_name in names(bmrk_usecase_2)){
   specs <- as.character(ts[["rank"]]$tspred_id)
   mses <- ts[["rank"]]$MSE
   
-  specs <- t(sapply(strsplit(specs, "-"),function(ts) if(length(ts)<3) c("None",ts) else ts))[,1:2]
+  specs <- t(sapply(strsplit(specs, "-"),function(ts) if(length(ts)<3) c("Naive",ts) else ts))[,1:2]
   specs <- data.frame(specs,stringsAsFactors = FALSE)
   names(specs) <- c("proc","norm")
   
@@ -116,6 +116,7 @@ getPalette <- function(colourCount){
 #orange{#ff9966}
 #purple{#cc99ff}
 
+errors_val_arima$norm <- "AN"
 errors_val_arima <- rbind(errors_val_arima,cbind(errors_val_arima[1:2],norm="MinMax"))
 
 scatter_usecase_2 <- ggplot(transf_errors_tmp, aes(x=ts, y=MSE, group=norm, color=norm, shape=reorder(proc, -MSE))) + 
