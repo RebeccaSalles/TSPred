@@ -1,0 +1,6 @@
+"","proc","norm","model"
+"V1","DIF","AN","ELM"
+"V2","None","None","ARIMA"
+"V3","PCT","AN","ELM"
+"V4","WT","None","ARIMA"
+"V5","EMD","MinMax","SVM"
