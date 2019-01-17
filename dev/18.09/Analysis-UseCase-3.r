@@ -72,7 +72,7 @@ plotTaylorDiagrams <- function(bmrk_tspred){
                                mod=tryCatch( if(!is.null(obj$pred$postp)) as.numeric(obj$pred$postp[[1]])
                                              else if(!is.null(obj$pred$raw)) as.numeric(obj$pred$raw[[1]]) ,
                                              error = function(c) NULL),
-                               model=model),TRUE)
+                               model=tail(strsplit(as.character(model), "-")[[1]],1)),TRUE)
       if(class(model.t)=="try-error") next
       rbind(mod.dat, model.t) -> mod.dat
       
@@ -81,7 +81,7 @@ plotTaylorDiagrams <- function(bmrk_tspred){
     
     file_name <- paste("taylorDiagram_usecase_3_",ts,".pdf",sep="")
     CairoPDF(file_name,width=5,height=5)
-    taylor.diagrams[[ts]] <- TaylorDiagram(mod.dat, obs = "obs", mod = "mod", group = "model",key.title = "Method", key.pos = "right", normalise=TRUE,main=NULL)
+    taylor.diagrams[[ts]] <- TaylorDiagram(mod.dat, obs = "obs", mod = "mod", group = "model",key.title = "Model", key.pos = "right", normalise=TRUE,main=NULL)
     dev.off()
   }
   

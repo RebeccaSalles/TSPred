@@ -89,7 +89,7 @@ boxplot_usecase_2 <- ggplot(transf_errors_tmp, aes(x=reorder(proc, -MSE), y=MSE,
 print(boxplot_usecase_2)
 ggsave("boxplot_usecase_2.pdf", plot = boxplot_usecase_2, width = pdf.width, height = pdf.height)
 
-
+transf_errors_tmp[transf_errors_tmp$norm=="MinMax","norm"] <- "MM"
 summary_data <- summarySE(transf_errors_tmp, measurevar="MSE", groupvars=c("norm","proc")) #function implemented in the bottom
 
 pd <- position_dodge(0.1) # move them .05 to the left and right
@@ -117,7 +117,7 @@ getPalette <- function(colourCount){
 #purple{#cc99ff}
 
 errors_val_arima$norm <- "AN"
-errors_val_arima <- rbind(errors_val_arima,cbind(errors_val_arima[1:2],norm="MinMax"))
+errors_val_arima <- rbind(errors_val_arima,cbind(errors_val_arima[1:2],norm="MM"))
 
 scatter_usecase_2 <- ggplot(transf_errors_tmp, aes(x=ts, y=MSE, group=norm, color=norm, shape=reorder(proc, -MSE))) + 
   geom_point(position=position_dodge(width=0.5),size=3) +
