@@ -216,6 +216,8 @@ for(series in names(data)){
 names(lags) <- "lag"
 rownames(lags) <- names(data)
 
+library("TSPred")
+data("CATS","CATS.cont")
 data <- rbind(CATS,CATS.cont)
 
 errors_uc3 <- mse_errors(transf_models,lags,data)

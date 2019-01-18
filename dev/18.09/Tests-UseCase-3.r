@@ -55,7 +55,7 @@ generate_candidate_modeling <- function(model,corr_lag=5,norm=list(MinMax=MinMax
                   MLP=MLP(size=size, train_par=list(learnFuncParams=c(0.1),
                                                  maxit=1000),
                           sw=SW(window_len=w_len), proc=norm),
-                  ELM=ELM(train_par=list(nhid = 1000, actfun = 'purelin', 
+                  ELM=ELM(train_par=list(nhid = size, actfun = 'purelin', 
                                          init_weights = "uniform_negative",
                                          bias = TRUE, verbose = T),
                           sw=SW(window_len=w_len), proc=norm),
