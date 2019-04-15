@@ -491,7 +491,8 @@ benchmark.tspred <- function(tspred_obj,bmrk_objs,rank.by=c("MSE")){
     mdl_inner_procs <- sapply(obj$modeling[[1]]$proc,function(c) class(c)[[1]])
     procs <- sapply(obj$processing, function(c) sapply(c$train,function(c) class(c)[[1]]))
     
-    obj_id <- paste0(procs,ifelse(procs=="","","-"),mdl_inner_procs,ifelse(mdl_inner_procs=="","","-"),mdl,sep="")
+    procs_id <- paste(procs,collapse="+")
+    obj_id <- paste0(procs_id,ifelse(procs_id=="","","-"),mdl_inner_procs,ifelse(mdl_inner_procs=="","","-"),mdl,sep="")
     
     rank_obj <- data.frame(tspred_id=obj_id)
     

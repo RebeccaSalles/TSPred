@@ -231,7 +231,8 @@ fittestWavelet <-
         }
         
         #decompose time series up to maxlevel and optimize Models of each decomposed series given a set of initial parameters
-        models <- optim.models(ts.tmp,filter,maxlevel,modelType,...)
+        models <- tryCatch( optim.models(ts.tmp,filter,maxlevel,modelType,...) , error = function(e) e )
+        if(inherits(models, "error")) next
         
         #computes predictions for each decomposed time series if rank.by includes error measures
         if(any(c("MSE","NMSE","MAPE","sMAPE","MaxError") %in% rank.by)) prediction <- decomp.pred(models,maxlevel,n.ahead,conf.level)
