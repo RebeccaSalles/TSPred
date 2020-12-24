@@ -10,6 +10,7 @@ r:
 r_packages:
   - covr
   - Rlibeemd
+  
 warnings_are_errors: true
 
 r_check_args: --as-cran

@@ -5,5 +5,6 @@
 ^LICENSE$
 ^.*\.git$
 ^dev$
+^pkg-source$
 ^man-roxygen$
 ^cran-comments.md$
