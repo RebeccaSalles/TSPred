@@ -1,3 +1,5 @@
+
+#' @keywords internal
 SSMpolynomial <- 
 function(y, ord, H=0, Q=NA){ #Fun??o feita com base no c?digo do dlmodeler
   if( ord<0 ) stop("Order must be >= 0")

@@ -5,3 +5,5 @@
 ^LICENSE$
 ^.*\.git$
 ^dev$
+^man-roxygen$
+^cran-comments.md$

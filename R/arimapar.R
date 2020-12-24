@@ -1,5 +1,49 @@
+#' @title Get ARIMA model parameters.
+#'
+#' @description The function returns the parameters of an automatically fitted ARIMA model,
+#' including non-seasonal and seasonal orders and drift.
+#'
+#' @details The ARIMA model whose adjusted parameters are presented is automatically
+#' fitted by the \code{\link{auto.arima}} function in the forecast package. In
+#' order to avoid drift errors, the function introduces an auxiliary regressor
+#' whose values are a sequence of consecutive integer numbers starting from 1.
+#' For more details, see the \code{\link{auto.arima}} function in the
+#' \code{forecast} package.
+#'
+#' @param timeseries A vector or univariate time series which contains the
+#' values used for fitting an ARIMA model.
+#' @param na.action A function for treating missing values in
+#' \code{timeseries}. The default function is \code{\link{na.omit}}, which
+#' omits any missing values found in \code{timeseries}.
+#' @param xreg A vector, matrix, data frame or times series of external
+#' regressors used for fitting the ARIMA model.  It must have the same number
+#' of rows as \code{timeseries}. Ignored if \code{NULL}.
+#'
+#' @return A numeric vector giving the number of AR, MA, seasonal AR and
+#' seasonal MA coefficients, plus the period and the number of non-seasonal and
+#' seasonal differences of the automatically fitted ARIMA model. It is also
+#' presented the value of the fitted drift constant.
+#'
+#' @author Rebecca Pontes Salles
+#' @references R.J. Hyndman and G. Athanasopoulos, 2013, Forecasting:
+#' principles and practice. OTexts.
+#' 
+#' R.H. Shumway and D.S. Stoffer, 2010, Time Series Analysis and Its
+#' Applications: With R Examples. 3rd ed. 2011 edition ed. New York, Springer.
+#'
+#' @name arimapar-deprecated
+#' @usage arimapar(timeseries, na.action=stats::na.omit, xreg=NULL)
+#' @seealso \code{\link{TSPred-deprecated}} \code{\link{arimaparameters}} \code{\link{arimapred}}
+#' @keywords internal Deprecated ARIMA automatic fitting adjustment parameters
+NULL
+
+#' @rdname TSPred-deprecated
+#' @section \code{arimapar}:
+#' For \code{arimapar}, use \code{\link{arimaparameters}}.
+#'
+#' @export arimapar
 arimapar <-
-function(timeseries, na.action=na.omit, xreg=NULL){
+function(timeseries, na.action=stats::na.omit, xreg=NULL){
   if(is.null(timeseries)) stop("timeseries is required and must have positive length")
   .Deprecated("arimaparameters","TSPred")
   
@@ -8,7 +52,7 @@ function(timeseries, na.action=na.omit, xreg=NULL){
   nobs <- length(ts)
   reg <- cbind(1:nobs,xreg)
   
-  fit <- auto.arima(ts,xreg=ts(reg,start=1))
+  fit <- forecast::auto.arima(ts,xreg=ts(reg,start=1))
   
   ARIMAModelInfo <- TSPred::arimaparameters(fit)
   

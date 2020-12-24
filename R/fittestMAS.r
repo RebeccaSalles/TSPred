@@ -1,8 +1,132 @@
 #Finds and returns the fittest MAS
 #maxorder from the sma function of smooth package
+
+
+#' Automatic prediction with moving average smoothing 
+#' 
+#' The function uses an automatically produced moving average smoother as base
+#' for predicting and returning the next n consecutive values of the provided
+#' univariate time series using an also automatically fitted model
+#' (\code{\link{ets}}/\code{\link{stlf}} or \code{\link{arima}}). It also
+#' evaluates the fitness and prediction accuracy of the produced model.
+#' 
+#' The function produces a moving average smoother of \code{timeseries} with
+#' order \code{order} and uses it as base for model fitting and prediction. If
+#' \code{model="arima"}, an arima model is used and automatically fitted using
+#' the \code{\link[forecast]{auto.arima}} function. If \code{model="ets"}, the
+#' function fits an \code{[forecast]\link{ets}} model (if \code{timeseries} is
+#' non-seasonal or the seasonal period is 12 or less) or
+#' \code{\link[forecast]{stlf}} model (if the seasonal period is 13 or more).
+#' 
+#' For producing the prediction of the next \code{h} consecutive values of the
+#' provided univariate time series, the function \code{\link{mas.rev}} is used.
+#' 
+#' If \code{order} is \code{NULL}, it is automatically selected. For that, a
+#' set with candidate models constructed for moving average smoothers of orders
+#' from \code{minorder} to \code{maxorder} is generated. The default value of
+#' \code{maxorder} is set based on code from the \code{sma} function of
+#' \code{smooth} package. The value option of \code{order} which generate the
+#' best ranked candidate model acoording to the criteria in \code{rank.by} is
+#' selected.
+#' 
+#' The ranking criteria in \code{rank.by} may be set as a prediction error
+#' measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}},
+#' \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria
+#' (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or
+#' \code{\link{logLik}}). In the former case, the candidate models are used for
+#' time series prediction and the error measures are calculated by means of a
+#' cross-validation process. In the latter case, the candidate models are
+#' fitted and fitness criteria are calculated based on all observations in
+#' \code{timeseries}.
+#' 
+#' If \code{rank.by} is set as \code{"errors"} or \code{"fitness"}, the
+#' candidate models are ranked by all the mentioned prediction error measures
+#' or fitness criteria, respectively. The wheight of the ranking criteria is
+#' equally distributed. In this case, a \code{rank.position.sum} criterion is
+#' produced for ranking the candidate models. The \code{rank.position.sum}
+#' criterion is calculated as the sum of the rank positions of a model (1 = 1st
+#' position = better ranked model, 2 = 2nd position, etc.) on each calculated
+#' ranking criteria. 
+#' 
+#' @param timeseries A vector or univariate time series. 
+#' @param timeseries.test A vector or univariate time series containing a
+#' continuation for \code{timeseries} with actual values. It is used as a
+#' testing set and base for calculation of prediction error measures. Ignored
+#' if \code{NULL}.
+#' @param h Number of consecutive values of the time series to be predicted. If
+#' \code{h} is \code{NULL}, the number of consecutive values to be predicted is
+#' assumed to be equal to the length of \code{timeseries.test}. Required when
+#' \code{timeseries.test} is \code{NULL}. 
+#' @param order A numeric integer value corresponding to the order of moving
+#' average smoother to be produced. If \code{NULL}, the order of the moving
+#' average smoother returned by the function is automatically selected within
+#' the interval \code{minorder:maxorder}. See 'Details'. 
+#' @param minorder A numeric integer value corresponding to the minimum order
+#' of candidate moving average smoothers to be produced and evaluated. Ignored
+#' if \code{order} is provided. See 'Details'. 
+#' @param maxorder A numeric integer value corresponding to the maximal order
+#' of candidate moving average smoothers to be produced and evaluated. Ignored
+#' if \code{order} is provided. See 'Details'. 
+#' @param model Character string. Indicates which model is to be used for
+#' fitting and prediction of the moving average smoothed series. 
+#' @param na.action A function for treating missing values in \code{timeseries}
+#' and \code{timeseries.test}. The default function is \code{\link[stats]{na.omit}},
+#' which omits any missing values found in \code{timeseries} or
+#' \code{timeseries.test}. 
+#' @param level Confidence level for prediction intervals. See the
+#' \code{\link[forecast]{forecast}} function of the \code{forecast} package. 
+#' @param rank.by Character string. Criteria used for ranking candidate models
+#' generated. See 'Details'. 
+#' @param ... Additional arguments passed to the modeling functions. 
+#' @return A list with components: \item{model}{A list containing information
+#' about the best evaluated model.} \item{order}{The order of moving average
+#' smoother provided or automatically selected.} \item{ma}{The simple moving
+#' average smoother of order \code{order} of the provided time series.}
+#' \item{AICc}{Numeric value of the computed AICc criterion of the best
+#' evaluated model.} \item{AIC}{Numeric value of the computed AIC criterion of
+#' the best evaluated model.} \item{BIC}{Numeric value of the computed BIC
+#' criterion of the best evaluated model.} \item{logLik}{Numeric value of the
+#' computed log-likelihood of the best evaluated model.} \item{pred}{A list
+#' with the components \code{mean}, \code{lower} and \code{upper}, containing
+#' the predictions of the best evaluated model and the lower and upper limits
+#' for prediction intervals, respectively. All components are time series. See
+#' the \code{\link[forecast]{forecast}} function in the \code{forecast}
+#' package.} \item{MSE}{Numeric value of the resulting MSE error of prediction.
+#' Require \code{timeseries.test}.} \item{NMSE}{Numeric value of the resulting
+#' NMSE error of prediction. Require \code{timeseries.test}.}
+#' \item{MAPE}{Numeric value of the resulting MAPE error of prediction. Require
+#' \code{timeseries.test}.} \item{sMAPE}{Numeric value of the resulting sMAPE
+#' error of prediction. Require \code{timeseries.test}.}
+#' \item{MaxError}{Numeric value of the maximal error of prediction. Require
+#' \code{timeseries.test}.} \item{rank.val}{Data.frame with the fitness or
+#' prediction accuracy criteria computed for all candidate models ranked by
+#' \code{rank.by}. It has the attribute \code{"ranked.models"}, which is a list
+#' of objects containing all the candidate models, also ranked by
+#' \code{rank.by}.} \item{rank.by}{Ranking criteria used for ranking candidate
+#' models and producing \code{rank.val}.}
+#' @author Rebecca Pontes Salles 
+#' @seealso \code{\link{fittestEMD}}, \code{\link{fittestWavelet}} 
+#' @references R.J. Hyndman and G. Athanasopoulos, 2013, Forecasting:
+#' principles and practice. OTexts.
+#' 
+#' R.H. Shumway and D.S. Stoffer, 2010, Time Series Analysis and Its
+#' Applications: With R Examples. 3rd ed. 2011 edition ed. New York, Springer.
+#' @keywords moving average smoother automatic fitting adjustment prediction
+#' evaluation criterion errors time series
+#' @examples
+#' 
+#' data(CATS)
+#' \donttest{
+#' fMAS <- fittestMAS(CATS[,1],h=20,model="arima")
+#' 
+#' #automatically selected order of moving average
+#' mas.order <- fMAS$order
+#' }
+#' 
+#' @export fittestMAS
 fittestMAS <- 
   function(timeseries, timeseries.test=NULL, h=NULL, order=NULL, minorder=1, maxorder=min(36,length(ts(na.action(timeseries)))/2), 
-           model=c("ets","arima"), level=0.95, na.action=na.omit,
+           model=c("ets","arima"), level=0.95, na.action=stats::na.omit,
            rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","errors","fitness"),...){
     #catch parameter errors
     if(is.null(timeseries))    stop("timeseries is required and must have positive length")
@@ -19,7 +143,7 @@ fittestMAS <-
       n.ahead <- length(ts.test)
       if(!is.null(h)){
         if(h < n.ahead){
-          ts.test <- head(ts.test,h)
+          ts.test <- utils::head(ts.test,h)
           n.ahead <- h
         }
       }
@@ -35,14 +159,16 @@ fittestMAS <-
     else if(rank.by == "errors") rank.by <- c("MSE","NMSE","MAPE","sMAPE","MaxError")
     
     #transformation function (moving average smoothing)
-    MAS <- TSPred::MAS
+    MAS <- TSPred::mas
     #reverse transformation function (moving average smoothing)
-    revMAS <- TSPred::MAS.rev
+    revMAS <- TSPred::mas.rev
     
     #transforms series, optimize Model given a set of initial parameters and predicts n.ahead observations
     optim.model <- function(timeseries,order,modelType,n.ahead,level,...){
       #moving average smoothing transformation
-      sma <- MAS(timeseries,order)
+      sma <- tryCatch( MAS(timeseries,order) ,
+                       error=function(c) NULL)
+      if(is.null(sma)) return(NULL)
       
       #require(forecast)
       if(modelType=="ets") {
@@ -72,7 +198,7 @@ fittestMAS <-
       #computes predictions using the candidate model
       prediction <- list(mean=fc$mean,lower=fc$lower,upper=fc$upper)
       
-      xinit <- tail(as.numeric(ts),ord-1)
+      xinit <- utils::tail(as.numeric(ts),ord-1)
       prediction$mean <- revMAS(prediction$mean,xinit,ord,addinit=FALSE)
       attributes(prediction$mean) <- attributes(fc$mean)
       prediction$lower <- revMAS(prediction$lower,xinit,ord,addinit=FALSE)
@@ -122,8 +248,8 @@ fittestMAS <-
     rank <- NULL
     if(is.null(order)){
       # creates the Validation series for parameter optimization
-      ts.val <- tail(ts,n.ahead)
-      ts.tmp <- head(ts,nobs-n.ahead)
+      ts.val <- utils::tail(ts,n.ahead)
+      ts.tmp <- utils::head(ts,nobs-n.ahead)
       
       #if rank.by considers fitness measures, parameter optimization uses only and all the training series
       if(any(c("AIC","AICc","BIC","logLik") %in% rank.by)) ts.tmp <- ts
@@ -136,6 +262,7 @@ fittestMAS <-
       for(par in pars.opt){
         #generates and optimizes candidate Model based on initial parameter values
         fc <- optim.model(ts.tmp,order=par,modelType=modelType,n.ahead=n.ahead,level=level,...)
+        if(is.null(fc)) next
         model <- fc$model
         
         #creates candidate model id and saves it in the list models

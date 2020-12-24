@@ -1,5 +1,129 @@
+#' Automatic fitting and prediction of polynomial regression 
+#' 
+#' The function predicts and returns the next n consecutive values of a
+#' univariate time series using the best evaluated automatically fitted
+#' polynomial regression model. It also evaluates the fitness of the produced
+#' model, using AICc, AIC, BIC and logLik criteria, and its prediction
+#' accuracy, using the MSE, NMSE, MAPE, sMAPE and maximal error accuracy
+#' measures. 
+#' 
+#' A set with candidate polynomial regression models of order \code{order} is
+#' generated with help from the \code{\link{dredge}} function from the
+#' \code{MuMIn} package. The candidate models are ranked acoording to the
+#' criteria in \code{rank.by} and the best ranked model is returned by the
+#' function.
+#' 
+#' If \code{order} is \code{NULL}, it is automatically selected. For that, the
+#' candidate polynomial regression models generated receive orders from
+#' \code{minorder} to \code{maxorder}. The value option of \code{order} which
+#' generate the best ranked candidate polynomial regression model acoording to
+#' the criteria in \code{rank.by} is selected.
+#' 
+#' The ranking criteria in \code{rank.by} may be set as a prediction error
+#' measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}},
+#' \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria
+#' (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or
+#' \code{\link{logLik}}). In the former case, the candidate models are used for
+#' time series prediction and the error measures are calculated by means of a
+#' cross-validation process. In the latter case, the candidate models are
+#' fitted and fitness criteria are calculated based on all observations in
+#' \code{timeseries}.
+#' 
+#' If \code{rank.by} is set as \code{"errors"} or \code{"fitness"}, the
+#' candidate models are ranked by all the mentioned prediction error measures
+#' or fitness criteria, respectively. The wheight of the ranking criteria is
+#' equally distributed. In this case, a \code{rank.position.sum} criterion is
+#' produced for ranking the candidate models. The \code{rank.position.sum}
+#' criterion is calculated as the sum of the rank positions of a model (1 = 1st
+#' position = better ranked model, 2 = 2nd position, etc.) on each calculated
+#' ranking criteria.
+#' 
+#' @param timeseries A vector or univariate time series which contains the
+#' values used for fitting a polynomial regression model. 
+#' @param timeseries.test A vector or univariate time series containing a
+#' continuation for \code{timeseries} with actual values. It is used as a
+#' testing set and base for calculation of prediction error measures. Ignored
+#' if \code{NULL}. 
+#' @param h Number of consecutive values of the time series to be predicted. If
+#' \code{h} is \code{NULL}, the number of consecutive values to be predicted is
+#' assumed to be equal to the length of \code{timeseries.test}. Required when
+#' \code{timeseries.test} is \code{NULL}. 
+#' @param order A numeric integer value corresponding to the order of
+#' polynomial regression to be fitted. If \code{NULL}, the order of the
+#' polynomial regression returned by the function is automatically selected
+#' within the interval \code{minorder:maxorder}. See 'Details'. 
+#' @param minorder A numeric integer value corresponding to the minimum order
+#' of candidate polynomial regression to be fitted and evaluated. Ignored if
+#' \code{order} is provided. See 'Details'. 
+#' @param maxorder A numeric integer value corresponding to the maximal order
+#' of candidate polynomial regression to be fitted and evaluated. Ignored if
+#' \code{order} is provided. See 'Details'. 
+#' @param raw If \code{TRUE}, use raw and not orthogonal polynomials.
+#' Orthogonal polynomials help avoid correlation between variables. Default is
+#' \code{FALSE}. See \code{\link[stats]{poly}} of the \code{stats} package. 
+#' @param na.action A function for treating missing values in \code{timeseries}
+#' and \code{timeseries.test}. The default function is \code{\link[stats]{na.omit}},
+#' which omits any missing values found in \code{timeseries} or
+#' \code{timeseries.test}. 
+#' @param level Confidence level for prediction intervals. See the
+#' \code{\link[stats]{predict.lm}} function in the \code{stats} package. 
+#' @param rank.by Character string. Criteria used for ranking candidate models
+#' generated. See 'Details'. 
+#' @return A list with components: \item{model}{An object of class "stats::lm"
+#' containing the best evaluated polynomial regression model.} \item{order}{The
+#' order argument provided (or automatically selected) for the best evaluated
+#' polynomial regression model.} \item{AICc}{Numeric value of the computed AICc
+#' criterion of the best evaluated model.} \item{AIC}{Numeric value of the
+#' computed AIC criterion of the best evaluated model.} \item{BIC}{Numeric
+#' value of the computed BIC criterion of the best evaluated model.}
+#' \item{logLik}{Numeric value of the computed log-likelihood of the best
+#' evaluated model.} \item{pred}{A list with the components \code{mean},
+#' \code{lower} and \code{upper}, containing the predictions of the best
+#' evaluated model and the lower and upper limits for prediction intervals,
+#' respectively. All components are time series. See \code{\link[stats]{predict.lm}}.}
+#' \item{MSE}{Numeric value of the resulting MSE error of prediction. Require
+#' \code{timeseries.test}.} \item{NMSE}{Numeric value of the resulting NMSE
+#' error of prediction. Require \code{timeseries.test}.} \item{MAPE}{Numeric
+#' value of the resulting MAPE error of prediction. Require
+#' \code{timeseries.test}.} \item{sMAPE}{Numeric value of the resulting sMAPE
+#' error of prediction. Require \code{timeseries.test}.}
+#' \item{MaxError}{Numeric value of the maximal error of prediction. Require
+#' \code{timeseries.test}.} \item{rank.val}{Data.frame with the coefficients
+#' and the fitness or prediction accuracy criteria computed for all candidate
+#' polynomial regression models ranked by \code{rank.by}. It has the attribute
+#' \code{"model.calls"}, which is a list of objects of class "expression"
+#' containing the calls of all the candidate polynomial regression models, also
+#' ranked by \code{rank.by}.} \item{rank.by}{Ranking criteria used for ranking
+#' candidate models and producing \code{rank.val}.}
+#' @author Rebecca Pontes Salles 
+#' @seealso \code{\link{fittestPolyRKF}}, \code{\link{fittestLM}} 
+#' @references R.J. Hyndman and G. Athanasopoulos, 2013, Forecasting:
+#' principles and practice. OTexts.
+#' 
+#' R.H. Shumway and D.S. Stoffer, 2010, Time Series Analysis and Its
+#' Applications: With R Examples. 3rd ed. 2011 edition ed. New York, Springer.
+#' %% ~put references to the literature/web site here ~
+#' @keywords polynomial regression automatic fitting adjustment prediction
+#' evaluation criterion errors
+#' @examples
+#' 
+#' data(CATS,CATS.cont)
+#' fPolyR <- fittestPolyR(CATS[,3],CATS.cont[,3])
+#' #predicted values
+#' pred <- fPolyR$pred
+#' 
+#' #plotting the time series data
+#' plot(c(CATS[,3],CATS.cont[,3]),type='o',lwd=2,xlim=c(960,1000),ylim=c(-100,300),
+#' xlab="Time",ylab="PR")
+#' #plotting predicted values
+#' lines(ts(pred$mean,start=981),lwd=2,col='blue')
+#' #plotting prediction intervals
+#' lines(ts(pred$lower,start=981),lwd=2,col='light blue')
+#' lines(ts(pred$upper,start=981),lwd=2,col='light blue')
+#' 
+#' @export fittestPolyR
 fittestPolyR <- 
-  function(timeseries, timeseries.test=NULL, h=NULL, order=NULL, minorder=0, maxorder=5, raw = FALSE, na.action=na.omit, level=0.95,
+  function(timeseries, timeseries.test=NULL, h=NULL, order=NULL, minorder=0, maxorder=5, raw = FALSE, na.action=stats::na.omit, level=0.95,
            rank.by=c("MSE","NMSE","MAPE","sMAPE","MaxError","AIC","AICc","BIC","logLik","errors","fitness")){
     #require(MuMIn)
     #catch parameter errors
@@ -16,7 +140,7 @@ fittestPolyR <-
       n.ahead <- length(ts.test)
       if(!is.null(h)){
         if(h < n.ahead){
-          ts.test <- head(ts.test,h)
+          ts.test <- utils::head(ts.test,h)
           n.ahead <- h
         }
       }
@@ -29,10 +153,10 @@ fittestPolyR <-
     #preparing the dataset with independent variables (t,t^2,t^3,...)
     t <- seq(1,nobs,along.with=ts)
     tnew <- seq((nobs+1),(nobs+n.ahead),length.out=n.ahead)
-    #independent variables generated with poly(...,raw=FALSE) are orthogonal polynomials and avoid correlation between variables
-    pt <- poly(t,maxorder,raw=raw)
+    #independent variables generated with stats::poly(...,raw=FALSE) are orthogonal polynomials and avoid correlation between variables
+    pt <- stats::poly(t,maxorder,raw=raw)
     data <- data.frame(y=ts,pt)
-    ptnew = predict(pt,tnew) #calls predict.poly
+    ptnew = stats::predict(pt,tnew) #calls stats::predict.stats::poly
     data.test <- data.frame(ptnew)
     
     # evaluate choices of rank.by
@@ -48,9 +172,9 @@ fittestPolyR <-
     
     #computes quality measures acoording to rank.by
     fitness.criteria <- function(model){
-      ll <- logLik(model, marginal = TRUE)
-      AIC <- AIC(model)
-      BIC <- BIC(model)
+      ll <- stats::logLik(model, marginal = TRUE)
+      AIC <- stats::AIC(model)
+      BIC <- stats::BIC(model)
       AICc <- MuMIn::AICc(model)
       
       return(data.frame(AICc=AICc,AIC=AIC,BIC=BIC,logLik=ll))
@@ -59,13 +183,13 @@ fittestPolyR <-
     #computes predictions, and prediction error measures (if timeseries.test is provided)
     pred.criteria <- function(model,data.ahead,level,i.n.ahead,ts.test,ts){
       #computes predictions using the candidate model
-      pred <- predict(model, data.ahead, interval="prediction", se.fit=FALSE, level=level)
+      pred <- stats::predict(model, data.ahead, interval="prediction", se.fit=FALSE, level=level)
       
       rownames(pred) <- NULL
       pred <- list(mean=ts(pred[,"fit"],start=i.n.ahead),
                    lower=ts(pred[,"lwr"],start=i.n.ahead),
                    upper=ts(pred[,"upr"],start=i.n.ahead))
-      attr(pred,"pred.lm") <- predict(model, data.ahead, interval="prediction", se.fit=TRUE, level=level)
+      attr(pred,"pred.stats::lm") <- stats::predict(model, data.ahead, interval="prediction", se.fit=TRUE, level=level)
       
       pred.mean <- pred$mean
       
@@ -115,8 +239,8 @@ fittestPolyR <-
     rank <- NULL
     
     # creates the Validation series for parameter optimization
-    data.val <- tail(data,n.ahead)
-    data.tmp <- head(data,nobs-n.ahead)
+    data.val <- utils::tail(data,n.ahead)
+    data.tmp <- utils::head(data,nobs-n.ahead)
     
     extra <- NULL
     #if rank.by considers fitness measures, parameter optimization uses only and all the training series
@@ -128,7 +252,7 @@ fittestPolyR <-
     #produces all possible combinations (dredge) of candidate models and fitness measures in order to select "best" parameters
     #and combine results of the candidate models in the dataframe rank
     modelData <- data.tmp
-    fit.max <- lm(y~. ,data=modelData, na.action = "na.fail")
+    fit.max <- stats::lm(y~. ,data=modelData, na.action = "na.fail")
     #set the limits c(lower, upper) for number of terms in a single model (excluding the intercept)
     m.lim = c(0,maxorder)
     rank <- suppressMessages(MuMIn::dredge(fit.max,  m.lim = m.lim, rank = "AICc", extra = extra))
@@ -162,7 +286,7 @@ fittestPolyR <-
     model <- optim.model(attr(rank,"model.calls")[[1]],data)
     
     #extract the order of the model
-    order.optim <- as.numeric(tail(strsplit(tail(names(model$coefficients),1),"")[[1]],1)[1])
+    order.optim <- as.numeric(utils::tail(strsplit(utils::tail(names(model$coefficients),1),"")[[1]],1)[1])
     
     #computes fitness measures and returns a dataframe with them
     fit.measures <- fitness.criteria(model)

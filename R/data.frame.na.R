@@ -1,5 +1,6 @@
-###############################################################
-## data.frames with filled NA's
+
+#' data.frames with filled NA's
+#' @keywords internal
 data.frame.na <- function (..., row.names = NULL, check.rows = FALSE, check.names = TRUE,
     stringsAsFactors = FALSE)
 {
