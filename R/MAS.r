@@ -4,7 +4,7 @@
 #' provided time series. \code{mas.rev()} reverses the
 #' transformation(smoothing) process.
 #' 
-#' The moving average smoother transformation is given by \deqn{}{(1/k) * (
+#' The moving average smoother transformation is given by \deqn{(1/k) * (
 #' x[t] + x[t+1] + ... + x[t+k-1] )} where \code{k=order}, \code{t} assume
 #' values in the range \code{1:(n-k+1)}, and \code{n=length(x)}. See also the
 #' \code{\link[forecast]{ma}} of the \code{forecast} package.

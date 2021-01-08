@@ -38,3 +38,5 @@ devtools::build(args = c('--resave-data=best','--no-manual'))
 #Release Package To CRAN.
 #Run automated and manual tests, then post package to CRAN.
 devtools::release(pkg = ".", check = FALSE, args = NULL)
+
+#Manual submition may be done in https://cran.r-project.org/submit.html

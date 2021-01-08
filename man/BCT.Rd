@@ -32,10 +32,9 @@ respectively.
 }
 \details{
 If \code{lambda} is not \code{0}, the Box-Cox transformation is given by
-\deqn{f_\lambda(x) =\frac{x^\lambda - }{(x^lambda -
-1)/lambda}\deqn{1}{\lambda}}{(x^lambda - 1)/lambda} If
-\eqn{\lambda=0}{lambda=0}, the Box-Cox transformation is given by
-\deqn{f_0(x)=\log(x)}{log(x)}.
+\deqn{f_\lambda(x) =\frac{x^\lambda - 1}{\lambda}} If
+\eqn{\lambda=0}, the Box-Cox transformation is given by
+\deqn{f_0(x)=\log(x)}.
 }
 \examples{
 

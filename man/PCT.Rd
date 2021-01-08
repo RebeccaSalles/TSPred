@@ -30,8 +30,8 @@ series using a Percentage Change transformation. \code{pct.rev()} reverses
 the transformation.
 }
 \details{
-The Percentage Change transformation is given approximately by \deqn{}{log(
-x[2:n] / x[1:(n-1)] ) = log( x[2:n] ) - log( x[1:(n-1)] ) } where
+The Percentage Change transformation is given approximately by
+\deqn{ log(x[2:n] / x[1:(n-1)] ) = log( x[2:n] ) - log( x[1:(n-1)] ) } where
 \code{n=length(x)}.
 }
 \examples{
