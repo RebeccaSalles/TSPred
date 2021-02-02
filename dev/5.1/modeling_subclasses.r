@@ -4,7 +4,7 @@
 #' and prediction method based on a particular model.
 #'
 #' @section Linear models:
-#' 	ARIMA model. \code{train_func} set as \code{\link[forecast]{auto.arima}}
+#' 	ARIMA: ARIMA model. \code{train_func} set as \code{\link[forecast]{auto.arima}}
 #'  and \code{pred_func} set as \code{\link[forecast]{forecast}}.
 #'
 #' @param train_par List of named parameters required by \code{train_func}.
@@ -18,16 +18,16 @@
 #' @family constructors
 #'
 #' @keywords modeling prediction model method
-#' 
-#' @rdname ARIMA
+#'
+#' @rdname prediction_models
 #' @export ARIMA
 #Subclass ARIMA
 ARIMA <- function(train_par=list(), pred_par=list(level=c(80,95))){
-  
+
   forecast_mean <- function(...){
     do.call(forecast::forecast,c(list(...)))$mean
   }
-  
+
   linear(train_func = forecast::auto.arima, train_par=c(train_par),
         pred_func = forecast_mean, pred_par=c(pred_par),
         method="ARIMA model", subclass="ARIMA")
@@ -48,17 +48,17 @@ summary.ARIMA <- function(object,...){
 }
 
 #Subclass ETS
-#' @rdname ARIMA
+#' @rdname prediction_models
 #' @section Linear models:
-#' 	Exponential Smoothing State Space model. \code{train_func} set as \code{\link[forecast]{ets}}
+#' 	ETS: Exponential Smoothing State Space model. \code{train_func} set as \code{\link[forecast]{ets}}
 #'  and \code{pred_func} set as \code{\link[forecast]{forecast}}.
 #' @export
 ETS <- function(train_par=list(), pred_par=list(level=c(80,95))){
-  
+
   forecast_mean <- function(...){
     do.call(forecast::forecast,c(list(...)))$mean
   }
-  
+
   linear(train_func = forecast::ets, train_par=c(train_par),
          pred_func = forecast_mean, pred_par=c(pred_par),
          method="Exponential Smoothing State Space model", subclass="ETS")
@@ -79,17 +79,17 @@ summary.ETS <- function(object,...){
 }
 
 #Subclass HW
-#' @rdname ARIMA
+#' @rdname prediction_models
 #' @section Linear models:
-#' 	Holt-Winter's Exponential Smoothing model. \code{train_func} set as \code{\link[forecast]{hw}}
+#' 	HW: Holt-Winter's Exponential Smoothing model. \code{train_func} set as \code{\link[forecast]{hw}}
 #'  and \code{pred_func} set as \code{\link[forecast]{forecast}}.
 #' @export
 HW <- function(train_par=list(), pred_par=list(level=c(80,95))){
-  
+
   forecast_mean <- function(...){
     do.call(forecast::forecast,c(list(...)))$mean
   }
-  
+
   linear(train_func = forecast::hw, train_par=c(train_par),
          pred_func = forecast_mean, pred_par=c(pred_par),
          method="Holt-Winter's Exponential Smoothing model", subclass="HW")
@@ -110,20 +110,20 @@ summary.HW <- function(object,...){
 }
 
 #Subclass TF
-#' @rdname ARIMA
+#' @rdname prediction_models
 #' @section Linear models:
-#' 	Theta Forecasting model. \code{train_func} set as \code{\link[forecast]{thetaf}}
+#' 	TF: Theta Forecasting model. \code{train_func} set as \code{\link[forecast]{thetaf}}
 #'  and \code{pred_func} set as \code{\link[forecast]{forecast}}.
 #' @export
 TF <- function(train_par=list(), pred_par=list(level=c(80,95))){
-  
+
   forecast_mean <- function(...){
     do.call(forecast::forecast,c(list(...)))$mean
   }
   thetaf_model <- function(...){
     do.call(forecast::thetaf,c(list(...)))$model
   }
-  
+
   linear(train_func = thetaf_model, train_par=c(train_par),
          pred_func = forecast_mean, pred_par=c(pred_par),
          method="Theta Forecasting model", subclass="TF")
@@ -144,9 +144,9 @@ summary.TF <- function(object,...){
 }
 
 #Subclass NNET
-#' @rdname ARIMA
+#' @rdname prediction_models
 #' @section Machine learning models:
-#' 	Artificial Neural Network model. \code{train_func} set as \code{\link[nnet]{nnet}}
+#' 	NNET: Artificial Neural Network model. \code{train_func} set as \code{\link[nnet]{nnet}}
 #'  and \code{pred_func} set as \code{\link[stats]{predict}}.
 #' @param size See \code{\link[nnet]{nnet}}
 #' @export
@@ -166,7 +166,7 @@ summary.NNET <- function(object,...){
     cat("\nOther parameters:\n")
     print(obj$train$par[-1])
   }
-  
+
   if(!is.null(obj$pred$par)){
     cat("Predicting parameters:\n")
     print(obj$pred$par)
@@ -174,9 +174,9 @@ summary.NNET <- function(object,...){
 }
 
 #Subclass RFrst
-#' @rdname ARIMA
+#' @rdname prediction_models
 #' @section Machine learning models:
-#' 	Random Forest model. \code{train_func} set as \code{\link[randomForest]{randomForest}}
+#' 	RFrst: Random Forest model. \code{train_func} set as \code{\link[randomForest]{randomForest}}
 #'  and \code{pred_func} set as \code{\link[stats]{predict}}.
 #' @param ntree See \code{\link[randomForest]{randomForest}}
 #' @export
@@ -206,7 +206,7 @@ summary.RFrst <- function(object,...){
     cat("\nOther parameters:\n")
     print(obj$train$par[-1])
   }
-  
+
   if(!is.null(obj$pred$par)){
     cat("Predicting parameters:\n")
     print(obj$pred$par)
@@ -214,9 +214,9 @@ summary.RFrst <- function(object,...){
 }
 
 #Subclass RBF
-#' @rdname ARIMA
+#' @rdname prediction_models
 #' @section Machine learning models:
-#' 	Radial Basis Function (RBF) Network model. \code{train_func} set as \code{\link[RSNNS]{rbf}}
+#' 	RBF: Radial Basis Function (RBF) Network model. \code{train_func} set as \code{\link[RSNNS]{rbf}}
 #'  and \code{pred_func} set as \code{\link[stats]{predict}}.
 #' @param size See \code{\link[RSNNS]{rbf}}
 #' @export
@@ -241,7 +241,7 @@ summary.RBF <- function(object,...){
     cat("\nOther parameters:\n")
     print(obj$train$par[-1])
   }
-  
+
   if(!is.null(obj$pred$par)){
     cat("Predicting parameters:\n")
     print(obj$pred$par)
@@ -249,16 +249,16 @@ summary.RBF <- function(object,...){
 }
 
 #Subclass SVM
-#' @rdname ARIMA
+#' @rdname prediction_models
 #' @section Machine learning models:
-#' 	Support Vector Machine model. \code{train_func} set as \code{\link[e1071]{tune.svm}} 
+#' 	SVM: Support Vector Machine model. \code{train_func} set as \code{\link[e1071]{tune.svm}}
 #'  and \code{pred_func} set as \code{\link[stats]{predict}}.
 #' @export
 SVM <- function(train_par=NULL, pred_par=list(level=c(80,95)), sw=SW(window_len = 6), proc=list(MM=MinMax())){
-  
+
   tuned_svm <- function(...){
     do.call(e1071::tune.svm,c(ranges=c(epsilon=seq(0,1,0.1), cost=1:100),list(...)))$best.model
-  }  
+  }
 
   MLM(train_func = tuned_svm, train_par=c(train_par),
       pred_func = stats::predict, pred_par=c(pred_par),
@@ -273,7 +273,7 @@ summary.SVM <- function(object,...){
   if(length(obj$train$par)>0){
     print(obj$train$par)
   }
-  
+
   if(!is.null(obj$pred$par)){
     cat("Predicting parameters:\n")
     print(obj$pred$par)
@@ -281,9 +281,9 @@ summary.SVM <- function(object,...){
 }
 
 #Subclass MLP
-#' @rdname ARIMA
+#' @rdname prediction_models
 #' @section Machine learning models:
-#' 	Multi-Layer Perceptron (MLP) Network model. \code{train_func} set as \code{\link[RSNNS]{mlp}} 
+#' 	MLP: Multi-Layer Perceptron (MLP) Network model. \code{train_func} set as \code{\link[RSNNS]{mlp}}
 #'  and \code{pred_func} set as \code{\link[stats]{predict}}.
 #' @param size See \code{\link[RSNNS]{mlp}}
 #' @export
@@ -303,7 +303,7 @@ summary.MLP <- function(object,...){
     cat("\nOther parameters:\n")
     print(obj$train$par[-1])
   }
-  
+
   if(!is.null(obj$pred$par)){
     cat("Predicting parameters:\n")
     print(obj$pred$par)
@@ -311,9 +311,9 @@ summary.MLP <- function(object,...){
 }
 
 #Subclass ELM
-#' @rdname ARIMA
+#' @rdname prediction_models
 #' @section Machine learning models:
-#' 	Extreme Learning Machine (ELM) model. \code{train_func} set as \code{\link[elmNNRcpp]{elm_train}} 
+#' 	ELM: Extreme Learning Machine (ELM) model. \code{train_func} set as \code{\link[elmNNRcpp]{elm_train}}
 #'  and \code{pred_func} set as \code{\link[elmNNRcpp]{elm_predict}}.
 #' @export
 ELM <- function(train_par=list(), pred_par=list(), sw=SW(window_len = 6), proc=list(MM=MinMax())){
@@ -330,7 +330,7 @@ summary.ELM <- function(object,...){
   if(length(obj$train$par)>0){
     print(obj$train$par)
   }
-  
+
   if(!is.null(obj$pred$par)){
     cat("Predicting parameters:\n")
     print(obj$pred$par)
@@ -338,55 +338,56 @@ summary.ELM <- function(object,...){
 }
 
 #Subclass Tensor_CNN
-#' @rdname ARIMA
+#' @rdname prediction_models
 #' @section Machine learning models:
-#' 	Convolutional Neural Network - TensorFlow.
-#'  \code{train_func} based on functions from \code{\link[tensorflow]} and \code{\link[keras]},
+#' 	Tensor_CNN: Convolutional Neural Network - TensorFlow.
+#'  \code{train_func} based on functions from \code{tensorflow} and \code{keras},
 #'  and \code{pred_func} set as \code{\link[stats]{predict}}.
 #' @export
 Tensor_CNN <- function(train_par=NULL, pred_par=list(level=c(80,95)), sw=SW(window_len = 6), proc=list(MM=MinMax())){
-  
+
   ts_tensor_cnn <- function(X, Y) {
 	  cnn_epochs <- 2000
+	  t0 <- NULL #CRAN check workaround
 	  build_model <- function(train_df) {
 		set.seed(1)
-		
-		spec <- tfdatasets::feature_spec(train_df, t0 ~ . ) %>% 
-		  tfdatasets::step_numeric_column(tfdatasets::all_numeric(), normalizer_fn = tfdatasets::scaler_standard()) %>% 
+		t0 <- NULL #CRAN check workaround
+		spec <- tfdatasets::feature_spec(train_df, t0 ~ . ) %>%
+		  tfdatasets::step_numeric_column(tfdatasets::all_numeric(), normalizer_fn = tfdatasets::scaler_standard()) %>%
 		  tfdatasets::fit()
-		
+
 		input <- tfdatasets::layer_input_from_dataset(train_df %>% dplyr::select(-t0))
-		
-		output <- input %>% 
-		  keras::layer_dense_features(tfdatasets::dense_features(spec)) %>% 
+
+		output <- input %>%
+		  keras::layer_dense_features(tfdatasets::dense_features(spec)) %>%
 		  keras::layer_dense(units = 64, activation = "relu") %>%
 		  keras::layer_dense(units = 64, activation = "relu") %>%
-		  keras::layer_dense(units = 1) 
-		
+		  keras::layer_dense(units = 1)
+
 		model <- keras::keras_model(input, output)
-		
-		model %>% 
+
+		model %>%
 		  keras::compile(
 			loss = "mse",
 			optimizer = keras::optimizer_rmsprop(),
 			metrics = list("mean_absolute_error")
 		  )
-		
+
 		return(model)
 	  }
-	  
+
 	  XY <- data.frame(X)
 	  XY$t0 <- Y
-	  
+
 	  model <- build_model(XY)
-	  
+
 	  print_dot_callback <- keras::callback_lambda(
 		on_epoch_end = function(epoch, logs) {
 		  if (epoch %% 800 == 0) cat("\n")
 		  if (epoch %% 10 == 0) cat(".")
 		}
-	  )    
-	  
+	  )
+
 	  history <- model %>% keras::fit(
 		x = XY %>% dplyr::select(-t0),
 		y = XY$t0,
@@ -394,14 +395,18 @@ Tensor_CNN <- function(train_par=NULL, pred_par=list(level=c(80,95)), sw=SW(wind
 		validation_split = 0.2,
 		verbose = 0,
 		callbacks = list(print_dot_callback)
-	  )  
+	  )
 	  cat("\n")
-	  
+
 	  return(model)
-	}  
+  }
+
+  predict_mean <- function(mdl, data, ...){
+    do.call(stats::predict,c(list(mdl), list(data.frame(data)), list(...)))
+  }
 
   MLM(train_func = ts_tensor_cnn, train_par=c(train_par),
-      pred_func = stats::predict, pred_par=c(pred_par),
+      pred_func = predict_mean, pred_par=c(pred_par),
       sw=sw, proc=proc,
       method="Convolutional Neural Network - TensorFlow", subclass="Tensor_CNN")
 }
@@ -413,7 +418,7 @@ summary.Tensor_CNN <- function(object,...){
   if(length(obj$train$par)>0){
     print(obj$train$par)
   }
-  
+
   if(!is.null(obj$pred$par)){
     cat("Predicting parameters:\n")
     print(obj$pred$par)
@@ -421,30 +426,30 @@ summary.Tensor_CNN <- function(object,...){
 }
 
 #Subclass Tensor_LSTM
-#' @rdname ARIMA
+#' @rdname prediction_models
 #' @section Machine learning models:
-#' 	Long Short Term Memory Neural Networks - TensorFlow.
-#'  \code{train_func} based on functions from \code{\link[tensorflow]} and \code{\link[keras]},
+#' 	Tensor_LSTM: Long Short Term Memory Neural Networks - TensorFlow.
+#'  \code{train_func} based on functions from \code{tensorflow} and \code{keras},
 #'  and \code{pred_func} set as \code{\link[stats]{predict}}.
 #' @export
 Tensor_LSTM <- function(train_par=NULL, pred_par=list(batch_size=1,level=c(80,95)), sw=SW(window_len = 6), proc=list(MM=MinMax())){
-  
+
   ts_tensor_lstm <- function(X, Y) {
 	  lstm_epochs <- 2000
-  
+
 	  print_dot_callback <- keras::callback_lambda(
 		on_epoch_end = function(epoch, logs) {
 		  if (epoch %% 800 == 0) cat("\n")
 		  if (epoch %% 10 == 0) cat(".")
 		}
-	  )    
-	  
+	  )
+
 	  set.seed(1)
 	  batch.size <- 1
 	  size <- ncol(X)
-	  
+
 	  X <- array(as.vector(X), dim=(c(dim(X),1)))
-	  
+
 	  model <- keras::keras_model_sequential()
 	  model %>%
 		keras::layer_lstm(units = 100,
@@ -460,8 +465,8 @@ Tensor_LSTM <- function(train_par=NULL, pred_par=list(batch_size=1,level=c(80,95
 		keras::layer_dense(units = 1)
 	  model %>%
 		keras::compile(loss = 'mae', optimizer = 'adam')
-	  
-	  
+
+
 	  model %>% keras::fit(x = X,
 					y = Y,
 					batch_size = batch.size,
@@ -472,12 +477,13 @@ Tensor_LSTM <- function(train_par=NULL, pred_par=list(batch_size=1,level=c(80,95
 	  )
 	  model %>% keras::reset_states()
 	  cat("\n")
-	  
+
 	  return(model)
   }
-  
-  predict_mean <- function(...){
-    do.call(stats::predict,c(list(...)))[,1]
+
+  predict_mean <- function(mdl, data, ...){
+    data <- array(as.vector(data), dim=(c(dim(data),1)))
+    do.call(stats::predict,c(list(mdl), list(data), list(...)))[,1]
   }
 
   MLM(train_func = ts_tensor_lstm, train_par=c(train_par),
@@ -493,7 +499,7 @@ summary.Tensor_LSTM <- function(object,...){
   if(length(obj$train$par)>0){
     print(obj$train$par)
   }
-  
+
   if(!is.null(obj$pred$par)){
     cat("Predicting parameters:\n")
     print(obj$pred$par)

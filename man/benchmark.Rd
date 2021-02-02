@@ -30,8 +30,8 @@ depend on the class of the first argument.
 }
 \details{
 The function \code{\link{benchmark.tspred}} benchmarks a time series prediction process
-defined by a \code{\link{tspred}} object based on a particular metric. The metrics resulting 
-from its execution are compared against the ones produced by other time series prediction 
+defined by a \code{\link{tspred}} object based on a particular metric. The metrics resulting
+from its execution are compared against the ones produced by other time series prediction
 processes (defined in a list of \code{\link{tspred}} objects).
 }
 \examples{
@@ -50,8 +50,8 @@ eval2 <- MAPE_eval()
 
 #Defining a time series prediction process
 tspred_1 <- tspred(subsetting=proc1,
-                   processing=list(BCT=proc2, 
-                                   WT=proc3), 
+                   processing=list(BCT=proc2,
+                                   WT=proc3),
                    modeling=modl1,
                    evaluating=list(MSE=eval1,
                                    MAPE=eval2)
@@ -67,7 +67,7 @@ modl2 <- NNET(size=5,sw=proc4,proc=list(MM=proc5))
 
 #Defining a time series prediction process
 tspred_2 <- tspred(subsetting=proc1,
-                   processing=list(BCT=proc2, 
+                   processing=list(BCT=proc2,
                                    WT=proc3),
                    modeling=modl2,
                    evaluating=list(MSE=eval1,

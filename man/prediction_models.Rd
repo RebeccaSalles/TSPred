@@ -11,6 +11,8 @@
 \alias{SVM}
 \alias{MLP}
 \alias{ELM}
+\alias{Tensor_CNN}
+\alias{Tensor_LSTM}
 \title{Time series prediction models}
 \usage{
 ARIMA(train_par = list(), pred_par = list(level = c(80, 95)))
@@ -46,7 +48,7 @@ RBF(
 )
 
 SVM(
-  train_par = list(),
+  train_par = NULL,
   pred_par = list(level = c(80, 95)),
   sw = SW(window_len = 6),
   proc = list(MM = MinMax())
@@ -63,6 +65,20 @@ MLP(
 ELM(
   train_par = list(),
   pred_par = list(),
+  sw = SW(window_len = 6),
+  proc = list(MM = MinMax())
+)
+
+Tensor_CNN(
+  train_par = NULL,
+  pred_par = list(level = c(80, 95)),
+  sw = SW(window_len = 6),
+  proc = list(MM = MinMax())
+)
+
+Tensor_LSTM(
+  train_par = NULL,
+  pred_par = list(batch_size = 1, level = c(80, 95)),
   sw = SW(window_len = 6),
   proc = list(MM = MinMax())
 )
@@ -90,46 +106,56 @@ and prediction method based on a particular model.
 }
 \section{Linear models}{
 
-	ARIMA model. \code{train_func} set as \code{\link[forecast]{auto.arima}}
+	ARIMA: ARIMA model. \code{train_func} set as \code{\link[forecast]{auto.arima}}
  and \code{pred_func} set as \code{\link[forecast]{forecast}}.
 
 
-	Exponential Smoothing State Space model. \code{train_func} set as \code{\link[forecast]{ets}}
+	ETS: Exponential Smoothing State Space model. \code{train_func} set as \code{\link[forecast]{ets}}
  and \code{pred_func} set as \code{\link[forecast]{forecast}}.
 
 
-	Holt-Winter's Exponential Smoothing model. \code{train_func} set as \code{\link[forecast]{hw}}
+	HW: Holt-Winter's Exponential Smoothing model. \code{train_func} set as \code{\link[forecast]{hw}}
  and \code{pred_func} set as \code{\link[forecast]{forecast}}.
 
 
-	Theta Forecasting model. \code{train_func} set as \code{\link[forecast]{thetaf}}
+	TF: Theta Forecasting model. \code{train_func} set as \code{\link[forecast]{thetaf}}
  and \code{pred_func} set as \code{\link[forecast]{forecast}}.
 }
 
 \section{Machine learning models}{
 
-	Artificial Neural Network model. \code{train_func} set as \code{\link[nnet]{nnet}}
+	NNET: Artificial Neural Network model. \code{train_func} set as \code{\link[nnet]{nnet}}
  and \code{pred_func} set as \code{\link[stats]{predict}}.
 
 
-	Random Forest model. \code{train_func} set as \code{\link[randomForest]{randomForest}}
+	RFrst: Random Forest model. \code{train_func} set as \code{\link[randomForest]{randomForest}}
  and \code{pred_func} set as \code{\link[stats]{predict}}.
 
 
-	Radial Basis Function (RBF) Network model. \code{train_func} set as \code{\link[RSNNS]{rbf}}
+	RBF: Radial Basis Function (RBF) Network model. \code{train_func} set as \code{\link[RSNNS]{rbf}}
  and \code{pred_func} set as \code{\link[stats]{predict}}.
 
 
-	Support Vector Machine model. \code{train_func} set as \code{\link[e1071]{svm}} 
+	SVM: Support Vector Machine model. \code{train_func} set as \code{\link[e1071]{tune.svm}}
  and \code{pred_func} set as \code{\link[stats]{predict}}.
 
 
-	Multi-Layer Perceptron (MLP) Network model. \code{train_func} set as \code{\link[RSNNS]{mlp}} 
+	MLP: Multi-Layer Perceptron (MLP) Network model. \code{train_func} set as \code{\link[RSNNS]{mlp}}
  and \code{pred_func} set as \code{\link[stats]{predict}}.
 
 
-	Extreme Learning Machine (ELM) model. \code{train_func} set as \code{\link[elmNNRcpp]{elm_train}} 
+	ELM: Extreme Learning Machine (ELM) model. \code{train_func} set as \code{\link[elmNNRcpp]{elm_train}}
  and \code{pred_func} set as \code{\link[elmNNRcpp]{elm_predict}}.
+
+
+	Tensor_CNN: Convolutional Neural Network - TensorFlow.
+ \code{train_func} based on functions from \code{tensorflow} and \code{keras},
+ and \code{pred_func} set as \code{\link[stats]{predict}}.
+
+
+	Tensor_LSTM: Long Short Term Memory Neural Networks - TensorFlow.
+ \code{train_func} based on functions from \code{tensorflow} and \code{keras},
+ and \code{pred_func} set as \code{\link[stats]{predict}}.
 }
 
 \seealso{

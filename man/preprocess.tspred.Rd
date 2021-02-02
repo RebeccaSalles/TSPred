@@ -11,7 +11,7 @@
 
 \item{prep_test}{Should the testing set of data be preprocessed as well?}
 
-\item{...}{Other parameters passed to the method \code{\link{preprocess}} of 
+\item{...}{Other parameters passed to the method \code{\link{preprocess}} of
 the \code{\link{processing}} objects from \code{obj}.}
 }
 \value{
@@ -24,17 +24,17 @@ based on a particular set of transformation methods. Each transformation method 
 by a \code{\link{processing}} object in the list contained in the \code{\link{tspred}} class object.
 }
 \details{
-The function \code{\link{preprocess.tspred}} recursively calls the method \code{\link{preprocess}} 
-on each \code{\link{processing}} object contained in \code{obj}. The preprocessed time series 
+The function \code{\link{preprocess.tspred}} recursively calls the method \code{\link{preprocess}}
+on each \code{\link{processing}} object contained in \code{obj}. The preprocessed time series
 resulting from each of these calls is used as input to the next call. Thus, the order of the
-list of \code{\link{processing}} objects in \code{obj} becomes important. Finally, the produced 
+list of \code{\link{processing}} objects in \code{obj} becomes important. Finally, the produced
 preprocessed time series data are introduced in the structure of the \code{\link{tspred}} class object in \code{obj}.
 
 If any transformation method parameters are computed during preprocessing, they are duly updated
 in the structure of the \code{\link{tspred}} class object in \code{obj}. This is important not
 only for provenance and reprodutibility of the prediction process, but it is also crucial
 for the postprocessing step, since the same parameters must be used for reversing any transformations.
-Furthermore, if \code{prep_test} is \code{TRUE}, testing sets are preprocessed 
+Furthermore, if \code{prep_test} is \code{TRUE}, testing sets are preprocessed
 with the same parameters saved from preprocessing the training set.
 }
 \examples{
@@ -54,7 +54,7 @@ eval1 <- MSE_eval()
 #Defining a time series prediction process
 tspred_1 <- tspred(subsetting=proc1,
                    processing=list(BCT=proc2,
-                                   WT=proc3), 
+                                   WT=proc3),
                    modeling=modl1,
                    evaluating=list(MSE=eval1)
 )

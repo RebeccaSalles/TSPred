@@ -9,7 +9,7 @@
 \arguments{
 \item{obj}{An object of class \code{\link{tspred}} defining a particular time series prediction process.}
 
-\item{...}{Other parameters passed to the method \code{\link{postprocess}} of 
+\item{...}{Other parameters passed to the method \code{\link{postprocess}} of
 the \code{\link{processing}} objects from \code{obj}.}
 }
 \value{
@@ -22,14 +22,14 @@ reversing a particular set of transformation methods. Each transformation method
 by a \code{\link{processing}} object in the list contained in the \code{\link{tspred}} class object.
 }
 \details{
-The function \code{\link{postprocess.tspred}} recursively calls the method \code{\link{postprocess}} 
-on each \code{\link{processing}} object contained in \code{obj} in the inverse order 
-as done by \code{\link{preprocess.tspred}}. The postprocessed predictions 
-resulting from each of these calls is used as input to the next call. Finally, the produced 
+The function \code{\link{postprocess.tspred}} recursively calls the method \code{\link{postprocess}}
+on each \code{\link{processing}} object contained in \code{obj} in the inverse order
+as done by \code{\link{preprocess.tspred}}. The postprocessed predictions
+resulting from each of these calls is used as input to the next call. Finally, the produced
 postprocessed time series predictions are introduced in the structure of the \code{\link{tspred}} class object in \code{obj}.
 
 The same transformation method parameters used/computed during preprocessing, duly saved
-in the structure of the \code{\link{tspred}} class object in \code{obj}, are used for 
+in the structure of the \code{\link{tspred}} class object in \code{obj}, are used for
 reversing the transformations during postprocessing.
 }
 \examples{
@@ -50,7 +50,7 @@ eval1 <- MSE_eval()
 #Defining a time series prediction process
 tspred_1 <- tspred(subsetting=proc1,
                    processing=list(BCT=proc2,
-                                   WT=proc3), 
+                                   WT=proc3),
                    modeling=modl1,
                    evaluating=list(MSE=eval1)
 )

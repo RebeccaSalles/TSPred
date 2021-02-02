@@ -6,13 +6,13 @@ sourceDir <- function(path, trace = TRUE, ...) {
     if(trace) cat("\n")
   }
 }
-sourceDir("C:/Users/Rebecca/OneDrive/Documentos/TSPred/R")
+sourceDir("C:/Users/Rebecca/OneDrive/Documentos/GitHub/TSPred/R")
 
 #Load all artifacts of the package to the environment
 devtools::load_all()
 
 #Resave data objects (datasets) as compressed files (required by CRAN)
-path <- "C:/Users/Rebecca/OneDrive/Documentos/TSPred/data"
+path <- "C:/Users/Rebecca/OneDrive/Documentos/GitHub/TSPred/data"
 tools::resaveRdaFiles(path, compress="xz")
 
 #Constructs package documentation based on roxygen2

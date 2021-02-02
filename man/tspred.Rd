@@ -62,8 +62,8 @@ which are defined in a \code{tspred} class object.
 
   #Defining a time series prediction process
   tspred_1 <- tspred(subsetting=proc1,
-                     processing=list(BCT=proc2, 
-                                     WT=proc3), 
+                     processing=list(BCT=proc2,
+                                     WT=proc3),
                      modeling=modl1,
                      evaluating=list(MSE=eval1,
                                      MAPE=eval2)
@@ -73,13 +73,13 @@ which are defined in a \code{tspred} class object.
 	 #Obtaining objects of the processing class
   proc4 <- SW(window_len = 6)
   proc5 <- MinMax()
-  
+
   #Obtaining objects of the modeling class
   modl2 <- NNET(size=5,sw=proc4,proc=list(MM=proc5))
-  
+
   #Defining a time series prediction process
   tspred_2 <- tspred(subsetting=proc1,
-                     processing=list(BCT=proc2, 
+                     processing=list(BCT=proc2,
                                      WT=proc3),
                      modeling=modl2,
                      evaluating=list(MSE=eval1,

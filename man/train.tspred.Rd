@@ -21,9 +21,9 @@ based on a particular model training method. The model training method is define
 by a \code{\link{modeling}} object contained in the \code{\link{tspred}} class object.
 }
 \details{
-The function \code{\link{train.tspred}} calls the method \code{\link{train}} 
+The function \code{\link{train.tspred}} calls the method \code{\link{train}}
 on the \code{\link{modeling}} object for each time series contained in \code{obj}.
-Finally, the produced time series model is introduced in the structure of the 
+Finally, the produced time series model is introduced in the structure of the
 \code{\link{tspred}} class object in \code{obj}.
 
 If any modeling parameters are computed during training, they are duly updated
@@ -47,7 +47,7 @@ eval1 <- MSE_eval()
 #Defining a time series prediction process
 tspred_1 <- tspred(subsetting=proc1,
                    processing=list(BCT=proc2,
-                                   WT=proc3), 
+                                   WT=proc3),
                    modeling=modl1,
                    evaluating=list(MSE=eval1)
 )

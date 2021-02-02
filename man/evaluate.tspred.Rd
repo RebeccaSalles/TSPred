@@ -11,7 +11,7 @@
 
 \item{fitness}{Should the function compute fitness quality metrics?}
 
-\item{...}{Other parameters passed to the method \code{\link{evaluate}} of 
+\item{...}{Other parameters passed to the method \code{\link{evaluate}} of
 the \code{\link{evaluating}} objects from \code{obj}.}
 }
 \value{
@@ -25,7 +25,7 @@ based on a particular metric. Each metric is defined
 by an \code{\link{evaluating}} object in the list contained in the \code{\link{tspred}} class object.
 }
 \details{
-The function \code{\link{evaluate.tspred}} calls the method \code{\link{evaluate}} 
+The function \code{\link{evaluate.tspred}} calls the method \code{\link{evaluate}}
 on each \code{\link{evaluating}} object contained in \code{obj}. It uses each trained model,
 the testing set and the time series predictions contained in \code{obj} to compute the metrics.
 Finally, the produced quality metrics are introduced in the structure of the \code{\link{tspred}}
@@ -49,7 +49,7 @@ eval1 <- MSE_eval()
 #Defining a time series prediction process
 tspred_1 <- tspred(subsetting=proc1,
                    processing=list(BCT=proc2,
-                                   WT=proc3), 
+                                   WT=proc3),
                    modeling=modl1,
                    evaluating=list(MSE=eval1)
 )

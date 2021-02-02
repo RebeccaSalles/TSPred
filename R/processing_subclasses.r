@@ -4,7 +4,7 @@
 #' processing method based on a particular time series transformation.
 #'
 #' @section Mapping-based nonstationary transformation methods:
-#' 	Logarithmic transform. \code{prep_func} set as \code{\link[TSPred]{LogT}} 
+#' 	LT: Logarithmic transform. \code{prep_func} set as \code{\link[TSPred]{LogT}} 
 #'  and \code{postp_func} set as \code{\link[TSPred]{LogT.rev}}.
 #'
 #' @param prep_par List of named parameters required by \code{prep_func}.
@@ -21,7 +21,7 @@
 #'
 #' @keywords processing transformation preprocessing postprocessing
 #' 
-#' @rdname LT
+#' @rdname transformation_methods
 #' @export LT
 #Subclass LT
 LT <- function(base = exp(1)){ #::TSPred
@@ -39,9 +39,9 @@ summary.LT <- function(object,...){
 
 
 #Subclass BCT
-#' @rdname LT
+#' @rdname transformation_methods
 #' @section Mapping-based nonstationary transformation methods:
-#' 	Box-Cox transform. \code{prep_func} set as \code{\link[TSPred]{BCT}} 
+#' 	BoxCoxT: Box-Cox transform. \code{prep_func} set as \code{\link[TSPred]{BCT}} 
 #'  and \code{postp_func} set as \code{\link[TSPred]{BCT.rev}}.
 #' @param lambda See \code{\link[TSPred]{BCT}}
 #' @export
@@ -73,9 +73,9 @@ summary.BoxCoxT <- function(object,...){
 
 
 #Subclass WT  #::TSPred
-#' @rdname LT
+#' @rdname transformation_methods
 #' @section Splitting-based nonstationary transformation methods:
-#' 	Wavelet transform. \code{prep_func} set as \code{\link[TSPred]{WaveletT}} 
+#' 	WT: Wavelet transform. \code{prep_func} set as \code{\link[TSPred]{WaveletT}} 
 #'  and \code{postp_func} set as \code{\link[TSPred]{WaveletT.rev}}.
 #' @param level See \code{\link[TSPred]{WaveletT}}
 #' @param filter See \code{\link[TSPred]{WaveletT}}
@@ -119,9 +119,9 @@ summary.WT <- function(object,...){
 
 
 #Subclass subset
-#' @rdname LT
+#' @rdname transformation_methods
 #' @section Data subsetting methods:
-#' 	Subsetting data into training and testing sets. \code{prep_func} set as \code{\link[TSPred]{train_test_subset}} 
+#' 	subsetting: Subsetting data into training and testing sets. \code{prep_func} set as \code{\link[TSPred]{train_test_subset}} 
 #'  and \code{postp_func} set to \code{NULL}.
 #' @param train_perc See \code{\link[TSPred]{train_test_subset}}
 #' @param test_len See \code{\link[TSPred]{train_test_subset}}
@@ -144,9 +144,9 @@ summary.subsetting <- function(object,...){
 
 
 #Subclass sw
-#' @rdname LT
+#' @rdname transformation_methods
 #' @section Data subsetting methods:
-#' 	Sliding windows. \code{prep_func} set as \code{\link[TSPred]{sw}} 
+#' 	SW: Sliding windows. \code{prep_func} set as \code{\link[TSPred]{sw}} 
 #'  and \code{postp_func} set to \code{NULL}.
 #' @param window_len See \code{\link[TSPred]{sw}}
 #' @export
@@ -162,7 +162,6 @@ preprocess.SW <- function(obj,data,...,map=TRUE){
   
   NextMethod(obj,data,...,map=map)
 }
-
 is.SW <- function(sw_obj){
   methods::is(sw_obj,"SW")
 }
@@ -176,9 +175,9 @@ summary.SW <- function(object,...){
 
 
 #Subclass NAS
-#' @rdname LT
+#' @rdname transformation_methods
 #' @section Methods for handling missing values:
-#' 	Missing values treatment. \code{prep_func} set as parameter \code{na.action}
+#' 	NAS: Missing values treatment. \code{prep_func} set as parameter \code{na.action}
 #'  and \code{postp_func} set to \code{NULL}.
 #' @param na.action Function for handling missing values in time series data
 #' @export
@@ -200,9 +199,9 @@ summary.NAS <- function(object,...){
 
 
 #Subclass minmax
-#' @rdname LT
+#' @rdname transformation_methods
 #' @section Normalization methods:
-#' 	MinMax normalization. \code{prep_func} set as \code{\link[TSPred]{minmax}} 
+#' 	MinMax: MinMax normalization. \code{prep_func} set as \code{\link[TSPred]{minmax}} 
 #'  and \code{postp_func} set to \code{\link[TSPred]{minmax.rev}}.
 #' @param min See \code{\link[TSPred]{minmax}}
 #' @param max See \code{\link[TSPred]{minmax}}
@@ -235,9 +234,9 @@ summary.MinMax <- function(object,...){
 
 
 #Subclass AN
-#' @rdname LT
+#' @rdname transformation_methods
 #' @section Normalization methods:
-#' 	Adaptive normalization. \code{prep_func} set as \code{\link[TSPred]{an}} 
+#' 	AN: Adaptive normalization. \code{prep_func} set as \code{\link[TSPred]{an}} 
 #'  and \code{postp_func} set to \code{\link[TSPred]{an.rev}}.
 #' @param min See \code{\link[TSPred]{an}}
 #' @param max See \code{\link[TSPred]{an}}
@@ -273,9 +272,9 @@ summary.AN <- function(object,...){
 }
 
 #Subclass DIFF
-#' @rdname LT
+#' @rdname transformation_methods
 #' @section Mapping-based nonstationary transformation methods:
-#' 	Differencing. \code{prep_func} set as \code{\link[TSPred]{Diff}} 
+#' 	DIFF: Differencing. \code{prep_func} set as \code{\link[TSPred]{Diff}} 
 #'  and \code{postp_func} set as \code{\link[TSPred]{Diff.rev}}.
 #' @param lag See \code{\link[TSPred]{Diff}}
 #' @param differences See \code{\link[TSPred]{Diff}}
@@ -314,9 +313,9 @@ summary.DIFF <- function(object,...){
 
 
 #Subclass MAS
-#' @rdname LT
+#' @rdname transformation_methods
 #' @section Mapping-based nonstationary transformation methods:
-#' 	Moving average smoothing. \code{prep_func} set as \code{\link[TSPred]{mas}} 
+#' 	MAS: Moving average smoothing. \code{prep_func} set as \code{\link[TSPred]{mas}} 
 #'  and \code{postp_func} set as \code{\link[TSPred]{mas.rev}}.
 #' @param order See \code{\link[TSPred]{mas}}
 #' @export
@@ -349,9 +348,9 @@ summary.MAS <- function(object,...){
 
 
 #Subclass PCT
-#' @rdname LT
+#' @rdname transformation_methods
 #' @section Mapping-based nonstationary transformation methods:
-#' 	Percentage change transform. \code{prep_func} set as \code{\link[TSPred]{pct}} 
+#' 	PCT: Percentage change transform. \code{prep_func} set as \code{\link[TSPred]{pct}} 
 #'  and \code{postp_func} set as \code{\link[TSPred]{pct.rev}}.
 #' @export
 PCT <- function(postp_par=NULL){
@@ -373,9 +372,9 @@ preprocess.PCT <- function(obj,data,...,map=TRUE){
 }
 
 #Subclass EMD  #::TSPred
-#' @rdname LT
+#' @rdname transformation_methods
 #' @section Splitting-based nonstationary transformation methods:
-#' 	Empirical mode decomposition. \code{prep_func} set as \code{\link[TSPred]{emd}} 
+#' 	EMD: Empirical mode decomposition. \code{prep_func} set as \code{\link[TSPred]{emd}} 
 #'  and \code{postp_func} set as \code{\link[TSPred]{emd.rev}}.
 #' @param num_imfs See \code{\link[TSPred]{emd}}
 #' @param meaningfulImfs See \code{\link[TSPred]{emd}}

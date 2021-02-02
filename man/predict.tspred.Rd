@@ -12,7 +12,7 @@
 \item{onestep}{Should the function produce one-step ahead predictions?
 If \code{FALSE}, a multi-step ahead prediction approach is adopted.}
 
-\item{...}{Other parameters passed to the method \code{\link{predict}} of 
+\item{...}{Other parameters passed to the method \code{\link{predict}} of
 the \code{\link{modeling}} object from \code{object}.}
 }
 \value{
@@ -25,9 +25,9 @@ based on a particular trained model and a prediction method. The model training 
 by a \code{\link{modeling}} object contained in the \code{\link{tspred}} class object.
 }
 \details{
-The function \code{\link{predict.tspred}} calls the method \code{\link{predict}} 
+The function \code{\link{predict.tspred}} calls the method \code{\link{predict}}
 on the \code{\link{modeling}} objects for each trained model and time series contained in \code{object}.
-Finally, the produced time series predictions are introduced in the structure of the 
+Finally, the produced time series predictions are introduced in the structure of the
 \code{\link{tspred}} class object in \code{object}.
 }
 \examples{
@@ -48,7 +48,7 @@ eval1 <- MSE_eval()
 #Defining a time series prediction process
 tspred_1 <- tspred(subsetting=proc1,
                    processing=list(BCT=proc2,
-                                   WT=proc3), 
+                                   WT=proc3),
                    modeling=modl1,
                    evaluating=list(MSE=eval1)
 )

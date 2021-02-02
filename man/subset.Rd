@@ -12,7 +12,7 @@ subset(obj, ...)
 \arguments{
 \item{obj}{An object of class \code{\link{tspred}} defining a particular time series prediction process.}
 
-\item{...}{Other parameters passed to the method \code{\link{preprocess}} of 
+\item{...}{Other parameters passed to the method \code{\link{preprocess}} of
 object \code{\link{subsetting}} from \code{obj}.}
 
 \item{data}{A list of time series to be transformed.}
@@ -22,14 +22,14 @@ An object of class \code{tspred} with updated structure containing
 the produced training and testing sets of time series data.
 }
 \description{
-\code{subset} is a generic function for subsetting time series data 
+\code{subset} is a generic function for subsetting time series data
 into training and testing sets. The function invokes particular \emph{methods} which
 depend on the class of the first argument.
 }
 \details{
-The function \code{\link{subset.tspred}} calls the method \code{\link{preprocess}} 
-on the \code{\link{subsetting}} object from \code{obj}. The produced training and 
-testing sets of time series data are introduced in the structure 
+The function \code{\link{subset.tspred}} calls the method \code{\link{preprocess}}
+on the \code{\link{subsetting}} object from \code{obj}. The produced training and
+testing sets of time series data are introduced in the structure
 of the \code{\link{tspred}} class object in \code{obj}.
 }
 \examples{
@@ -47,7 +47,7 @@ eval1 <- MSE_eval()
 
 #Defining a time series prediction process
 tspred_1 <- tspred(subsetting=proc1,
-                   processing=list(BCT=proc2), 
+                   processing=list(BCT=proc2),
                    modeling=modl1,
                    evaluating=list(MSE=eval1)
 )

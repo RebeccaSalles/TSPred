@@ -107,59 +107,59 @@ processing method based on a particular time series transformation.
 }
 \section{Mapping-based nonstationary transformation methods}{
 
-	Logarithmic transform. \code{prep_func} set as \code{\link[TSPred]{LogT}} 
+	LT: Logarithmic transform. \code{prep_func} set as \code{\link[TSPred]{LogT}} 
  and \code{postp_func} set as \code{\link[TSPred]{LogT.rev}}.
 
 
-	Box-Cox transform. \code{prep_func} set as \code{\link[TSPred]{BCT}} 
+	BoxCoxT: Box-Cox transform. \code{prep_func} set as \code{\link[TSPred]{BCT}} 
  and \code{postp_func} set as \code{\link[TSPred]{BCT.rev}}.
 
 
-	Differencing. \code{prep_func} set as \code{\link[TSPred]{Diff}} 
+	DIFF: Differencing. \code{prep_func} set as \code{\link[TSPred]{Diff}} 
  and \code{postp_func} set as \code{\link[TSPred]{Diff.rev}}.
 
 
-	Moving average smoothing. \code{prep_func} set as \code{\link[TSPred]{mas}} 
+	MAS: Moving average smoothing. \code{prep_func} set as \code{\link[TSPred]{mas}} 
  and \code{postp_func} set as \code{\link[TSPred]{mas.rev}}.
 
 
-	Percentage change transform. \code{prep_func} set as \code{\link[TSPred]{pct}} 
+	PCT: Percentage change transform. \code{prep_func} set as \code{\link[TSPred]{pct}} 
  and \code{postp_func} set as \code{\link[TSPred]{pct.rev}}.
 }
 
 \section{Splitting-based nonstationary transformation methods}{
 
-	Wavelet transform. \code{prep_func} set as \code{\link[TSPred]{WaveletT}} 
+	WT: Wavelet transform. \code{prep_func} set as \code{\link[TSPred]{WaveletT}} 
  and \code{postp_func} set as \code{\link[TSPred]{WaveletT.rev}}.
 
 
-	Empirical mode decomposition. \code{prep_func} set as \code{\link[TSPred]{emd}} 
+	EMD: Empirical mode decomposition. \code{prep_func} set as \code{\link[TSPred]{emd}} 
  and \code{postp_func} set as \code{\link[TSPred]{emd.rev}}.
 }
 
 \section{Data subsetting methods}{
 
-	Subsetting data into training and testing sets. \code{prep_func} set as \code{\link[TSPred]{train_test_subset}} 
+	subsetting: Subsetting data into training and testing sets. \code{prep_func} set as \code{\link[TSPred]{train_test_subset}} 
  and \code{postp_func} set to \code{NULL}.
 
 
-	Sliding windows. \code{prep_func} set as \code{\link[TSPred]{sw}} 
+	SW: Sliding windows. \code{prep_func} set as \code{\link[TSPred]{sw}} 
  and \code{postp_func} set to \code{NULL}.
 }
 
 \section{Methods for handling missing values}{
 
-	Missing values treatment. \code{prep_func} set as parameter \code{na.action}
+	NAS: Missing values treatment. \code{prep_func} set as parameter \code{na.action}
  and \code{postp_func} set to \code{NULL}.
 }
 
 \section{Normalization methods}{
 
-	MinMax normalization. \code{prep_func} set as \code{\link[TSPred]{minmax}} 
+	MinMax: MinMax normalization. \code{prep_func} set as \code{\link[TSPred]{minmax}} 
  and \code{postp_func} set to \code{\link[TSPred]{minmax.rev}}.
 
 
-	Adaptive normalization. \code{prep_func} set as \code{\link[TSPred]{an}} 
+	AN: Adaptive normalization. \code{prep_func} set as \code{\link[TSPred]{an}} 
  and \code{postp_func} set to \code{\link[TSPred]{an.rev}}.
 }
 
