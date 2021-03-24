@@ -17,7 +17,7 @@ __Available at CRAN:__ <https://CRAN.R-project.org/package=TSPred>
 
 __Reference manual:__ [TSPred.pdf](http://cran.r-project.org/web/packages/TSPred/TSPred.pdf)
 
-__Acknowledgements:__ The authors thank CNPq, CAPES (finance code 001), and FAPERJ for partially sponsoring this research.
+__Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sponsoring this research.
 
 ---
 ### Usage:
