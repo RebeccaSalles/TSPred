@@ -21,13 +21,13 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
 
 ---
 ### Usage:
-~~~~~~
+```r
 #Install TSPred package
 > install.packages("TSPred")
 
 #Load TSPred package
 > library("TSPred")
-~~~~~~
+```
 #####
 
 #### ARIMA model prediction application using _TSPred_
