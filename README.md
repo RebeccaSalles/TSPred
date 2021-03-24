@@ -95,7 +95,7 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
  > model <- my.model(train_par = list(par1="a", par2="b"), pred_par = list(par3="c"))
 ```
 
-#### 
+---
 ### Other relevant functions:
 #### Fittest linear models:
 * __fittestLM__ - Automatically finding fittest linear model for prediction.
