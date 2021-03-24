@@ -39,8 +39,7 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
 #defining the time series application
  > tspred_arima <- tspred( subsetting = subsetting(test_len = 20),
                            modeling = ARIMA(), 
-                           evaluating = list(MSE = MSE(),AIC = AIC())
-                         )
+                           evaluating = list(MSE = MSE(),AIC = AIC()) )
 
 #performing the prediction application and obtaining results
  > tspred_arima_res <- workflow( tspred_arima, data = CATS[5] )
@@ -68,7 +67,7 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
  > tspred_mlm <- tspred( subsetting = proc_subset, 
                          processing = list(BCT = proc_bct, WT = proc_wt), 
                          modeling = modl_nnet,
-                         evaluating = list(MSE = eval_mse))
+                         evaluating = list(MSE = eval_mse) )
 
 #Running the time series prediction process and obtaining results
  > tspred_mlm_res <- tspred_mlm %>% 
@@ -87,10 +86,9 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
 ```r
 #Subclass my.model
  > my.model <- function(train_par=NULL, pred_par=NULL){
-      MLM(train_func = my.model.func, train_par=c(train_par),
-          pred_func = my.model.pred.func, pred_par=c(pred_par),
-          method="Name of my model", subclass="my.model"
-         )
+      MLM(train_func = my.model.func, train_par = c(train_par),
+          pred_func = my.model.pred.func, pred_par = c(pred_par),
+          method = "Name of my model", subclass = "my.model" )
  }
 
 #Obtaining an instance of the subclass my.model
