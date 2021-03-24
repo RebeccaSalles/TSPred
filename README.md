@@ -6,12 +6,12 @@
 
 ## TSPred Package for R : Functions for Benchmarking Time Series Prediction
 
-__Current Version:__ 4.0
-__Date:__ 2018-06
+__Current Version:__ 5.1
+__Date:__ 2021-01
 
 __Authors:__ Rebecca Pontes Salles (<rebeccapsalles@acm.org>) and Eduardo Ogasawara (<eogasawara@ieee.org>)
  
-__Description:__ Functions for time series preprocessing, decomposition, prediction and accuracy assessment using automatic linear modelling. The generated linear models and its yielded prediction errors can be used for benchmarking other time series prediction methods and for creating a demand for the refinement of such methods. For this purpose, benchmark data from prediction competitions may be used.
+__Description:__ Functions for defining and conducting a time series prediction process including pre(post)processing, decomposition, modeling, prediction, and accuracy assessment. The generated models and their yielded prediction errors can be used for benchmarking other time series prediction methods and for creating a demand for the refinement of such methods. For this purpose, benchmark data from prediction competitions may be used.
 
 __Available at CRAN:__ <https://CRAN.R-project.org/package=TSPred>
 
