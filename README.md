@@ -32,7 +32,7 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
 
 #### ARIMA model prediction application using _TSPred_
 
-~~~~~~
+```r
 #loading CATS dataset
  > data("CATS")
 
@@ -42,10 +42,10 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
 
 #performing the prediction application and obtaining results
  > tspred_arima_res <- workflow(tspred_arima, data = CATS[5])
-~~~~~~
+```
 
 #### Definition of components/steps of a time series prediction process in _TSPred_
-~~~~~~
+```r
 #Obtaining objects of the processing class
  > proc_subset <- subsetting(test_len = 20)
  > proc_bct <- BCT()
@@ -58,10 +58,10 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
 
 #Obtaining objects of the evaluating class
  > eval_mse <- MSE()
-~~~~~~
+```
 
 #### MLM prediction application using _TSPred_
-~~~~~~
+```r
 #Defining a time series prediction process
  > tspred_mlm <- tspred(subsetting = proc_subset, 
  processing = list(BCT = proc_bct, WT = proc_wt), 
@@ -74,10 +74,10 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
 
 #Benchmarking tspred objects
  > bmrk_results <- benchmark(tspred_arima_res, list(tspred_mlm_res))
-~~~~~~
+```
 
 #### A user-defined MLM using _TSPred_
-~~~~~~
+```r
 #Subclass my.model
  > my.model <- function(train_par=NULL, pred_par=NULL){
  MLM(train_func = my.model.func, train_par=c(train_par),
@@ -88,7 +88,7 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
 #Obtaining an instance of the subclass my.model
  > model <- my.model(train_par = list(par1 = "a", par2 = "b"), 
  pred_par = list(par3 = "c"))
-~~~~~~
+```
 
 #### 
 ### Other relevant functions:
