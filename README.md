@@ -38,23 +38,25 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
 
 #defining the time series application
  > tspred_arima <- tspred( subsetting = subsetting(test_len = 20),
- modeling = ARIMA(), evaluating = list(MSE = MSE(),AIC = AIC()) )
+                           modeling = ARIMA(), 
+                           evaluating = list(MSE = MSE(),AIC = AIC())
+                         )
 
 #performing the prediction application and obtaining results
- > tspred_arima_res <- workflow(tspred_arima, data = CATS[5])
+ > tspred_arima_res <- workflow( tspred_arima, data = CATS[5] )
 ```
 
 #### Definition of components/steps of a time series prediction process in _TSPred_
 ```r
 #Obtaining objects of the processing class
- > proc_subset <- subsetting(test_len = 20)
+ > proc_subset <- subsetting( test_len = 20 )
  > proc_bct <- BCT()
- > proc_wt <- WT(level = 1, filter = "bl14")
- > proc_sw <- SW(window_len = 6)
+ > proc_wt <- WT( level = 1, filter = "bl14" )
+ > proc_sw <- SW( window_len = 6 )
  > proc_mm <- MinMax()
 
 #Obtaining objects of the modeling class
- > modl_nnet <- NNET(size = 5, sw = proc_sw, proc = list(MM = proc_mm))
+ > modl_nnet <- NNET( size = 5, sw = proc_sw, proc = list(MM = proc_mm) )
 
 #Obtaining objects of the evaluating class
  > eval_mse <- MSE()
@@ -63,31 +65,36 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
 #### MLM prediction application using _TSPred_
 ```r
 #Defining a time series prediction process
- > tspred_mlm <- tspred(subsetting = proc_subset, 
- processing = list(BCT = proc_bct, WT = proc_wt), 
- modeling = modl_nnet, evaluating = list(MSE = eval_mse))
+ > tspred_mlm <- tspred( subsetting = proc_subset, 
+                         processing = list(BCT = proc_bct, WT = proc_wt), 
+                         modeling = modl_nnet,
+                         evaluating = list(MSE = eval_mse))
 
 #Running the time series prediction process and obtaining results
- > tspred_mlm_res <- tspred_mlm %>% subset(data = CATS[5]) %>%
- preprocess(prep_test = TRUE) %>% train() %>%
- predict(input_test_data = TRUE) %>% postprocess() %>% evaluate()
+ > tspred_mlm_res <- tspred_mlm %>% 
+                     subset(data = CATS[5]) %>%
+                     preprocess(prep_test = TRUE) %>% 
+                     train() %>%
+                     predict(input_test_data = TRUE) %>% 
+                     postprocess() %>% 
+                     evaluate()
 
 #Benchmarking tspred objects
- > bmrk_results <- benchmark(tspred_arima_res, list(tspred_mlm_res))
+ > bmrk_results <- benchmark( tspred_arima_res, list(tspred_mlm_res) )
 ```
 
 #### A user-defined MLM using _TSPred_
 ```r
 #Subclass my.model
  > my.model <- function(train_par=NULL, pred_par=NULL){
- MLM(train_func = my.model.func, train_par=c(train_par),
- pred_func = my.model.pred.func, pred_par=c(pred_par),
- method="Name of my model", subclass="my.model")
+      MLM(train_func = my.model.func, train_par=c(train_par),
+          pred_func = my.model.pred.func, pred_par=c(pred_par),
+          method="Name of my model", subclass="my.model"
+         )
  }
 
 #Obtaining an instance of the subclass my.model
- > model <- my.model(train_par = list(par1 = "a", par2 = "b"), 
- pred_par = list(par3 = "c"))
+ > model <- my.model(train_par = list(par1="a", par2="b"), pred_par = list(par3="c"))
 ```
 
 #### 
