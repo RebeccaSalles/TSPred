@@ -4,8 +4,7 @@
 [![downloads](http://cranlogs.r-pkg.org/badges/TSPred)](http://cranlogs.r-pkg.org/badges/TSPred)
 [![Research software impact](http://depsy.org/api/package/cran/TSPred/badge.svg)](http://depsy.org/package/r/TSPred)
 
-## TSPred Package for R : Functions for Benchmarking Time Series Prediction
-
+## TSPred Package for R : Framework for Nonstationary Time Series Prediction
 __Current Version:__ 5.1
 __Date:__ 2021-01
 
