@@ -96,6 +96,15 @@ __Acknowledgements:__ The authors thank CNPq, CAPES, and FAPERJ for partially sp
 
 ---
 ### Other relevant functions:
+#### Nonstationarity treatment:
+* __LogT__ - Logarithmic transform.
+* __BCT__ - Box-Cox transform.
+* __an__ - Adaptive normalization.
+* __Diff__ - Differencing. MAS
+* __mas__ - Moving average smoothing.
+* __pct__ - Percentage change transform.
+* __WaveletT__ - Wavelet transform.
+* __emd__ - Empirical mode decomposition.
 #### Fittest linear models:
 * __fittestLM__ - Automatically finding fittest linear model for prediction.
 * __fittestArima__ - Automatic ARIMA fitting, prediction and accuracy evaluation.
