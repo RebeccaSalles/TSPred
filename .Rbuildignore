@@ -8,3 +8,4 @@
 ^pkg-source$
 ^man-roxygen$
 ^cran-comments.md$
+^class-diagrams$

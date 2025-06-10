@@ -1,4 +1,5 @@
 #Updating parameters
+#' @keywords internal
 updt <- function(obj,...){
   UseMethod("updt")
 }

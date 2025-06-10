@@ -30,9 +30,9 @@ is.result <- function(result_obj){
   methods::is(result_obj,"result")
 }
 
-# #' @export
-updt.result <- function(result_obj,...){
-  updt(result_obj$obj,...)
+#' @export
+updt.result <- function(obj,...){
+  updt(obj$obj,...)
 }
 
 
@@ -72,8 +72,12 @@ is.results <- function(results_obj){
   methods::is(results_obj,"results")
 }
 
-# #' @export
-updt.results <- function(obj,par=NULL,refpar=NULL,value=NULL){
+#' @export
+updt.results <- function(obj,...){
+  args <- list(...)
+  par    <- if (!is.null(args$par)) args$par else NULL
+  refpar <- if (!is.null(args$refpar)) args$refpar else NULL
+  value  <- if (!is.null(args$value)) args$value else NULL
 
   if(is.null(refpar)) refpar <- par
 
@@ -131,8 +135,9 @@ res.results <- function(obj,...){
   return(res)
 }
 
-# #' @exportS3Method base::summary
-summary.results <- function(obj,...){
+#' @export
+summary.results <- function(object,...){
+  obj <- object
   for(r in c(1:length(obj$results))){
     if(length(obj$results)>1) cat("\nData object",r,"of",length(obj$results),":",attr(obj$results[[r]]$res,"name"),"\n")
     summary(obj$results[[r]]$obj)

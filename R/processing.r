@@ -161,13 +161,18 @@ summary.processing <- function(object,...){
   if(is.null(obj$prep$par) && is.null(obj$postp$par)) cat("Parameters: N/A\n")
 }
 
-# #' @export
-updt.processing <- function(obj,par=NULL,value=NULL){
+#' @export
+updt.processing <- function(obj,...){
+  args <- list(...)
+  par   <- if (!is.null(args$par)) args$par else NULL
+  value <- if (!is.null(args$value)) args$value else NULL
+
   if(par %in% names(obj$prep$par)) obj$prep$par[[par]] <- value
   if(par %in% names(obj$postp$par)) obj$postp$par[[par]] <- value
 
   return(obj)
 }
+
 
 is.processing.result <- function(res){
   methods::is(res,"list") && names(res)==c("obj","res")

@@ -77,7 +77,8 @@ is.pred <- function(pred_obj){
 }
 
 #' @export
-predict.pred <- function(obj,...){
+predict.pred <- function(object,...){
+  obj <- object
   do.call(obj$func,c(list(...),obj$par))
 }
 
