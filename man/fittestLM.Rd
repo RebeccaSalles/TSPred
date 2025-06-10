@@ -16,8 +16,8 @@ fittestLM(
   maxorder = 5,
   raw = FALSE,
   initQ = NULL,
-  rank.by = c("MSE", "NMSE", "MAPE", "sMAPE", "MaxError", "AIC", "AICc", "BIC",
-    "logLik", "errors", "fitness"),
+  rank.by = c("MSE", "NMSE", "MAPE", "sMAPE", "MaxError", "AIC", "AICc", "BIC", "logLik",
+    "errors", "fitness"),
   ...
 )
 }
@@ -94,7 +94,7 @@ is selected based on the criteria in \code{rank.by}.
 The ranking criteria in \code{rank.by} may be set as a prediction error
 measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}},
 \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria
-(such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or
+(such as \code{\link{AIC}}, \code{\link[MuMIn]{AICc}}, \code{\link{BIC}} or
 \code{\link{logLik}}). See \code{\link{fittestArima}},
 \code{\link{fittestArimaKF}}, \code{\link{fittestPolyR}} or
 \code{\link{fittestPolyRKF}}.

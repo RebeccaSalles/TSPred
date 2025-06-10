@@ -30,10 +30,10 @@ including non-seasonal and seasonal orders and drift.
 }
 \details{
 The ARIMA model whose adjusted parameters are presented is automatically
-fitted by the \code{\link{auto.arima}} function in the forecast package. In
+fitted by the \code{\link[forecast]{auto.arima}} function in the forecast package. In
 order to avoid drift errors, the function introduces an auxiliary regressor
 whose values are a sequence of consecutive integer numbers starting from 1.
-For more details, see the \code{\link{auto.arima}} function in the
+For more details, see the \code{\link[forecast]{auto.arima}} function in the
 \code{forecast} package.
 }
 \references{

@@ -36,7 +36,7 @@ processing method based on a particular time series transformation.
 }
 \examples{
 base <- exp(1)
-lt <- processing(prep_func=TSPred::LogT, prep_par=list(base=base), 
+lt <- processing(prep_func=TSPred::LogT, prep_par=list(base=base),
                  postp_func=TSPred::LogT.rev, postp_par=list(base=base),
                  method="Logarithmic transform", subclass="LT")
 summary(lt)

@@ -59,7 +59,7 @@ An object of class \code{modeling}.
 \description{
 Constructor for the \code{modeling} class representing a time series modeling
 and prediction method based on a particular model.
-The \code{modeling} class has two specialized subclasses \code{linear} and 
+The \code{modeling} class has two specialized subclasses \code{linear} and
 \code{MLM} reagarding linear models and machine learning based models, respectively.
 }
 \examples{
@@ -67,7 +67,7 @@ The \code{modeling} class has two specialized subclasses \code{linear} and
 forecast_mean <- function(...){
    do.call(forecast::forecast,c(list(...)))$mean
 }
-  
+
 l <- linear(train_func = forecast::auto.arima, pred_func = forecast_mean,
             method="ARIMA model", subclass="ARIMA")
 summary(l)

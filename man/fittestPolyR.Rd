@@ -14,8 +14,8 @@ fittestPolyR(
   raw = FALSE,
   na.action = stats::na.omit,
   level = 0.95,
-  rank.by = c("MSE", "NMSE", "MAPE", "sMAPE", "MaxError", "AIC", "AICc", "BIC",
-    "logLik", "errors", "fitness")
+  rank.by = c("MSE", "NMSE", "MAPE", "sMAPE", "MaxError", "AIC", "AICc", "BIC", "logLik",
+    "errors", "fitness")
 )
 }
 \arguments{
@@ -98,7 +98,7 @@ measures.
 }
 \details{
 A set with candidate polynomial regression models of order \code{order} is
-generated with help from the \code{\link{dredge}} function from the
+generated with help from the \code{\link[MuMIn]{dredge}} function from the
 \code{MuMIn} package. The candidate models are ranked acoording to the
 criteria in \code{rank.by} and the best ranked model is returned by the
 function.
@@ -112,7 +112,7 @@ the criteria in \code{rank.by} is selected.
 The ranking criteria in \code{rank.by} may be set as a prediction error
 measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}},
 \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria
-(such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or
+(such as \code{\link{AIC}}, \code{\link[MuMIn]{AICc}}, \code{\link{BIC}} or
 \code{\link{logLik}}). In the former case, the candidate models are used for
 time series prediction and the error measures are calculated by means of a
 cross-validation process. In the latter case, the candidate models are

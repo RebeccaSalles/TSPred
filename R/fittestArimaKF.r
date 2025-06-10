@@ -7,11 +7,11 @@
 #' accuracy, using the MSE, NMSE, MAPE, sMAPE and maximal error accuracy
 #' measures.
 #'
-#' A best ARIMA model is automatically fitted by the \code{\link{auto.arima}}
+#' A best ARIMA model is automatically fitted by the \code{\link[forecast]{auto.arima}}
 #' function in the \code{forecast} package. The coefficients of this model are
 #' then used as initial parameters for optimization of a state space model
-#' (\code{\link{SSModel}}) using the Kalman filter and functions of the
-#' \code{KFAS} package (see \code{\link{SSMarima}} and
+#' (\code{\link[KFAS]{SSModel}}) using the Kalman filter and functions of the
+#' \code{KFAS} package (see \code{\link[KFAS]{SSMarima}} and
 #' \code{\link[KFAS]{artransform}}).
 #'
 #' If \code{initQ} is \code{NULL}, it is automatically set as either
@@ -24,7 +24,7 @@
 #' The ranking criteria in \code{rank.by} may be set as a prediction error
 #' measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}},
 #' \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria
-#' (such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or
+#' (such as \code{\link{AIC}}, \code{\link[MuMIn]{AICc}}, \code{\link{BIC}} or
 #' \code{\link{logLik}}). In the former case, the candidate models are used for
 #' time series prediction and the error measures are calculated by means of a
 #' cross-validation process. In the latter case, the candidate models are
@@ -55,20 +55,20 @@
 #' which omits any missing values found in \code{timeseries} or
 #' \code{timeseries.test}.
 #' @param level Confidence level for prediction intervals. See the
-#' \code{\link{predict.SSModel}} function in the \code{KFAS} package.
+#' \code{\link[KFAS]{predict.SSModel}} function in the \code{KFAS} package.
 #' @param filtered If \code{filtered} is \code{TRUE}, Kalman filtered time
 #' series observations are used for prediction, otherwise, Kalman smoothed
 #' observations are used for prediction.
 #' @param initQ Numeric argument regarding the initial value for the covariance
 #' of disturbances parameter to be optimized over. The initial value to be
 #' optimized is set to \code{exp(initQ)}. See the \code{Q} argument of the
-#' \code{\link{SSMarima}} function in the \code{KFAS} package and the examples
-#' in \code{\link{KFAS}}. If \code{NULL}, \code{initQ} is automatically set.
+#' \code{\link[KFAS]{SSMarima}} function in the \code{KFAS} package and the examples
+#' in \code{\link[KFAS]{KFAS}}. If \code{NULL}, \code{initQ} is automatically set.
 #' See 'Details'.
 #' @param rank.by Character string. Criteria used for ranking candidate models
 #' generated using different options of values for \code{initQ}. Only used if
 #' \code{initQ} is \code{NULL}. Ignored otherwise. See 'Details'.
-#' @param ... Additional arguments passed to the \code{\link{auto.arima}}
+#' @param ... Additional arguments passed to the \code{\link[forecast]{auto.arima}}
 #' modelling function.
 #' @return A list with components: \item{model}{An object of class "SSModel"
 #' containing the best evaluated ARIMA model fitted with Kalman Filter.}
@@ -82,7 +82,7 @@
 #' with the components \code{mean}, \code{lower} and \code{upper}, containing
 #' the predictions of the best evaluated model and the lower and upper limits
 #' for prediction intervals, respectively. All components are time series. See
-#' \code{\link{predict.SSModel}}.} \item{MSE}{Numeric value of the resulting
+#' \code{\link[KFAS]{predict.SSModel}}.} \item{MSE}{Numeric value of the resulting
 #' MSE error of prediction. Require \code{timeseries.test}.}
 #' \item{NMSE}{Numeric value of the resulting NMSE error of prediction. Require
 #' \code{timeseries.test}.} \item{MAPE}{Numeric value of the resulting MAPE

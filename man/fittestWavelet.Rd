@@ -15,8 +15,8 @@ fittestWavelet(
   model = c("ets", "arima"),
   conf.level = 0.95,
   na.action = stats::na.omit,
-  rank.by = c("MSE", "NMSE", "MAPE", "sMAPE", "MaxError", "AIC", "AICc", "BIC",
-    "logLik", "errors", "fitness"),
+  rank.by = c("MSE", "NMSE", "MAPE", "sMAPE", "MaxError", "AIC", "AICc", "BIC", "logLik",
+    "errors", "fitness"),
   ...
 )
 }
@@ -116,7 +116,7 @@ The function automatically applies a maximal overlap discrete wavelet
 transform to a provided univariate time series. The resulting components of
 the decomposed series are used as base for predicting and returning the next
 n consecutive values of the provided univariate time series using also
-automatically fitted models (\code{\link{ets}} or \code{\link{arima}}). It
+automatically fitted models (\code{\link[forecast]{ets}} or \code{\link{arima}}). It
 also evaluates fitness and prediction accuracy of the produced models.
 }
 \details{
@@ -129,7 +129,7 @@ the decomposition (\code{n.levels} wavelet coefficients series and
 model fitting and prediction. If \code{model="arima"}, arima models are used
 and automatically fitted using the \code{\link[forecast]{auto.arima}}
 function. If \code{model="ets"}, the function fits
-\code{[forecast]\link{ets}} models. The set of predictions for all component
+\code{[forecast]\link[forecast]{ets}} models. The set of predictions for all component
 series are then reversed transformed in order to produce the next \code{h}
 consecutive values of the provided univariate time series in
 \code{timeseries}. See the \code{\link[wavelets]{imodwt}} function.
@@ -148,7 +148,7 @@ acoording to the criteria in \code{rank.by} are selected.
 The ranking criteria in \code{rank.by} may be set as a prediction error
 measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}},
 \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria
-(such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or
+(such as \code{\link{AIC}}, \code{\link[MuMIn]{AICc}}, \code{\link{BIC}} or
 \code{\link{logLik}}). In the former case, the candidate wavelet
 decompositions are used for time series prediction and the error measures
 are calculated by means of a cross-validation process. In the latter case,

@@ -14,8 +14,8 @@ fittestMAS(
   model = c("ets", "arima"),
   level = 0.95,
   na.action = stats::na.omit,
-  rank.by = c("MSE", "NMSE", "MAPE", "sMAPE", "MaxError", "AIC", "AICc", "BIC",
-    "logLik", "errors", "fitness"),
+  rank.by = c("MSE", "NMSE", "MAPE", "sMAPE", "MaxError", "AIC", "AICc", "BIC", "logLik",
+    "errors", "fitness"),
   ...
 )
 }
@@ -93,7 +93,7 @@ models and producing \code{rank.val}.}
 The function uses an automatically produced moving average smoother as base
 for predicting and returning the next n consecutive values of the provided
 univariate time series using an also automatically fitted model
-(\code{\link{ets}}/\code{\link{stlf}} or \code{\link{arima}}). It also
+(\code{\link[forecast]{ets}}/\code{\link[forecast]{stlf}} or \code{\link{arima}}). It also
 evaluates the fitness and prediction accuracy of the produced model.
 }
 \details{
@@ -101,7 +101,7 @@ The function produces a moving average smoother of \code{timeseries} with
 order \code{order} and uses it as base for model fitting and prediction. If
 \code{model="arima"}, an arima model is used and automatically fitted using
 the \code{\link[forecast]{auto.arima}} function. If \code{model="ets"}, the
-function fits an \code{[forecast]\link{ets}} model (if \code{timeseries} is
+function fits an \code{[forecast]\link[forecast]{ets}} model (if \code{timeseries} is
 non-seasonal or the seasonal period is 12 or less) or
 \code{\link[forecast]{stlf}} model (if the seasonal period is 13 or more).
 
@@ -119,7 +119,7 @@ selected.
 The ranking criteria in \code{rank.by} may be set as a prediction error
 measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}},
 \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria
-(such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or
+(such as \code{\link{AIC}}, \code{\link[MuMIn]{AICc}}, \code{\link{BIC}} or
 \code{\link{logLik}}). In the former case, the candidate models are used for
 time series prediction and the error measures are calculated by means of a
 cross-validation process. In the latter case, the candidate models are

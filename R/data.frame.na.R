@@ -103,7 +103,7 @@ data.frame.na <- function (..., row.names = NULL, check.rows = FALSE, check.name
                 xi1 <- xi[[j]]
                 if (is.vector(xi1) || is.factor(xi1))
                   xi[[j]] <- c(xi1, rep(NA, nr - nrows[i]))
-                else if (is.character(xi1) && class(xi1) == "AsIs")
+                else if (is.character(xi1) && inherits(xi1,"AsIs"))
                   xi[[j]] <- structure(c(xi1, rep(NA, nr - nrows[i])),
                     class = class(xi1))
                 else if (inherits(xi1, "Date") || inherits(xi1,

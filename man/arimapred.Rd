@@ -76,12 +76,12 @@ predicted values against the actual ones using the function
 }
 \details{
 The ARIMA model used for time series prediction is automatically fitted by
-the \code{\link{auto.arima}} function in the \code{forecast} package. In
+the \code{\link[forecast]{auto.arima}} function in the \code{forecast} package. In
 order to avoid drift errors, the function introduces an auxiliary regressor
 whose values are a sequence of consecutive integer numbers starting from 1.
 The fitted ARIMA model is used for prediction by the
 \code{\link{predict.Arima}} function in the \code{stats} package. For more
-details, see the \code{\link{auto.arima}} function in the \code{forecast}
+details, see the \code{\link[forecast]{auto.arima}} function in the \code{forecast}
 package and the \code{\link{predict.Arima}} function in the stats package.
 }
 \examples{
@@ -99,7 +99,7 @@ R.H. Shumway and D.S. Stoffer, 2010, Time Series Analysis and Its
 Applications: With R Examples. 3rd ed. 2011 edition ed. New York, Springer.
 }
 \seealso{
-\code{\link{auto.arima}}, \code{\link{predict.Arima}},
+\code{\link[forecast]{auto.arima}}, \code{\link{predict.Arima}},
 \code{\link{plotarimapred}}, \code{\link{marimapred}}
 }
 \author{

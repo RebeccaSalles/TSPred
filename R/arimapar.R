@@ -4,10 +4,10 @@
 #' including non-seasonal and seasonal orders and drift.
 #'
 #' @details The ARIMA model whose adjusted parameters are presented is automatically
-#' fitted by the \code{\link{auto.arima}} function in the forecast package. In
+#' fitted by the \code{\link[forecast]{auto.arima}} function in the forecast package. In
 #' order to avoid drift errors, the function introduces an auxiliary regressor
 #' whose values are a sequence of consecutive integer numbers starting from 1.
-#' For more details, see the \code{\link{auto.arima}} function in the
+#' For more details, see the \code{\link[forecast]{auto.arima}} function in the
 #' \code{forecast} package.
 #'
 #' @param timeseries A vector or univariate time series which contains the
@@ -27,7 +27,7 @@
 #' @author Rebecca Pontes Salles
 #' @references R.J. Hyndman and G. Athanasopoulos, 2013, Forecasting:
 #' principles and practice. OTexts.
-#' 
+#'
 #' R.H. Shumway and D.S. Stoffer, 2010, Time Series Analysis and Its
 #' Applications: With R Examples. 3rd ed. 2011 edition ed. New York, Springer.
 #'
@@ -46,15 +46,15 @@ arimapar <-
 function(timeseries, na.action=stats::na.omit, xreg=NULL){
   if(is.null(timeseries)) stop("timeseries is required and must have positive length")
   .Deprecated("arimaparameters","TSPred")
-  
+
   ts <- ts(na.action(timeseries))
-  
+
   nobs <- length(ts)
   reg <- cbind(1:nobs,xreg)
-  
+
   fit <- forecast::auto.arima(ts,xreg=ts(reg,start=1))
-  
+
   ARIMAModelInfo <- TSPred::arimaparameters(fit)
-  
+
   return (ARIMAModelInfo)
 }

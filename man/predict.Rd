@@ -24,8 +24,8 @@
 \item{onestep}{Should the function produce one-step ahead predictions?
 If \code{FALSE}, a multi-step ahead prediction approach is adopted.
 
-For \code{predict.MLM}, \code{sw} of \code{object} may be used to transform the time series 
-input in \code{data} into sliding windows used during prediction. Also, 
+For \code{predict.MLM}, \code{sw} of \code{object} may be used to transform the time series
+input in \code{data} into sliding windows used during prediction. Also,
 \code{proc} of \code{object} may be used to preprocess/postprocess the input during prediction.}
 }
 \value{

@@ -15,8 +15,8 @@ fittestPolyRKF(
   maxorder = 5,
   initQ = NULL,
   filtered = TRUE,
-  rank.by = c("MSE", "NMSE", "MAPE", "sMAPE", "MaxError", "AIC", "AICc", "BIC",
-    "logLik", "errors", "fitness")
+  rank.by = c("MSE", "NMSE", "MAPE", "sMAPE", "MaxError", "AIC", "AICc", "BIC", "logLik",
+    "errors", "fitness")
 )
 }
 \arguments{
@@ -59,8 +59,8 @@ of candidate polynomial regression to be fitted and evaluated. Ignored if
 \item{initQ}{Numeric argument regarding the initial values for the
 covariance of disturbances parameter to be optimized over. The initial
 values to be optimized are set to \code{rep(initQ,(order+1))}. See the
-\code{Q} argument of the \code{\link{SSModel}} function in the \code{KFAS}
-package and the examples in \code{\link{KFAS}}. If \code{NULL}, \code{initQ}
+\code{Q} argument of the \code{\link[KFAS]{SSModel}} function in the \code{KFAS}
+package and the examples in \code{\link[KFAS]{KFAS}}. If \code{NULL}, \code{initQ}
 is automatically set. See 'Details'.}
 
 \item{filtered}{If \code{filtered} is \code{TRUE}, Kalman filtered time
@@ -115,10 +115,10 @@ accuracy measures.
 }
 \details{
 The polynomial regression model produced and returned by the function is
-generated and represented as state space model (\code{\link{SSModel}}) based
+generated and represented as state space model (\code{\link[KFAS]{SSModel}}) based
 on code from the \code{dlmodeler} package. See \code{dlmodeler.polynomial}.
 The model is optimized using the Kalman filter and functions of the
-\code{KFAS} package (see \code{\link{fitSSM}}).
+\code{KFAS} package (see \code{\link[KFAS]{fitSSM}}).
 
 If \code{order} is \code{NULL}, it is automatically selected. For that, a
 set of candidate polynomial regression state space models of orders from
@@ -133,7 +133,7 @@ acoording to the criteria in \code{rank.by} are selected.
 The ranking criteria in \code{rank.by} may be set as a prediction error
 measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}},
 \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria
-(such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or
+(such as \code{\link{AIC}}, \code{\link[MuMIn]{AICc}}, \code{\link{BIC}} or
 \code{\link{logLik}}). In the former case, the candidate models are used for
 time series prediction and the error measures are calculated by means of a
 cross-validation process. In the latter case, the candidate models are

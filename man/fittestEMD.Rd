@@ -90,7 +90,7 @@ provided univariate time series in \code{timeseries}. See the
 \code{\link{emd.rev}} function.
 
 The function automatically selects the meaningful IMFs of
-a decomposition. For that, the function produces 
+a decomposition. For that, the function produces
 models for different selections of meaningful IMFs according to the
 possible intervals \code{i:num_imfs} for \code{i=1,...,(num_imfs-1)}, where
 \code{num_imfs} is the number of IMFs in a decomposition. The options of
@@ -101,7 +101,7 @@ the best ranked model fitness/predictions acoording to the criteria in
 The ranking criteria in \code{rank.by} may be set as a prediction error
 measure (such as \code{\link{MSE}}, \code{\link{NMSE}}, \code{\link{MAPE}},
 \code{\link{sMAPE}} or \code{\link{MAXError}}), or as a fitness criteria
-(such as \code{\link{AIC}}, \code{\link{AICc}}, \code{\link{BIC}} or
+(such as \code{\link{AIC}}, \code{\link[MuMIn]{AICc}}, \code{\link{BIC}} or
 \code{\link{logLik}}). In the former case, the candidate empirical mode
 decompositions are used for time series prediction and the error measures
 are calculated by means of a cross-validation process. In the latter case,

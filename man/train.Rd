@@ -17,8 +17,8 @@ train(obj, ...)
 
 \item{...}{Other parameters passed to \code{train_func} of \code{obj}.
 
-For \code{train.MLM}, \code{sw} of \code{obj} may be used to transform the time series 
-in \code{data} into sliding windows used during training. Also, 
+For \code{train.MLM}, \code{sw} of \code{obj} may be used to transform the time series
+in \code{data} into sliding windows used during training. Also,
 \code{proc} of \code{obj} may be used to preprocess the time series before training.}
 
 \item{data}{A list of time series to be modelled.}

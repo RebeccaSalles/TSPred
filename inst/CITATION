@@ -1,13 +1,18 @@
 c(
   bibentry(
-    bibtype = "Manual",
-    title = "{TSPred}: Functions for Baseline-Based Time Series Prediction",
-    author = c(person(c("Rebecca", "Pontes"),"Salles"),
+    bibtype = "Article",
+    title = "TSPred: A framework for nonstationary time series prediction",
+    author = c(person("Rebecca","Salles"),
+			   person("Esther","Pacitti"),
+			   person("Eduardo","Bezerra"),
+			   person("Fabio","Porto"),
 			   person("Eduardo","Ogasawara")),
-    year = sub("-.*", "", meta$Date),
-    note = sprintf("R package version %s", meta$Version),
-    url = "https://CRAN.R-project.org/package=TSPred",
-    key = "TSPred"
+    journal = "Neurocomputing",
+    year = "2022",
+    volume= "467",
+    pages= "197--202",
+    publisher= "Elsevier",
+    key = "TSPredNeurocomputing"
   ),
   bibentry(
     bibtype = "InProceedings",
@@ -20,6 +25,16 @@ c(
 			   person("Eduardo","Ogasawara")),
     booktitle = "The 2017 International Joint Conference on Neural Networks ({IJCNN})",
     year = "2017",
-    key = "TSPredArticle"
+    key = "TSPredIJCNN"
+  ),
+  bibentry(
+    bibtype = "Manual",
+    title = "{TSPred}: Functions for Baseline-Based Time Series Prediction",
+    author = c(person(c("Rebecca", "Pontes"),"Salles"),
+			   person("Eduardo","Ogasawara")),
+    year = sub("-.*", "", meta$Date),
+    note = sprintf("R package version %s", meta$Version),
+    url = "https://CRAN.R-project.org/package=TSPred",
+    key = "TSPred"
   )
 )

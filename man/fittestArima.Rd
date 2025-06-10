@@ -39,7 +39,7 @@ and \code{timeseries.test}. The default function is
 }
 \value{
 A list with components: \item{model}{A list of class "ARIMA"
-containing the best fitted ARIMA model. See the \code{\link{auto.arima}}
+containing the best fitted ARIMA model. See the \code{\link[forecast]{auto.arima}}
 function in the \code{forecast} package.} \item{parameters}{A list
 containing the parameters of the best fitted ARIMA model. See the
 \code{\link{arimaparameters}} function.} \item{AICc}{Numeric value of the
@@ -49,7 +49,7 @@ the computed BIC criterion of the fitted model.} \item{logLik}{Numeric value
 of the computed log-likelihood of the fitted model.} \item{pred}{A list with
 the components \code{mean}, \code{lower} and \code{upper}, containing the
 predictions and the lower and upper limits for prediction intervals,
-respectively. All components are time series. See the \code{\link{forecast}}
+respectively. All components are time series. See the \code{\link[forecast]{forecast}}
 function in the \code{forecast} package.} \item{MSE}{Numeric value of the
 resulting MSE error of prediction.} \item{NMSE}{Numeric value of the
 resulting NMSE error of prediction.} \item{MAPE}{Numeric value of the
@@ -86,7 +86,7 @@ fArima <- fittestArima(CATS[,1],CATS.cont[,1])
 pred <- fArima$pred$mean
 #model information
 cbind(AICc=fArima$AICc, AIC=fArima$AIC, BIC=fArima$BIC,
- logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE, 
+ logLik=fArima$logLik, MSE=fArima$MSE, NMSE=fArima$NMSE,
  MAPE=fArima$MSE, sMAPE=fArima$MSE, MaxError=fArima$MaxError)
 
 #plotting the time series data

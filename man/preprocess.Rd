@@ -30,7 +30,7 @@ A list containing \code{obj} and the transformed time series.
 }
 \description{
 \code{preprocess} and \code{postprocess} are generic functions for
-preprocessing and postprocessing time series data, respectively, based on 
+preprocessing and postprocessing time series data, respectively, based on
 a particular transformation method defined in a \code{\link{processing}} object.
 Generally, postprocessing reverses the transformation performed during preprocessing.
 }

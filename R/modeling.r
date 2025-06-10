@@ -2,7 +2,7 @@
 new_trn <- function(func, par, ..., subclass=NULL){
   stopifnot(is.function(func))
   if(!is.null(par)) stopifnot(is.list(par))
-  
+
   structure(
     list(
       func = func,
@@ -15,14 +15,14 @@ new_trn <- function(func, par, ..., subclass=NULL){
 
 validate_trn <- function(trn_obj){
   values <- unclass(trn_obj)
-  
+
   if(is.null(values$func) || !is.function(values$func)) {
     stop("argument 'func' must be a non-missing training function",call. = FALSE)
   }
   if(!is.null(values$par) && !is.list(values$par)) {
     stop("argument 'par' must be NULL or a list of named parameters",call. = FALSE)
   }
-  
+
   return(trn_obj)
 }
 
@@ -34,6 +34,7 @@ is.trn <- function(trn_obj){
   methods::is(trn_obj,"trn")
 }
 
+#' @export
 train.trn <- function(obj,...){
   do.call(obj$func,c(list(...),obj$par))
 }
@@ -43,7 +44,7 @@ train.trn <- function(obj,...){
 new_pred <- function(func, par, ..., subclass=NULL){
   stopifnot(is.function(func))
   if(!is.null(par)) stopifnot(is.list(par))
-  
+
   structure(
     list(
       func = func,
@@ -56,14 +57,14 @@ new_pred <- function(func, par, ..., subclass=NULL){
 
 validate_pred <- function(pred_obj){
   values <- unclass(pred_obj)
-  
+
   if(is.null(values$func) || !is.function(values$func)) {
     stop("argument 'func' must be a non-missing prediction function",call. = FALSE)
   }
   if(!is.null(values$par) && !is.list(values$par)) {
     stop("argument 'par' must be NULL or a list of named parameters",call. = FALSE)
   }
-  
+
   return(pred_obj)
 }
 
@@ -75,6 +76,7 @@ is.pred <- function(pred_obj){
   methods::is(pred_obj,"pred")
 }
 
+#' @export
 predict.pred <- function(obj,...){
   do.call(obj$func,c(list(...),obj$par))
 }
@@ -84,7 +86,7 @@ predict.pred <- function(obj,...){
 new_modeling <- function(train, pred, ..., subclass=NULL){
   stopifnot(is.trn(train))
   if(!is.null(pred)) stopifnot(is.pred(pred))
-  
+
   structure(
     list(
       train = train,
@@ -97,14 +99,14 @@ new_modeling <- function(train, pred, ..., subclass=NULL){
 
 validate_modeling <- function(modeling_obj){
   values <- unclass(modeling_obj)
-  
+
   if(is.null(values$train) || !is.trn(values$train)) {
     stop("argument 'train' must be a non-missing training ('trn') object",call. = FALSE)
   }
   if(!is.null(values$pred) && !is.pred(values$pred)) {
     stop("argument 'pred' must be NULL or a prediction ('pred') object",call. = FALSE)
   }
-  
+
   return(modeling_obj)
 }
 
@@ -113,7 +115,7 @@ validate_modeling <- function(modeling_obj){
 #'
 #' Constructor for the \code{modeling} class representing a time series modeling
 #' and prediction method based on a particular model.
-#' The \code{modeling} class has two specialized subclasses \code{linear} and 
+#' The \code{modeling} class has two specialized subclasses \code{linear} and
 #' \code{MLM} reagarding linear models and machine learning based models, respectively.
 #'
 #' @aliases modeling linear MLM
@@ -125,7 +127,7 @@ validate_modeling <- function(modeling_obj){
 #' @param proc A list of \code{\link{processing}} objects regarding any pre(post)processing
 #' needed during training or prediction. Optional.
 #' @param ... Other parameters to be encapsulated in the class object.
-#' @param subclass Name of new specialized subclass object created in case it is provided. 
+#' @param subclass Name of new specialized subclass object created in case it is provided.
 #'
 #' @return An object of class \code{modeling}.
 #' @author Rebecca Pontes Salles
@@ -133,11 +135,11 @@ validate_modeling <- function(modeling_obj){
 #'
 #' @keywords modeling prediction model method
 #' @examples
-#' 
+#'
 #' forecast_mean <- function(...){
 #'    do.call(forecast::forecast,c(list(...)))$mean
 #' }
-#'   
+#'
 #' l <- linear(train_func = forecast::auto.arima, pred_func = forecast_mean,
 #'             method="ARIMA model", subclass="ARIMA")
 #' summary(l)
@@ -146,14 +148,14 @@ validate_modeling <- function(modeling_obj){
 #'       pred_func = predict, sw=SW(window_len = 6), proc=list(MM=MinMax()),
 #'       method="Artificial Neural Network model", subclass="NNET")
 #' summary(m)
-#' 
+#'
 #' @export modeling
 modeling <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, ..., subclass=NULL){
   train_obj <- do.call(trn,list(func=train_func, par=train_par, subclass=NULL))
   pred_obj <- NULL
   if(!is.null(pred_func))
     pred_obj <- do.call(pred,list(func=pred_func, par=pred_par, subclass=NULL))
-  
+
   validate_modeling(new_modeling(train_obj, pred_obj, ..., subclass=subclass))
 }
 
@@ -161,7 +163,7 @@ modeling <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, 
 #' @rdname modeling
 #' @export
 MLM <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, sw=NULL, proc=NULL, ..., subclass=NULL){
-  mlm_obj <- modeling( train_func=train_func, 
+  mlm_obj <- modeling( train_func=train_func,
                        train_par=train_par,
                        pred_func=pred_func,
                        pred_par=pred_par,
@@ -174,7 +176,7 @@ MLM <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, sw=NU
 validate_MLM <- function(mlm_obj){
   mlm_obj <- validate_modeling(mlm_obj)
   values <- unclass(mlm_obj)
-  
+
   if(!is.null(values$sw) && !is.SW(values$sw)) {
     stop("argument 'sw' must be NULL or a sliding windows processing ('SW') object",call. = FALSE)
   }
@@ -183,7 +185,7 @@ validate_MLM <- function(mlm_obj){
       if(!is.processing(p))
         stop("argument 'proc' must be NULL or a list of processing ('processing') objects",call. = FALSE)
   }
-  
+
   return(mlm_obj)
 }
 
@@ -191,7 +193,7 @@ validate_MLM <- function(mlm_obj){
 #' @rdname modeling
 #' @export
 linear <- function(train_func, train_par=NULL, pred_func=NULL, pred_par=NULL, ..., subclass=NULL){
-  modeling(train_func=train_func, 
+  modeling(train_func=train_func,
            train_par=train_par,
            pred_func=pred_func,
            pred_par=pred_par,
@@ -216,10 +218,10 @@ is.linear <- function(linear_obj){
 summary.modeling <- function(object,...){
   obj <- object
   cat("Modeling class object\n")
-  
+
   if(is.null(obj$method)) cat("Method: Description not provided\n")
   else cat("Method: ",obj$method,"\n")
-  
+
   if(is.null(obj$trn$par) && is.null(obj$pred$par)) cat("Parameters: N/A\n")
 }
 
@@ -227,12 +229,12 @@ summary.modeling <- function(object,...){
 summary.MLM <- function(object,...){
   obj <- object
   cat("Modeling class object\n")
-  
+
   if(is.null(obj$method)) cat("Method: Description not provided\n")
   else cat("Method: ",obj$method,"\n")
-  
+
   cat("Type: Machine learning model\n")
-  
+
   if(is.null(obj$trn$par) && is.null(obj$pred$par)) cat("Parameters: N/A\n")
 }
 
@@ -240,12 +242,12 @@ summary.MLM <- function(object,...){
 summary.linear <- function(object,...){
   obj <- object
   cat("Modeling class object\n")
-  
+
   if(is.null(obj$method)) cat("Method: Description not provided\n")
   else cat("Method: ",obj$method,"\n")
-  
+
   cat("Type: Linear model\n")
-  
+
   if(is.null(obj$trn$par) && is.null(obj$pred$par)) cat("Parameters: N/A\n")
 }
 
@@ -262,8 +264,8 @@ summary.linear <- function(object,...){
 #' @param data A list of time series to be modelled.
 #' @param ... Other parameters passed to \code{train_func} of \code{obj}.
 #'
-#' For \code{train.MLM}, \code{sw} of \code{obj} may be used to transform the time series 
-#' in \code{data} into sliding windows used during training. Also, 
+#' For \code{train.MLM}, \code{sw} of \code{obj} may be used to transform the time series
+#' in \code{data} into sliding windows used during training. Also,
 #' \code{proc} of \code{obj} may be used to preprocess the time series before training.
 #'
 #' @return A list containing \code{obj} and the trained models.
@@ -279,7 +281,7 @@ summary.linear <- function(object,...){
 #'
 #' n <- NNET(size=5, sw=SW(window_len = 5+1), proc=list(MM=MinMax()))
 #' model <- train(n,list(CATS[,1]))
-#' 
+#'
 #' @export train
 train <- function(obj,...){
   UseMethod("train")
@@ -293,7 +295,7 @@ train.MLM <- function(obj,data,...){
   for(i in c(1:length(data))){
     data_i <- data[i]
     obj_i <- obj
-    
+
     if(!is.null(obj$sw)){
       attr(data_i,"subset") <- "train"
       sw_res <- preprocess(obj$sw,data_i)
@@ -309,23 +311,23 @@ train.MLM <- function(obj,data,...){
         data_i <- res(proc_res)
       }
     }
-    
+
     data_i <- stats::as.ts(data_i[[1]])
     io <- mlm_io(data_i)
-    
+
     proc_res <- train(obj$train, as.matrix(io$input), as.matrix(io$output), ...)
     attr(proc_res,"name") <- names(data[i])
     attr(proc_res,"y") <- io$output
-    
+
     if("list" %in% class(proc_res)) {
       aux_res <- list()
       aux_res[[attr(proc_res,"name")]] <- proc_res
       proc_res <- aux_res
     }
-    
+
     res[[i]] <- result(obj_i,proc_res)
   }
-  
+
   return(results(res))
 }
 
@@ -333,15 +335,15 @@ train.MLM <- function(obj,data,...){
 #' @export
 train.linear <- function(obj,data,...){
   res <- list()
-  
+
   for(i in c(1:length(data))){
     data_i <- stats::as.ts(data[[i]])
-    
+
     proc_res <- train(obj$train, data_i, ...)
     attr(proc_res,"name") <- names(data[i])
     res[[i]] <- result(obj,proc_res)
   }
-  
+
   return(results(res))
 }
 
@@ -360,8 +362,8 @@ train.linear <- function(obj,data,...){
 #' @param onestep Should the function produce one-step ahead predictions?
 #' If \code{FALSE}, a multi-step ahead prediction approach is adopted.
 #'
-#' For \code{predict.MLM}, \code{sw} of \code{object} may be used to transform the time series 
-#' input in \code{data} into sliding windows used during prediction. Also, 
+#' For \code{predict.MLM}, \code{sw} of \code{object} may be used to transform the time series
+#' input in \code{data} into sliding windows used during prediction. Also,
 #' \code{proc} of \code{object} may be used to preprocess/postprocess the input during prediction.
 #'
 #' @return A list containing \code{object} and the produced predictions.
@@ -379,7 +381,7 @@ train.linear <- function(obj,data,...){
 #' n <- NNET(size=5, sw=SW(window_len = 5+1), proc=list(MM=MinMax()))
 #' model <- train(n,list(CATS[,1]))$results[[1]]$res
 #' pred_data <- predict(n,model,data=list(CATS.cont[,1]),n.ahead=20)
-#' 
+#'
 #' @name predict
 NULL
 #predict is already a generic method
@@ -393,19 +395,19 @@ predict.MLM <- function(object,mdl,data,n.ahead,...,onestep=TRUE){
   obj <- object
   ts_name <- names(data)
   data <- as.list(data)
-  
+
   if(is.list(mdl) && length(mdl)==1 && names(mdl)==ts_name) mdl <- mdl[[1]]
-  
+
   if(!is.null(obj$sw)){
     data[[1]] <- c( attr(obj$sw,"train_data"), data[[1]] )
     attr(data,"subset") <- "test"
     sw_res <- preprocess(obj$sw,data)
     data <- res(sw_res)
   }
-  
+
   data <- stats::as.ts(data[[1]])
   io <- mlm_io(data)
-  
+
   if(onestep){
     input <- io$input
     #browser()
@@ -420,9 +422,9 @@ predict.MLM <- function(object,mdl,data,n.ahead,...,onestep=TRUE){
         input <- res(proc_res)[[1]]
       }
     }
-    
+
     proc_res <- stats::predict(obj$pred, mdl, as.matrix(input),...)
-    
+
     if(!is.null(obj_test)){
       for(p in c(length(obj_test):1)){
         proc_res <- list(proc_res)
@@ -431,20 +433,20 @@ predict.MLM <- function(object,mdl,data,n.ahead,...,onestep=TRUE){
         proc_res <- res(proc_res)[[1]]
       }
     }
-    
+
     attr(proc_res,"name") <- ts_name
     res <- list(result(obj,proc_res))
   }
   else{
-    
+
     predictions <- NULL
     tuple <- io$input[1,]
     len_tuple <- length(tuple)
-    
+
     names_tuple <- names(tuple)
-    
+
     for(i in c(1:n.ahead)){
-      
+
       obj_test <- NULL
       if(!is.null(obj$proc)){
         obj_test <- list()
@@ -456,10 +458,10 @@ predict.MLM <- function(object,mdl,data,n.ahead,...,onestep=TRUE){
           tuple <- as.matrix(res(proc_res)[[1]])
         }
       }
-      
+
       proc_res <- stats::predict(obj$pred, mdl, as.matrix(tuple),...)
       tuple <- utils::tail(c(tuple,proc_res),len_tuple)
-      
+
       if(!is.null(obj_test)){
         for(p in c(length(obj_test):1)){
           tuple <- list(tuple)
@@ -468,17 +470,17 @@ predict.MLM <- function(object,mdl,data,n.ahead,...,onestep=TRUE){
           tuple <- res(tuple)[[1]]
         }
       }
-      
+
       names(tuple) <- names_tuple
-      
+
       predictions <- c(predictions,utils::tail(tuple,1))
-      
+
     }
-    
+
     attr(predictions,"name") <- ts_name
     res <- list(result(obj,predictions))
   }
-  
+
   return(results(res))
 }
 
@@ -493,22 +495,22 @@ predict.linear <- function(object,mdl,data,n.ahead,...,onestep=TRUE){
   }
   else{
     test <- stats::as.ts(data[[1]])
-    
+
     train_data <- stats::fitted(mdl)+stats::residuals(mdl)
     mdl_res <- mdl
-    
+
     predictions <- NULL
-    
+
     for(p in c(1:n.ahead)){
       proc_res <- stats::predict(obj$pred, mdl_res, 1,...)
       predictions <- c(predictions,proc_res)
-      
+
       train_data <- c(train_data,test[p])
       mdl_res <- train(obj$train, train_data)
     }
     attr(predictions,"name") <- attr(mdl,"name")
     res <- list(result(obj,predictions))
   }
-  
+
   return(results(res))
 }
